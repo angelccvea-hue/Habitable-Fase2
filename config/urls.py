@@ -36,7 +36,7 @@ from inspecciones.views import (
     ver_informe_pdf_adjunto,
 )
 
-admin.site.site_header = "CPEH — Seguimiento ROJO Fase II"
+admin.site.site_header = "CPEH — Habitable Fase II"
 admin.site.site_title = "CPEH Fase II"
 admin.site.index_title = "Panel de administración"
 

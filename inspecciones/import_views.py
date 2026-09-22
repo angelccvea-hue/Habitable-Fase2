@@ -56,7 +56,7 @@ def cargar_excel_informe(request, pk: int | None = None):
         "caso": caso,
         "opts": CasoRojo._meta,
         "has_permission": True,
-        "site_header": "CPEH — Seguimiento ROJO Fase II",
+        "site_header": "CPEH — Habitable Fase II",
         "puede_overwrite_precarga": request.user.is_superuser or es_coordinador(request.user),
     }
 

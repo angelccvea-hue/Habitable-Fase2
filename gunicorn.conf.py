@@ -1,4 +1,4 @@
-# Gunicorn — CPEH Fase II ROJO
+# Gunicorn — CPEH Fase II
 import multiprocessing
 
 bind = "127.0.0.1:8000"

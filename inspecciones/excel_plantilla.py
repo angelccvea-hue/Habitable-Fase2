@@ -19,7 +19,7 @@ from inspecciones.section_labels import CASE_FIELDSETS
 
 PLANTILLA_VERSION = "v1.10-sin-evidencia-excel"
 INSTITUCION = "Comisión Presidencial para la Evaluación de Habitabilidad de Infraestructuras"
-PROGRAMA = "Seguimiento inspecciones ROJO — Fase II"
+PROGRAMA = "Verificación Habitable — Fase II"
 # Contraseña de protección de hojas (solo admin TI la quita si hace falta ajustar plantilla).
 SHEET_PROTECT_PASSWORD = "cpeh"
 # Filas vacías extra en Metrados (además de las precargadas) para agregar líneas sin insertar filas.

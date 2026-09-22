@@ -181,7 +181,7 @@ def _cajetin(msp, x0: float, y0: float, w: float = 14.0, h: float = 5.5) -> None
             text, height=height, dxfattribs={"layer": "ROTULO", "color": colors.BLUE}
         ).set_placement((tx, ty), align=TextEntityAlignment.MIDDLE_LEFT)
 
-    cell(x0 + 0.25, y0 + h - 0.55, "CPEH — Fase II ROJO · PLN-01", 0.32)
+    cell(x0 + 0.25, y0 + h - 0.55, "CPEH — Fase II · PLN-01", 0.32)
     cell(x0 + w * 0.55 + 0.2, y0 + h - 0.55, "Rev. borrador", 0.28)
     cell(x0 + 0.25, y0 + 3.85, "Edificio: ______________________________")
     cell(x0 + w * 0.55 + 0.2, y0 + 3.85, "ID Habitable: __________")

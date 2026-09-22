@@ -1,5 +1,5 @@
 """
-Django settings — CPEH Fase II ROJO (UI: Jazzmin + WhiteNoise).
+Django settings — CPEH Fase II (UI: Jazzmin + WhiteNoise).
 """
 from pathlib import Path
 import os

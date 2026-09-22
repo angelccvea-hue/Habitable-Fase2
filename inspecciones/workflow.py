@@ -291,7 +291,7 @@ def validar_seccion3_cierre(caso) -> None:
     pendientes = []
     campos = (
         ("val_edificio", "¿Coincide el edificio?"),
-        ("val_etiqueta", "¿Coincide la etiqueta ROJO?"),
+        ("val_etiqueta", "¿Coincide la etiqueta Habitable (rojo / amarillo / …)?"),
         ("val_geometria", "¿Coincide la geometría?"),
         ("val_ranking", "¿Coincide el ranking/score?"),
     )

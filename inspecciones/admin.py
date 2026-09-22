@@ -545,7 +545,7 @@ class CasoRojoAdmin(admin.ModelAdmin):
             else:
                 extra.setdefault(
                     "title",
-                    "Casos ROJO — revisión técnica",
+                    "Casos Fase II — revisión técnica",
                 )
         return super().changelist_view(request, extra_context=extra)
 

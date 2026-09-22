@@ -684,7 +684,7 @@ def _caso_pks_por_equipo(equipo: str) -> list[str]:
 
 def get_recent_actions_context(request=None) -> dict:
     """
-    Acciones recientes (LogEntry de Casos ROJO) con filtros GET:
+    Acciones recientes (LogEntry de Casos Fase II) con filtros GET:
     ra_equipo, ra_coord, ra_actor, ra_tipo, ra_dias, ra_q (búsqueda genérica).
     """
     empty = {

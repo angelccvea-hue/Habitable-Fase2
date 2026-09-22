@@ -1,8 +1,8 @@
-# Habitable Fase II — Seguimiento ROJO (CPEH)
+# Habitable Fase II (CPEH)
 
-Aplicación **Django** para la **Comisión Presidencial para la Evaluación de Habitabilidad (CPEH)**: seguimiento operativo de edificaciones etiquetadas **ROJO** en la 2.ª ronda de verificación post-sísmica (terremoto 24-jun-2026).
+Aplicación **Django** para la **Comisión Presidencial para la Evaluación de Habitabilidad (CPEH)**: **verificación detallada Fase II** de edificaciones priorizadas en Habitable (etiquetas **rojo**, **amarillo** u otras) tras el sismo del 24-jun-2026.
 
-Incluye ficha de caso, workflow por roles, metrados **MET-01**, planos de inspección **PLN-01** (visor multi-planta), mapa, tablero de operación, Excel/PDF y panel **Jazzmin**.
+Incluye ficha de caso, workflow por roles, metrados **MET-01**, planos de inspección **PLN-01** (visor multi-planta), mapa, tablero de operación, Excel/PDF y panel **Jazzmin**. El alcance de este sistema es **hasta Fase II** (no despliega Fase III).
 
 **Repositorio:** https://github.com/angelccvea-hue/Habitable-Fase2
 
@@ -29,7 +29,7 @@ Incluye ficha de caso, workflow por roles, metrados **MET-01**, planos de inspec
 
 | Necesidad | Cómo lo cubre la app |
 |-----------|----------------------|
-| Inventario ROJO 2.ª ronda | Modelo `CasoRojo` + precarga Habitable / ranking + visita de verificación |
+| Inventario Fase II (rojo / amarillo) | Modelo `CasoRojo` + precarga Habitable / ranking + visita de verificación |
 | Dictamen estructurado | Decisiones **D1–D4**, magnitud **M**, prioridad, medidas, justificación |
 | Cuantificación para anteproyecto | Catálogo de partidas + `LineaMetrado` (MET-01) anclado a IDs PLN-01 |
 | Lectura espacial por planta | `PlantaInspeccion` + visor SVG multi-planta + resumen de reparaciones |
@@ -100,7 +100,7 @@ Dependencias: `requirements.txt`.
 
 ### Flujos principales
 
-**A. Caso ROJO (ciclo de vida)**
+**A. Caso Fase II (ciclo de vida)**
 
 ```text
 Precarga Habitable/Ranking
@@ -145,7 +145,7 @@ Entidades centrales (nombres de modelo):
 
 | Modelo | Rol |
 |--------|-----|
-| `CasoRojo` | Expediente ROJO: precarga Habitable, visita, dictamen, GPS, score |
+| `CasoRojo` | Expediente Fase II: precarga Habitable, visita, dictamen, GPS, score |
 | `LineaMetrado` | Línea de cuantificación; `id_pln01`, `piso_pln`, partida, apuntamiento |
 | `PartidaCatalogo` | Catálogo MET-01 (APUNT_*, REP_*, FIS_*, DEM_*, ESC_*, …) |
 | `PlantaInspeccion` | Nivel/planta del caso para el visor multi-capa |
@@ -360,7 +360,7 @@ gunicorn -c gunicorn.conf.py config.wsgi:application
 
 ```ini
 [Unit]
-Description=CPEH Fase II ROJO
+Description=CPEH Fase II
 After=network.target postgresql.service
 
 [Service]

@@ -226,7 +226,7 @@ def ficha_met01() -> dict:
         "categoria": "Metrados / partidas · vínculo PLN-01 · estandarización normativa",
         "titulo": (
             "Estandarización de partidas de metrado — acoplamiento a PLN-01 "
-            "(plano de inspección), COVENIN 2000 e ISO/ICMS (Fase III)"
+            "(plano de inspección), COVENIN 2000 e ISO/ICMS (alcance Fase II)"
         ),
         "alcance": (
             "Definir el catálogo de partidas CPEH, su ancla normativa y —de forma "
@@ -251,7 +251,7 @@ def ficha_met01() -> dict:
             "Se cuantifica intervención (metrado) en ficha, Excel o visor del plano.",
             "Se asigna un arreglo (partida) a un elemento concreto del plano.",
             "Se distingue apuntamiento preventivo vs de trabajo post-terremoto.",
-            "Se prepara anteproyecto / estimación (cantidad × PU) para Fase III.",
+            "Se prepara anteproyecto / estimación (cantidad × PU) dentro de Fase II.",
             "Se homologa escombros (ESC_*) con vol_escombros_m3 y COVENIN E134/E903.",
         ],
         "no_aplicar": [
@@ -268,7 +268,7 @@ def ficha_met01() -> dict:
             "elemento estructural con cantidad > 0 debe llevar id_pln01 (y piso_pln). "
             "3) Flujo operativo: croquis/plano → identificar elemento → elegir partida "
             "del catálogo MET-01 → cantidad/unidad/confianza → (opcional) tipo_apuntamiento. "
-            "4) Visor dinámico (Fase III): mapa SVG/plano interactivo; al seleccionar "
+            "4) Visor dinámico (Fase II): mapa SVG/plano interactivo; al seleccionar "
             "un nodo/tramo se abre el catálogo filtrado y se crea/edita LineaMetrado "
             "con ese id_pln01. 5) Apuntamiento: usar APUNT_PREV para estabilización "
             "post-sísmica; APUNT_PISO/COL/VIGA para shoring de trabajo; marcar "
@@ -365,7 +365,7 @@ def ficha_met01() -> dict:
                 "titulo": "Dual coding",
                 "texto": (
                     "Conservar códigos CPEH en brigada; ancla COVENIN/R en catálogo "
-                    "para Fase III."
+                    "en Fase II."
                 ),
             },
             {

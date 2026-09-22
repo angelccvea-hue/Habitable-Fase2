@@ -25,7 +25,8 @@
 
     <h3 class="cpeh-about-heading">1. ¿Qué es este sistema?</h3>
     <p class="cpeh-about-text">
-      Aplicación web interna (Django) para el <strong>seguimiento Fase II</strong> de edificaciones etiqueta ROJO:
+      Aplicación web interna (Django) para el <strong>seguimiento Fase II</strong> de edificaciones
+      priorizadas en Habitable (rojo / amarillo u otras):
       una ficha por edificio con <strong>11 secciones numeradas</strong>, dictamen D1–D4, estados de revisión y exportación PDF.
       Reemplaza hojas sueltas / Excel como registro maestro operativo (el Excel sigue siendo plantilla de referencia).
     </p>
@@ -94,7 +95,7 @@ PostgreSQL (tabla inspecciones_casorojo + tablas auth de Django)</pre>
     <h3 class="cpeh-about-heading">5. Base de datos — tabla principal</h3>
     <p class="cpeh-about-text">
       Django crea la tabla <code>inspecciones_casorojo</code> a partir del modelo <code>CasoRojo</code>.
-      Cada fila = un edificio ROJO en 2.ª ronda. Campo clave: <code>hab_id</code> (único, ID Habitable).
+      Cada fila = un edificio en verificación Fase II. Campo clave: <code>hab_id</code> (único, ID Habitable).
     </p>
     <div class="table-responsive">
       <table class="table table-sm cpeh-dev-table mb-3">
@@ -246,7 +247,7 @@ SELECT hab_id, nombre_conf, decision_D FROM inspecciones_casorojo WHERE decision
     <h3 class="cpeh-about-heading">10. Implementado vs pendiente (roadmap)</h3>
     <p class="small text-muted mb-2">
       Manual ejecutivo completo (flujo, roles, catálogos, ranking nacional):
-      ver documento <strong>Manual ejecutivo — Sistema Fase II ROJO</strong> en el paquete de entregables demolición 2.ª ronda.
+      ver documento <strong>Manual ejecutivo — Sistema Habitable Fase II</strong> en el paquete de entregables demolición 2.ª ronda.
     </p>
     <div class="table-responsive">
       <table class="table table-sm cpeh-dev-table mb-3">

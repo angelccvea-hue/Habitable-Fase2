@@ -230,7 +230,7 @@ def main() -> None:
 <body>
   <div class="barra"><span class="ve-a"></span><span class="ve-b"></span><span class="ve-c"></span></div>
   <div class="aviso">
-    <strong>Prototipo para revisión de equipo</strong> · CPEH Fase II ROJO ·
+    <strong>Prototipo para revisión de equipo</strong> · CPEH Fase II ·
     Visor multi-planta (PLN-01) con asignación de partidas (MET-01).
     Archivo autocontenido: ábralo en cualquier navegador, sin servidor.
     Los cambios se guardan solo en este equipo (navegador). Datos de ejemplo precargados · {hoy}.

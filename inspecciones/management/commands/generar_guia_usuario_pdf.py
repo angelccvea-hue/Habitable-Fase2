@@ -10,7 +10,7 @@ from inspecciones.guia_pdf import render_guia_usuario_pdf
 
 
 class Command(BaseCommand):
-    help = "Genera PDF de la guía didáctica de usuario Fase II ROJO"
+    help = "Genera PDF de la guía didáctica de usuario Fase II"
 
     def add_arguments(self, parser):
         parser.add_argument(

@@ -1,8 +1,8 @@
-"""Personalización Jazzmin — CPEH Fase II ROJO (identidad portal CPEH)."""
+"""Personalización Jazzmin — CPEH Fase II (identidad portal CPEH)."""
 JAZZMIN_SETTINGS = {
     "site_title": "CPEH · Habitabilidad",
-    "site_header": "Seguimiento inspecciones ROJO",
-    "site_brand": "Fase II · ROJO",
+    "site_header": "Verificación Habitable Fase II",
+    "site_brand": "Habitable · Fase II",
     "site_logo": "img/logo-cpeh-sidebar.svg",
     "site_logo_classes": "brand-image-cpeh elevation-2",
     "site_icon": "img/logo-cpeh-sidebar.svg",

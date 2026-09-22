@@ -1,4 +1,4 @@
-"""Generación PDF — Guía de usuario Fase II ROJO."""
+"""Generación PDF — Guía de usuario Fase II."""
 from __future__ import annotations
 
 from django.db.models import Q

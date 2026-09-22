@@ -31,7 +31,7 @@ FIELD_HINTS: dict[str, str] = {
     "corr_nombre": "Solo si §3 edificio = No/Parcial: nombre correcto del sitio.",
     "corr_direccion": "Solo si corrige: dirección real (actualiza precarga al guardar).",
     "corr_muni_parr": "Solo si corrige: municipio/parroquia correctos.",
-    "val_etiqueta": "¿Confirma la etiqueta ROJO (u otra)? Documente si duda.",
+    "val_etiqueta": "¿Confirma la etiqueta Habitable (rojo / amarillo u otra)? Documente si duda.",
     "corr_etiqueta": "Solo si la etiqueta Fase I estaba mal (ej. no es ROJO).",
     "val_geometria": "¿Coinciden pisos/sótanos/uso con lo visto en campo?",
     "corr_pisos": "Solo si corrige geometría: ej. «11 / 1».",

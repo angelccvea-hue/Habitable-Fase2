@@ -6,7 +6,7 @@ from . import choices as ch
 
 
 class CasoRojo(models.Model):
-    """Un caso ROJO en 2.ª ronda (informe consolidado en una fila administrable)."""
+    """Caso de verificación Fase II (informe consolidado en una fila administrable)."""
 
     # --- 1 Precarga Habitable ---
     hab_id = models.PositiveIntegerField("ID Habitable", unique=True, db_index=True)
@@ -335,8 +335,8 @@ class CasoRojo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Caso ROJO Fase II"
-        verbose_name_plural = "Casos ROJO Fase II"
+        verbose_name = "Caso Fase II"
+        verbose_name_plural = "Casos Fase II"
         ordering = ["-score", "hab_id"]
 
     def __str__(self) -> str:
@@ -526,7 +526,7 @@ class InformePdfAdjunto(models.Model):
         CasoRojo,
         on_delete=models.CASCADE,
         related_name="informes_pdf",
-        verbose_name="Caso ROJO",
+        verbose_name="Caso Fase II",
     )
     archivo = models.FileField(
         "Archivo PDF",
@@ -630,7 +630,7 @@ class LineaMetrado(models.Model):
         CasoRojo,
         on_delete=models.CASCADE,
         related_name="lineas_metrado",
-        verbose_name="Caso ROJO",
+        verbose_name="Caso Fase II",
     )
     orden = models.PositiveSmallIntegerField(default=1)
     partida = models.ForeignKey(
@@ -750,7 +750,7 @@ class HistorialDetallado(models.Model):
         CasoRojo,
         on_delete=models.CASCADE,
         related_name="historial_detallado",
-        verbose_name="Caso ROJO",
+        verbose_name="Caso Fase II",
     )
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -814,7 +814,7 @@ class CroquisAdjunto(models.Model):
         CasoRojo,
         on_delete=models.CASCADE,
         related_name="croquis",
-        verbose_name="Caso ROJO",
+        verbose_name="Caso Fase II",
     )
     archivo = models.FileField(
         "Archivo croquis",
@@ -862,7 +862,7 @@ class PlantaInspeccion(models.Model):
         CasoRojo,
         on_delete=models.CASCADE,
         related_name="plantas_inspeccion",
-        verbose_name="Caso ROJO",
+        verbose_name="Caso Fase II",
     )
     codigo_piso = models.CharField(
         "Código de planta",

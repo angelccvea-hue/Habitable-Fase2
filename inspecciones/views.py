@@ -42,7 +42,7 @@ def health(request):
     return JsonResponse(
         {
             "status": "ok",
-            "proyecto": "CPEH Fase II — Seguimiento ROJO",
+            "proyecto": "CPEH — Habitable Fase II",
             "version": "0.3.0-metrados-anteproyecto",
             "casos": CasoRojo.objects.count(),
             "informes_pdf": InformePdfAdjunto.objects.count(),
