@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Django / local runtime
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+media/
+staticfiles/
+logs/
+run/
+*.log
+local_settings.py
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.ppk
+**/CREDENCIALES*.md
+**/credenciales*.md
+**/frase-clave.txt
+**/cph_private_key*
+
+# IDE / OS
+.idea/
+.vscode/
+.cursor/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Temp / scratch helpers
+_check_*.py
+_fix_*.py
+_mig*.py
+_rec*.py
+*.tmp
+*.bak
+
+# Coverage / test
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/

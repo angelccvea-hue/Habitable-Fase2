@@ -1,0 +1,8 @@
+{% load i18n %}
+{# Solo nombre corto + input para reemplazar; sin checkbox limpiar --- #}
+<div class="cpeh-file-widget">
+{% if widget.is_initial and widget.display_name %}
+  <a class="cpeh-file-name" href="{{ widget.value.url }}" target="_blank" rel="noopener" title="{{ widget.display_name }}">{{ widget.display_name }}</a>
+{% endif %}
+  <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+</div>

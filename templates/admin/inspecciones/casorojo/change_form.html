@@ -1,0 +1,636 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
+
+{# No usar <form> anidado: el change_form de admin ya envuelve la ficha en un form. #}
+
+{% block object-tools-items %}
+  {# Solo Histórico aquí; Excel/PDF viven en «Herramientas» abajo (evita duplicar). #}
+  {{ block.super }}
+{% endblock %}
+
+{% block field_sets %}
+{% if original.pk %}
+<div class="cpeh-sticky-save mb-2">
+  <button type="submit" name="_continue" class="btn btn-primary btn-sm">
+    <i class="fas fa-edit"></i> Guardar y continuar editando
+  </button>
+  <span class="cpeh-sticky-save-hint">Guarda sin salir de la ficha. No borra lo ya llenado.</span>
+  {% if estado_actual %}
+  <span class="cpeh-estado-pill cpeh-estado-pill-inline">{{ estado_actual }}</span>
+  {% endif %}
+  <a href="#cpeh-panel-flujo" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-flag-checkered"></i> Ir a Flujo
+  </a>
+  <a href="#lineametado_set-group" class="btn btn-outline-primary btn-sm">
+    <i class="fas fa-table"></i> Líneas de metrado
+  </a>
+</div>
+
+{# Botones de flujo siempre visibles arriba (antes estaban solo al final) #}
+{% if puede_iniciar_visita or puede_pasar_borrador or puede_enviar_revision or puede_marcar_revisado or puede_devolver or puede_aprobar or puede_publicar %}
+<div class="cpeh-flujo-top mb-3" id="cpeh-flujo-top">
+  <div class="cpeh-flujo-top-label">
+    <i class="fas fa-flag-checkered"></i> Flujo (paso actual)
+  </div>
+  <div class="cpeh-flujo-top-btns">
+    {% if puede_iniciar_visita %}
+    <button type="button" class="btn btn-primary btn-sm"
+            onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_iniciar_visita' original.pk %}', 'iniciar');">
+      <i class="fas fa-walking"></i> Iniciar visita
+    </button>
+    {% endif %}
+    {% if puede_pasar_borrador %}
+    <button type="button" class="btn btn-secondary btn-sm"
+            onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_pasar_borrador' original.pk %}', 'borrador');">
+      <i class="fas fa-file-alt"></i> Pasar a borrador
+    </button>
+    {% endif %}
+    {% if puede_enviar_revision %}
+    <button type="button" class="btn btn-primary btn-sm"
+            onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_enviar_revision' original.pk %}', 'enviar');">
+      <i class="fas fa-paper-plane"></i> Enviar a revisión
+    </button>
+    {% endif %}
+    {% if puede_marcar_revisado %}
+    <button type="button" class="btn btn-info btn-sm"
+            onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_marcar_revisado' original.pk %}', 'marcar');">
+      <i class="fas fa-clipboard-check"></i> Marcar revisado
+    </button>
+    {% endif %}
+    {% if puede_devolver %}
+    <button type="button" class="btn btn-warning btn-sm"
+            onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_devolver' original.pk %}', 'devolver');">
+      <i class="fas fa-undo"></i> Devolver a borrador
+    </button>
+    {% endif %}
+    {% if puede_aprobar %}
+    <button type="button" class="btn btn-success btn-sm"
+            onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_aprobar' original.pk %}', 'aprobar');">
+      <i class="fas fa-check-circle"></i> Aprobar
+    </button>
+    {% endif %}
+    {% if puede_publicar %}
+    <button type="button" class="btn btn-dark btn-sm"
+            onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_publicar' original.pk %}', 'publicar');">
+      <i class="fas fa-bullhorn"></i> Publicar
+    </button>
+    {% endif %}
+  </div>
+  <p class="cpeh-flujo-top-hint mb-0">
+    {% if puede_pasar_borrador %}
+    En <strong>En visita</strong> el siguiente paso es <em>Pasar a borrador</em>. Pend.Rev. se habilita después, en Borrador.
+    {% elif puede_enviar_revision %}
+    Checklist listo → <em>Enviar a revisión</em> (pasa a Pendiente revisión).
+    {% elif puede_iniciar_visita %}
+    Empiece con <em>Iniciar visita</em>.
+    {% else %}
+    También están al final, panel «3. Flujo del caso».
+    {% endif %}
+  </p>
+</div>
+{% endif %}
+
+<details class="cpeh-note-fold mb-2">
+  <summary><i class="fas fa-info-circle"></i> Guía del formulario (orden sugerido)</summary>
+  <div class="cpeh-note-fold-body">
+    En cada sección verá un recuadro didáctico (objetivo, qué rellenar, clasificaciones y ejemplo).
+    Orden: validar precarga (3) → visita (4–8) → metrados (9) → decisión (10) →
+    fotos/croquis (§11, solo en esta ficha; mín. {{ min_fotos_informe|default:3 }}) → resumen (12) → enviar a revisión.
+    Use «Guardar y continuar editando» mientras trabaja (barra superior o panel 2 abajo).
+    En §5 marque también <strong>Daño losas</strong>; el detalle va en §6 (bloque Losas).
+  </div>
+</details>
+{% endif %}
+{{ block.super }}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+{% if original.pk %}
+
+{% if n_fotos_adjuntas|default:0 < min_fotos_informe|default:3 %}
+<div class="cpeh-alert-fotos mb-3">
+  <i class="fas fa-camera"></i>
+  Faltan fotos para <strong>elevar / PDF</strong>:
+  <strong>{{ n_fotos_adjuntas|default:0 }}/{{ min_fotos_informe|default:3 }}</strong>
+  en «Fotos de evidencia».
+  <em>No bloquean Guardar ni Cargar Excel.</em>
+</div>
+{% endif %}
+
+{# ========== 1. HERRAMIENTAS ========== #}
+<section class="cpeh-panel cpeh-panel-herramientas mb-3">
+  <header class="cpeh-panel-head">
+    <span class="cpeh-panel-head-title"><i class="fas fa-toolbox"></i> 1. Herramientas (Excel / PDF)</span>
+  </header>
+  <div class="cpeh-panel-body">
+    <div class="cpeh-excel-banner mb-2">
+      <strong>Excel:</strong> descargar → llenar en campo → cargar.
+      <em>No exige PDF ni fotos.</em>
+    </div>
+    <div class="cpeh-action-grid">
+      <div class="cpeh-action-card">
+        <a href="{% url 'export_excel_informe' original.pk %}" class="btn btn-outline-success btn-block" target="_blank" rel="noopener">
+          <i class="fas fa-file-excel"></i> {% trans "Descargar plantilla Excel" %}
+        </a>
+        <p class="cpeh-btn-hint">Archivo para llenar en campo (offline).</p>
+      </div>
+      <div class="cpeh-action-card">
+        <a href="{% url 'cargar_excel_caso' original.pk %}" class="btn btn-success btn-block">
+          <i class="fas fa-file-upload"></i> {% trans "Cargar Excel llenado" %}
+        </a>
+        <p class="cpeh-btn-hint">Sube el Excel; actualiza esta ficha. Sin PDF.</p>
+      </div>
+      <div class="cpeh-action-card cpeh-action-card-optional">
+        {% if n_fotos_adjuntas|default:0 >= min_fotos_informe|default:3 %}
+        <a href="{% url 'admin:inspecciones_casorojo_pdf' original.pk %}" class="btn btn-outline-danger btn-block" target="_blank" rel="noopener">
+          <i class="fas fa-file-pdf"></i> {% trans "Ver PDF del sistema" %}
+        </a>
+        <p class="cpeh-btn-hint">Opcional. Informe PDF con los datos actuales.</p>
+        {% else %}
+        <button type="button" class="btn btn-outline-secondary btn-block" disabled>
+          <i class="fas fa-file-pdf"></i> PDF opcional (faltan fotos {{ n_fotos_adjuntas|default:0 }}/{{ min_fotos_informe|default:3 }})
+        </button>
+        <p class="cpeh-btn-hint">El PDF es opcional. Puede guardar y cargar Excel sin él.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ========== 2. GUARDAR (cada botón + descripción) ========== #}
+<section class="cpeh-panel cpeh-panel-guardar mb-3" id="cpeh-panel-guardar">
+  <header class="cpeh-panel-head">
+    <span class="cpeh-panel-head-title"><i class="fas fa-save"></i> 2. Guardar cambios</span>
+  </header>
+  <div class="cpeh-panel-body">
+    <div class="cpeh-action-grid">
+      <div class="cpeh-action-card">
+        <button type="submit" name="_save" class="btn btn-success btn-block">
+          <i class="fas fa-save"></i> {% trans "Guardar" %}
+        </button>
+        <p class="cpeh-btn-hint">Guarda y vuelve al listado. <em>No</em> aprueba el caso.</p>
+      </div>
+      <div class="cpeh-action-card">
+        <button type="submit" name="_continue" class="btn btn-primary btn-block">
+          <i class="fas fa-edit"></i> {% trans "Guardar y continuar editando" %}
+        </button>
+        <p class="cpeh-btn-hint">Guarda y se queda en esta ficha (recomendado). Conserva lo llenado.</p>
+      </div>
+      {% if has_delete_permission %}
+      <div class="cpeh-action-card">
+        <a href="{% url opts|admin_urlname:'delete' original.pk|admin_urlquote %}" class="btn btn-danger btn-block">
+          <i class="fas fa-trash"></i> {% trans "Eliminar" %}
+        </a>
+        <p class="cpeh-btn-hint">Borra el caso (solo admin). Irreversible.</p>
+      </div>
+      {% endif %}
+      <div class="cpeh-action-card">
+        <a href="{% url opts|admin_urlname:'history' original.pk|admin_urlquote %}" class="btn btn-outline-secondary btn-block">
+          <i class="fas fa-history"></i> {% trans "Histórico" %}
+        </a>
+        <p class="cpeh-btn-hint">Ver ediciones y cambios de estado del caso.</p>
+      </div>
+    </div>
+    {# Oculto: botones nativos de Django/Jazzmin (evita duplicar) #}
+    <div class="cpeh-submit-native-hide" aria-hidden="true" style="display:none !important;">
+      {{ block.super }}
+    </div>
+  </div>
+</section>
+
+{# ========== 3. FLUJO ========== #}
+<section class="cpeh-panel cpeh-panel-flujo mb-3" id="cpeh-panel-flujo">
+  <header class="cpeh-panel-head">
+    <span class="cpeh-panel-head-title"><i class="fas fa-flag-checkered"></i> 3. Flujo del caso</span>
+    {% if estado_actual %}<span class="cpeh-estado-pill">{{ estado_actual }}</span>{% endif %}
+  </header>
+  <div class="cpeh-panel-body">
+    {% include "includes/cpeh_guia_estados_rapida.html" with estado_actual=estado_actual %}
+
+    {% if mostrar_aprobar or mostrar_devolver or mostrar_enviar_revision or mostrar_marcar_revisado or mostrar_publicar or mostrar_iniciar_visita or mostrar_pasar_borrador %}
+    <p class="cpeh-panel-lead">Acciones de estado. Solo se habilitan cuando el caso está en el paso correcto.</p>
+    <div class="cpeh-action-grid cpeh-action-grid-decision">
+      {% if mostrar_iniciar_visita %}
+      <div class="cpeh-action-card cpeh-action-card-info">
+        {% if puede_iniciar_visita %}
+        <button type="button" class="btn btn-primary btn-block"
+                onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_iniciar_visita' original.pk %}', 'iniciar');">
+          <i class="fas fa-walking"></i> Iniciar visita
+        </button>
+        <p class="cpeh-btn-hint">Empieza el levantamiento → <strong>En visita</strong>.</p>
+        {% else %}
+        <button type="button" class="btn btn-primary btn-block" disabled>
+          <i class="fas fa-walking"></i> Iniciar visita
+        </button>
+        <p class="cpeh-btn-hint">Activo en estado <strong>Pendiente verificación</strong>.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if mostrar_pasar_borrador %}
+      <div class="cpeh-action-card cpeh-action-card-info">
+        {% if puede_pasar_borrador %}
+        <button type="button" class="btn btn-secondary btn-block"
+                onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_pasar_borrador' original.pk %}', 'borrador');">
+          <i class="fas fa-file-alt"></i> Pasar a borrador
+        </button>
+        <p class="cpeh-btn-hint">Datos de campo listos → <strong>Borrador</strong> (luego podrá enviar a revisión).</p>
+        {% else %}
+        <button type="button" class="btn btn-secondary btn-block" disabled>
+          <i class="fas fa-file-alt"></i> Pasar a borrador
+        </button>
+        <p class="cpeh-btn-hint">Activo en estado <strong>En visita</strong>.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if mostrar_enviar_revision %}
+      <div class="cpeh-action-card cpeh-action-card-info">
+        {% if puede_enviar_revision %}
+        <button type="button" class="btn btn-primary btn-block"
+                onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_enviar_revision' original.pk %}', 'enviar');">
+          <i class="fas fa-paper-plane"></i> {% trans "Enviar a revisión" %}
+        </button>
+        <p class="cpeh-btn-hint">Informe listo → <strong>Pendiente revisión</strong> (cola del revisor).</p>
+        {% else %}
+        <button type="button" class="btn btn-primary btn-block" disabled>
+          <i class="fas fa-paper-plane"></i> {% trans "Enviar a revisión" %}
+        </button>
+        <p class="cpeh-btn-hint">Activo en estado <strong>Borrador</strong>.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if mostrar_marcar_revisado %}
+      <div class="cpeh-action-card cpeh-action-card-info">
+        {% if puede_marcar_revisado %}
+        <button type="button" class="btn btn-info btn-block"
+                onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_marcar_revisado' original.pk %}', 'marcar');">
+          <i class="fas fa-clipboard-check"></i> Marcar como revisado
+        </button>
+        <p class="cpeh-btn-hint">Control técnico hecho → estado <strong>Revisado</strong>.</p>
+        {% else %}
+        <button type="button" class="btn btn-info btn-block" disabled>
+          <i class="fas fa-clipboard-check"></i> Marcar como revisado
+        </button>
+        <p class="cpeh-btn-hint">Activo en estado <strong>Pendiente revisión</strong>.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if mostrar_devolver %}
+      <div class="cpeh-action-card cpeh-action-card-warn">
+        {% if puede_devolver %}
+        <button type="button" class="btn btn-warning btn-block"
+                onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_devolver' original.pk %}', 'devolver');">
+          <i class="fas fa-undo"></i> {% trans "Devolver a borrador" %}
+        </button>
+        <p class="cpeh-btn-hint">El ingeniero debe corregir. Estado → <strong>Borrador</strong>.</p>
+        {% else %}
+        <button type="button" class="btn btn-warning btn-block" disabled>
+          <i class="fas fa-undo"></i> {% trans "Devolver a borrador" %}
+        </button>
+        <p class="cpeh-btn-hint">Activo en <strong>Pendiente revisión</strong> o <strong>Revisado</strong>.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if mostrar_aprobar %}
+      <div class="cpeh-action-card cpeh-action-card-ok">
+        {% if puede_aprobar %}
+        <button type="button" class="btn btn-success btn-block"
+                onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_aprobar' original.pk %}', 'aprobar');">
+          <i class="fas fa-check-circle"></i> {% trans "Aprobar caso" %}
+        </button>
+        <p class="cpeh-btn-hint">Dictamen validado → estado <strong>Aprobado</strong>.</p>
+        {% else %}
+        <button type="button" class="btn btn-success btn-block" disabled>
+          <i class="fas fa-check-circle"></i> {% trans "Aprobar caso" %}
+        </button>
+        <p class="cpeh-btn-hint">Activo en <strong>Pendiente revisión</strong> o <strong>Revisado</strong>.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if mostrar_publicar %}
+      <div class="cpeh-action-card cpeh-action-card-pub">
+        {% if puede_publicar %}
+        <button type="button" class="btn btn-dark btn-block"
+                onclick="return window.cpehCambioEstado && window.cpehCambioEstado('{% url 'admin:inspecciones_casorojo_publicar' original.pk %}', 'publicar');">
+          <i class="fas fa-bullhorn"></i> {% trans "Publicar caso" %}
+        </button>
+        <p class="cpeh-btn-hint">Cierre para tablero/reportes → <strong>Publicado</strong>.</p>
+        {% else %}
+        <button type="button" class="btn btn-dark btn-block" disabled>
+          <i class="fas fa-bullhorn"></i> {% trans "Publicar caso" %}
+        </button>
+        <p class="cpeh-btn-hint">Activo en estado <strong>Aprobado</strong>.</p>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% else %}
+    <p class="cpeh-panel-lead mb-0">
+      En este estado no hay botones de flujo para su rol.
+      Abra el menú rápido arriba para ver qué significa el estado y quién debe actuar.
+    </p>
+    {% endif %}
+  </div>
+</section>
+
+{# ========== 4. AYUDA Y ADJUNTOS ========== #}
+<section class="cpeh-panel cpeh-panel-mas mb-2">
+  <header class="cpeh-panel-head">
+    <span class="cpeh-panel-head-title"><i class="fas fa-folder-open"></i> 4. Ayuda y adjuntos</span>
+  </header>
+  <div class="cpeh-panel-body cpeh-panel-body-folds">
+    <details class="cpeh-note-fold mb-2">
+      <summary><i class="fas fa-question-circle"></i> Cómo usar Excel y PDF</summary>
+      <div class="cpeh-note-fold-body">
+        1) Descargue la plantilla → 2) complete en campo (sin §11) → 3) <strong>Cargar Excel llenado</strong>.
+        La sección 11 (fotos, croquis, firmas) <strong>solo se carga en el sistema</strong>, no en el Excel.
+        Croquis en «Croquis adjuntos»; mín. {{ min_fotos_informe|default:3 }} fotos solo para elevar o PDF.
+        <strong>Cargar Excel no exige PDF ni fotos.</strong>
+      </div>
+    </details>
+
+    {% if original.croquis.all %}
+    <details class="cpeh-note-fold mb-2">
+      <summary><i class="fas fa-drafting-compass"></i> Croquis adjuntos ({{ original.croquis.count }})</summary>
+      <div class="cpeh-note-fold-body">
+        <ul class="mb-0 mt-1">
+          {% for doc in original.croquis.all %}
+          <li>
+            <a href="{% url 'ver_croquis_adjunto' doc.pk %}" target="_blank" rel="noopener">
+              {{ doc.titulo|default:doc.nombre_archivo_origen|default:"Croquis" }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </details>
+    {% endif %}
+
+    {% if original.informes_pdf.all %}
+    <details class="cpeh-note-fold mb-2">
+      <summary><i class="fas fa-file-pdf"></i> Informes PDF adjuntos ({{ original.informes_pdf.count }})</summary>
+      <div class="cpeh-note-fold-body">
+        <ul class="mb-0 mt-1">
+          {% for doc in original.informes_pdf.all %}
+          <li>
+            <a href="{% url 'ver_informe_pdf_adjunto' doc.pk %}" target="_blank" rel="noopener">
+              {{ doc.titulo|default:doc.nombre_archivo_origen }}
+            </a>
+            {% if doc.tipo_informe %}<span class="text-muted"> — {{ doc.tipo_informe }}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </details>
+    {% endif %}
+
+    {% if es_admin_reset %}
+    <details class="cpeh-note-fold cpeh-note-fold-warn mb-0">
+      <summary><i class="fas fa-undo-alt"></i> Admin — resetear datos de prueba</summary>
+      <div class="cpeh-note-fold-body">
+        Borra visita, Excel, PDF, croquis, fotos, metrados e historial.
+        Conserva precarga Habitable/ranking y asignación.
+        <div class="mt-2">
+          <button type="button" class="btn btn-outline-danger btn-sm"
+                  onclick="return window.cpehResetearPrueba && window.cpehResetearPrueba('{% url 'admin:inspecciones_casorojo_resetear_prueba' original.pk %}');">
+            <i class="fas fa-undo-alt"></i> {% trans "Resetear datos de prueba" %}
+            {% if n_adjuntos_prueba or n_historial_estados %}
+              (adj. {{ n_adjuntos_prueba|default:0 }} · hist. {{ n_historial_estados|default:0 }})
+            {% endif %}
+          </button>
+          <p class="cpeh-btn-hint mb-0 mt-1">Solo pruebas. No usar en casos reales.</p>
+        </div>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+</section>
+
+{# ========== 5. CHECKLIST DE CIERRE ========== #}
+{% if checklist_cierre %}
+<section class="cpeh-panel cpeh-panel-checklist mb-3" id="cpeh-checklist-cierre">
+  <header class="cpeh-panel-head">
+    <span class="cpeh-panel-head-title">
+      <i class="fas fa-tasks"></i> 5. Checklist de cierre
+    </span>
+    <span class="cpeh-checklist-score {% if checklist_cierre.listo %}is-ready{% endif %}">
+      {{ checklist_cierre.ok }}/{{ checklist_cierre.total }}
+      {% if checklist_cierre.listo %}· listo para elevar{% else %}· incompleto{% endif %}
+    </span>
+  </header>
+  <div class="cpeh-panel-body">
+    <p class="cpeh-panel-lead">
+      Requisitos para <strong>Enviar a revisión</strong>, agrupados como en el formulario (§3…§12).
+      Dentro de cada bloque, lo pendiente aparece primero. Guardar y Cargar Excel funcionan aunque falten ítems.
+    </p>
+    {% if checklist_cierre.groups %}
+    <div class="cpeh-checklist-groups">
+      {% for g in checklist_cierre.groups %}
+      <div class="cpeh-checklist-group {% if g.listo %}is-ready{% else %}is-open{% endif %}">
+        <div class="cpeh-checklist-group-head">
+          <span class="cpeh-checklist-group-title">{{ g.title }}</span>
+          <span class="cpeh-checklist-group-score {% if g.listo %}is-ready{% endif %}">{{ g.ok }}/{{ g.total }}</span>
+        </div>
+        <ul class="cpeh-checklist">
+          {% for it in g.items %}
+          <li class="cpeh-checklist-item {% if it.ok %}is-ok{% else %}is-pending{% endif %}">
+            <span class="cpeh-checklist-mark" aria-hidden="true">{% if it.ok %}✓{% else %}○{% endif %}</span>
+            <span class="cpeh-checklist-label">{{ it.label }}</span>
+            {% if it.hint %}<span class="cpeh-checklist-hint">{{ it.hint }}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <ul class="cpeh-checklist">
+      {% for it in checklist_cierre.items %}
+      <li class="cpeh-checklist-item {% if it.ok %}is-ok{% else %}is-pending{% endif %}">
+        <span class="cpeh-checklist-mark" aria-hidden="true">{% if it.ok %}✓{% else %}○{% endif %}</span>
+        <span class="cpeh-checklist-label">{{ it.label }}</span>
+        {% if it.hint %}<span class="cpeh-checklist-hint">{{ it.hint }}</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% else %}
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+window.cpehResetearPrueba = function (url) {
+  if (!url) return false;
+  if (!window.confirm(
+    "Resetear este caso para pruebas?\n\n" +
+    "SE BORRA: visita, validacion, Excel cargado, PDF/croquis/fotos, metrados e historial.\n" +
+    "SE CONSERVA: precarga Habitable + ranking, GPS y asignacion.\n" +
+    "Estado -> Pendiente verificacion."
+  )) {
+    return false;
+  }
+  return window.cpehPostAccion(url);
+};
+
+window.cpehCambioEstado = function (url, tipo) {
+  if (!url) return false;
+  var msgs = {
+    iniciar: "¿Iniciar VISITA?\n\nEstado → «En visita». Continúe el levantamiento en campo.",
+    borrador: "¿Pasar a BORRADOR?\n\nEstado → «Borrador». Desde ahí podrá enviar a revisión cuando el checklist esté listo.\n(Pendiente revisión NO se elige desde En visita.)",
+    aprobar: "¿Confirma APROBAR este caso?\n\nEl estado pasará a «Aprobado».",
+    devolver: "¿Devolver el caso a BORRADOR?\n\nEl ingeniero deberá corregir y volver a enviarlo.",
+    enviar: "¿Enviar a REVISIÓN?\n\nEstado → «Pendiente revisión» (cola del revisor).\nDebe cumplir fotos, croquis y reglas de cierre.",
+    marcar: "¿Marcar como REVISADO?\n\nConfirma que el control técnico del dictamen está hecho.",
+    publicar: "¿PUBLICAR este caso?\n\nQuedará cerrado para tablero y reportes."
+  };
+  if (!window.confirm(msgs[tipo] || "¿Confirma esta acción?")) {
+    return false;
+  }
+  return window.cpehPostAccion(url);
+};
+
+window.cpehPostAccion = function (url) {
+  var tokenEl = document.querySelector("input[name=csrfmiddlewaretoken]");
+  if (!tokenEl || !tokenEl.value) {
+    window.alert("No se encontro el token CSRF. Recargue la pagina e intente de nuevo.");
+    return false;
+  }
+  var f = document.createElement("form");
+  f.method = "POST";
+  f.action = url;
+  f.style.display = "none";
+  var i = document.createElement("input");
+  i.type = "hidden";
+  i.name = "csrfmiddlewaretoken";
+  i.value = tokenEl.value;
+  f.appendChild(i);
+  document.body.appendChild(f);
+  f.submit();
+  return false;
+};
+
+(function () {
+  // Ocultar botones nativos duplicados de Jazzmin (Guardar / añadir otro / Histórico suelto)
+  document.querySelectorAll(".cpeh-submit-native-hide, .cpeh-submit-native-hide *").forEach(function () {});
+  document.querySelectorAll(
+    'input[name="_addanother"], button[name="_addanother"]'
+  ).forEach(function (el) {
+    var wrap = el.closest(".form-group") || el;
+    wrap.style.display = "none";
+  });
+  document.querySelectorAll(".submit-row button, .submit-row input[type=submit], .submit-row a").forEach(function (el) {
+    if (el.closest(".cpeh-panel-guardar .cpeh-action-grid")) return;
+    var name = (el.getAttribute("name") || "");
+    var txt = (el.textContent || el.value || "").toLowerCase();
+    if (
+      name === "_addanother" ||
+      name === "_save" ||
+      name === "_continue" ||
+      txt.indexOf("guardar") >= 0 ||
+      txt.indexOf("eliminar") >= 0 ||
+      txt.indexOf("histórico") >= 0 ||
+      txt.indexOf("historico") >= 0 ||
+      txt.indexOf("add another") >= 0
+    ) {
+      var row = el.closest(".submit-row") || el.closest(".form-group") || el;
+      if (row && !row.closest(".cpeh-action-grid")) row.style.display = "none";
+    }
+  });
+})();
+
+(function () {
+  function valOf(id) {
+    var el = document.getElementById(id);
+    return el ? (el.value || "") : "";
+  }
+  function needFix(v) {
+    return v === "No" || v === "Parcial / corregir" || v === "Insuficiente evidencia";
+  }
+  function rowOf(name) {
+    return document.querySelector(".form-row.field-" + name)
+      || document.querySelector(".field-" + name);
+  }
+  function show(name, on) {
+    var row = rowOf(name);
+    if (!row) return;
+    row.style.display = on ? "" : "none";
+    if (on) {
+      row.style.background = "#fff8e6";
+      row.style.padding = "0.35rem 0.5rem";
+      row.style.borderRadius = "6px";
+    } else {
+      row.style.background = "";
+      row.style.padding = "";
+    }
+  }
+  function syncCorr() {
+    var edif = needFix(valOf("id_val_edificio"));
+    var etiq = needFix(valOf("id_val_etiqueta"));
+    var geo = needFix(valOf("id_val_geometria"));
+    var rank = needFix(valOf("id_val_ranking"));
+    show("corr_nombre", edif);
+    show("corr_direccion", edif);
+    show("corr_muni_parr", edif);
+    show("corr_etiqueta", etiq);
+    show("corr_pisos", geo);
+    show("corr_gps", geo);
+    show("corr_score", rank);
+    show("corr_banda", rank);
+    var any = edif || etiq || geo || rank;
+    var nota = rowOf("correcciones");
+    if (nota) {
+      var help = nota.querySelector(".cpeh-corr-help");
+      if (!help) {
+        help = document.createElement("div");
+        help.className = "help cpeh-corr-help";
+        help.style.marginTop = "0.35rem";
+        nota.appendChild(help);
+      }
+      help.textContent = any
+        ? "Si ya llenó los campos «… correcto» (fondo crema), la nota adicional es opcional."
+        : "Solo hace falta nota o valores correctos si marcó No / Parcial / Insuficiente.";
+    }
+  }
+  ["id_val_edificio", "id_val_etiqueta", "id_val_geometria", "id_val_ranking"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("change", syncCorr);
+  });
+  syncCorr();
+})();
+
+(function () {
+  // Evita doble clic en Guardar y continuar (móvil suele reenviar y satura workers).
+  var form = document.getElementById("casorojo_form") || document.querySelector("form");
+  if (!form) return;
+  var locking = false;
+  form.addEventListener("submit", function (e) {
+    if (locking) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    locking = true;
+    var submitter = e.submitter;
+    if (submitter && submitter.name) {
+      var h = document.createElement("input");
+      h.type = "hidden";
+      h.name = submitter.name;
+      h.value = submitter.value || "1";
+      form.appendChild(h);
+    }
+    form.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(function (btn) {
+      btn.disabled = true;
+      if (btn.tagName === "BUTTON") {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando…';
+      }
+    });
+  }, true);
+})();
+</script>
+{% endblock %}

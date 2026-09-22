@@ -1,0 +1,667 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin log %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  /* Filtros del dashboard: una sola línea (evita caché de CSS viejo) */
+  .cpeh-ra-filters-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-end !important;
+    gap: 0.3rem 0.4rem !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+  }
+  .cpeh-ra-field {
+    flex: 0 0 auto !important;
+    width: 6.6rem !important;
+    min-width: 6rem !important;
+    max-width: 7.5rem !important;
+  }
+  .cpeh-ra-field--sm {
+    width: 5.8rem !important;
+    min-width: 5.4rem !important;
+    max-width: 6.2rem !important;
+  }
+  .cpeh-ra-field--md {
+    width: 7.2rem !important;
+    min-width: 6.5rem !important;
+    max-width: 8rem !important;
+  }
+  .cpeh-ra-field--date {
+    width: 10.8rem !important;
+    min-width: 10.2rem !important;
+    max-width: 11.5rem !important;
+  }
+  .cpeh-ra-field--search {
+    width: 12.5rem !important;
+    min-width: 10.5rem !important;
+    max-width: 16rem !important;
+    flex: 1 1 12rem !important;
+  }
+  .cpeh-ra-field--date input[type="date"] {
+    cursor: pointer;
+    min-height: 1.9rem;
+    padding-right: 0.2rem !important;
+  }
+  .cpeh-ra-field--date input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 1 !important;
+    cursor: pointer;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0 0.1rem 0 0.15rem;
+    padding: 0.12rem;
+    border-radius: 3px;
+    background-color: #e8eef8;
+  }
+  .cpeh-ra-field--date input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    background-color: #d4e0f5;
+  }
+  .cpeh-ra-actions {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+  }
+  .cpeh-recent-table thead th.cpeh-th-sort {
+    white-space: nowrap;
+  }
+  .cpeh-recent-table thead th.cpeh-th-sort a {
+    color: #fff !important;
+    font-weight: 700;
+    text-decoration: none !important;
+  }
+  .cpeh-recent-table thead th.cpeh-th-sort a:hover {
+    color: #fde68a !important;
+    text-decoration: underline !important;
+  }
+  .cpeh-recent-table thead th.cpeh-th-sort.is-active a {
+    color: #fde68a !important;
+  }
+  .cpeh-sort-arrow {
+    font-size: 0.75em;
+    margin-left: 0.15rem;
+  }
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block content_title %} {% trans 'Dashboard' %} {% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+        <li class="breadcrumb-item">{% trans 'Dashboard' %}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="cpeh-dashboard-wrap col-12">
+  <div class="cpeh-hero-card card shadow-sm border-0 mb-4">
+    <div class="ve-tricolor-bar" aria-hidden="true">
+      <span class="ve-amarillo"></span>
+      <span class="ve-azul"></span>
+      <span class="ve-rojo"></span>
+    </div>
+    <div class="ve-hero-stars" aria-hidden="true">★ ★ ★ ★ ★ ★ ★ ★</div>
+    <div class="card-body cpeh-hero-body">
+      <div class="cpeh-hero-brand">
+        {% include "includes/cpeh_nombre_institucional.html" %}
+        <div class="cpeh-hero-program">
+          <h2 class="cpeh-hero-title mb-1">Seguimiento inspecciones ROJO — Fase II</h2>
+          <p class="cpeh-hero-sub mb-2">
+            Panel de control para la 2.ª ronda de verificación de edificaciones con etiqueta ROJO
+            tras el sismo del 24-jun-2026.
+          </p>
+          <div class="cpeh-hero-guia-pdf">
+            <a href="{% url 'guia_usuario_pdf' %}" class="btn btn-sm btn-light cpeh-btn-guia-pdf" target="_blank" rel="noopener">
+              <i class="fas fa-file-pdf" aria-hidden="true"></i>
+              Guía de usuario (PDF)
+              {% if guia_usuario_aprobada %}
+              <span class="cpeh-badge-status cpeh-badge-ok">Aprobada</span>
+              {% else %}
+              <span class="cpeh-badge-status cpeh-badge-draft">Borrador</span>
+              {% endif %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cpeh-kpi-strip mb-3">
+    {% for kpi in dashboard_kpis %}
+    <a href="{{ kpi.url }}" class="cpeh-kpi-chip {{ kpi.class }} text-decoration-none" title="{{ kpi.label }}">
+      <i class="{{ kpi.icon }} cpeh-kpi-chip-icon" aria-hidden="true"></i>
+      <span class="cpeh-kpi-chip-value">{{ kpi.value }}</span>
+      <span class="cpeh-kpi-chip-label">{{ kpi.label }}</span>
+    </a>
+    {% endfor %}
+    <a href="{% url 'tablero_operacion' %}" class="cpeh-kpi-chip cpeh-kpi-chip-operacion text-decoration-none" title="Dashboard" target="_blank" rel="noopener">
+      <i class="fas fa-chart-line cpeh-kpi-chip-icon" aria-hidden="true"></i>
+      <span class="cpeh-kpi-chip-value"><i class="fas fa-external-link-alt" style="font-size:0.85rem"></i></span>
+      <span class="cpeh-kpi-chip-label">Dashboard</span>
+    </a>
+  </div>
+
+  {% include "includes/cpeh_guia_estados_rapida.html" %}
+
+  {% if dashboard_es_revisor %}
+  <div class="alert alert-info border-0 shadow-sm mb-3" role="status">
+    <strong>Bandeja por revisión:</strong>
+    los casos elevados a <em>Pendiente revisión</em> aparecen aquí para <strong>todos</strong> los revisores
+    (no hace falta asignar revisor).
+    Pulse el chip <strong>Bandeja por revisión</strong> o abra
+    <a href="{{ dashboard_url_cola }}" class="alert-link">esta lista filtrada</a>.
+    {% if dashboard_vacio_cola_msg %}
+    <br><span class="text-muted">{{ dashboard_vacio_cola_msg }}</span>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="card shadow-sm border-0 mb-4" id="casos-recientes">
+    <div class="card-header cpeh-card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <span><i class="fas fa-list mr-2"></i> {{ dashboard_titulo_recientes|default:"Casos recientes" }}</span>
+      <div class="cpeh-hdr-pager">
+        {% if cr_paginacion and cr_paginacion.num_pages > 1 %}
+          {% if cr_paginacion.has_prev %}
+          <a class="cpeh-hdr-page-btn" href="{{ cr_paginacion.prev_url }}">‹ Anterior</a>
+          {% else %}
+          <span class="cpeh-hdr-page-btn is-disabled">‹ Anterior</span>
+          {% endif %}
+        {% endif %}
+        {% if cr_total %}
+        <span class="badge cpeh-ra-count">
+          {% if cr_paginacion %}
+            {{ cr_paginacion.showing_from }}–{{ cr_paginacion.showing_to }} de {{ cr_total }}
+            · pág. {{ cr_paginacion.page }}/{{ cr_paginacion.num_pages }}
+          {% else %}
+            {{ dashboard_recientes|length }} de {{ cr_total }}
+          {% endif %}
+        </span>
+        {% endif %}
+        {% if cr_paginacion and cr_paginacion.num_pages > 1 %}
+          {% if cr_paginacion.has_next %}
+          <a class="cpeh-hdr-page-btn" href="{{ cr_paginacion.next_url }}">Siguiente ›</a>
+          {% else %}
+          <span class="cpeh-hdr-page-btn is-disabled">Siguiente ›</span>
+          {% endif %}
+        {% endif %}
+        {% if dashboard_es_revisor %}
+        <a class="btn btn-sm btn-outline-light" href="{{ dashboard_url_cola }}">Ver bandeja por revisión</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-body">
+      <form method="get" action="{% url 'admin:index' %}#casos-recientes" class="cpeh-ra-filters mb-3">
+        {% for k, v in cr_hidden_ra %}
+        <input type="hidden" name="{{ k }}" value="{{ v }}">
+        {% endfor %}
+        {% if cr_filtros.orden %}
+        <input type="hidden" name="cr_orden" value="{{ cr_filtros.orden }}">
+        <input type="hidden" name="cr_dir" value="{{ cr_filtros.dir }}">
+        {% endif %}
+        <div class="cpeh-ra-filters-row">
+          <label class="cpeh-ra-field cpeh-ra-field--search">
+            <span>Buscar</span>
+            <input type="search" name="cr_q" class="form-control form-control-sm"
+                   value="{{ cr_filtros.q }}"
+                   placeholder="ID, edificio, municipio…"
+                   autocomplete="off">
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--sm">
+            <span>Brigada</span>
+            <select name="cr_equipo" class="form-control form-control-sm">
+              <option value="">Todas</option>
+              {% for eq in cr_equipos %}
+              <option value="{{ eq.numero }}" {% if cr_filtros.equipo == eq.numero %}selected{% endif %}>{{ eq.etiqueta }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--md">
+            <span>Coordinador</span>
+            <select name="cr_coord" class="form-control form-control-sm">
+              <option value="">Todos</option>
+              {% for u in cr_coordinadores %}
+              <option value="{{ u.pk }}" {% if cr_filtros.coord == u.pk|stringformat:"s" %}selected{% endif %}>
+                {{ u.get_full_name|default:u.username }}
+              </option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--md">
+            <span>Decisión</span>
+            <select name="cr_decision" class="form-control form-control-sm">
+              <option value="">Todas</option>
+              {% for val, label in cr_decisiones %}
+              <option value="{{ val }}" {% if cr_filtros.decision == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--md">
+            <span>Estado</span>
+            <select name="cr_estado" class="form-control form-control-sm">
+              <option value="">Todos</option>
+              {% for val, label in cr_estados %}
+              <option value="{{ val }}" {% if cr_filtros.estado == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--sm">
+            <span>Campo fecha</span>
+            <select name="cr_fecha_campo" class="form-control form-control-sm">
+              <option value="actualizacion" {% if cr_filtros.fecha_campo == "actualizacion" %}selected{% endif %}>Actualiz.</option>
+              <option value="visita" {% if cr_filtros.fecha_campo == "visita" %}selected{% endif %}>Visita</option>
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--date" title="Elegir fecha en el calendario">
+            <span>Desde</span>
+            <input type="date" name="cr_fecha_desde" class="form-control form-control-sm"
+                   value="{{ cr_filtros.fecha_desde }}"
+                   onclick="this.showPicker && this.showPicker()">
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--date" title="Elegir fecha en el calendario">
+            <span>Hasta</span>
+            <input type="date" name="cr_fecha_hasta" class="form-control form-control-sm"
+                   value="{{ cr_filtros.fecha_hasta }}"
+                   onclick="this.showPicker && this.showPicker()">
+          </label>
+          <div class="cpeh-ra-actions">
+            <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
+            {% if cr_activo %}
+            <a href="{{ cr_limpiar_url }}" class="btn btn-sm btn-outline-secondary">Limpiar</a>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+
+      {% if cr_paginacion and cr_paginacion.num_pages > 1 %}
+      <nav class="cpeh-pager cpeh-pager-top" aria-label="Paginación casos (arriba)">
+        <div class="cpeh-pager-info">
+          Página {{ cr_paginacion.page }} de {{ cr_paginacion.num_pages }}
+          · {{ cr_paginacion.showing_from }}–{{ cr_paginacion.showing_to }} de {{ cr_total }}
+        </div>
+        <div class="cpeh-pager-btns">
+          {% if cr_paginacion.first_url %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.first_url }}" title="Primera">«</a>
+          {% endif %}
+          {% if cr_paginacion.has_prev %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.prev_url }}">‹ Anterior</a>
+          {% else %}
+          <span class="cpeh-pager-btn is-disabled">‹ Anterior</span>
+          {% endif %}
+          {% for p in cr_paginacion.pages %}
+          <a class="cpeh-pager-btn{% if p.active %} is-active{% endif %}" href="{{ p.url }}">{{ p.n }}</a>
+          {% endfor %}
+          {% if cr_paginacion.has_next %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.next_url }}">Siguiente ›</a>
+          {% else %}
+          <span class="cpeh-pager-btn is-disabled">Siguiente ›</span>
+          {% endif %}
+          {% if cr_paginacion.last_url %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.last_url }}" title="Última">»</a>
+          {% endif %}
+        </div>
+      </nav>
+      {% endif %}
+
+      {% if not dashboard_recientes %}
+        <p class="mb-0 cpeh-ra-empty">
+          {% if dashboard_es_revisor and dashboard_vacio_cola_msg and not cr_activo %}
+            {{ dashboard_vacio_cola_msg }}
+          {% else %}
+            No hay casos con estos filtros.
+          {% endif %}
+        </p>
+        {% if dashboard_es_revisor and not cr_activo %}
+        <a class="btn btn-sm btn-primary mt-2" href="{{ dashboard_url_cola }}">Abrir lista filtrada (Pendiente revisión)</a>
+        {% endif %}
+      {% else %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 cpeh-recent-table">
+          <thead>
+            <tr>
+              {% for col in cr_sort_links %}
+              <th class="cpeh-th-sort{% if col.active %} is-active{% endif %}">
+                <a href="{{ col.url }}" title="Ordenar por {{ col.label }}">
+                  {{ col.label }}{% if col.arrow %} <span class="cpeh-sort-arrow">{{ col.arrow }}</span>{% endif %}
+                </a>
+              </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for caso in dashboard_recientes %}
+            <tr>
+              <td><a href="{% url 'admin:inspecciones_casorojo_change' caso.pk %}">{{ caso.hab_id }}</a></td>
+              <td>{{ caso.nombre_conf|default:caso.nombre_hab }}</td>
+              <td>{{ caso.score|default:"—" }}</td>
+              <td>
+                {% with d=caso.decision_D|default:"Pendiente" %}
+                <span class="badge badge-cpeh{% if d|slice:':2' == 'D1' %} badge-cpeh-d1{% elif d|slice:':2' == 'D2' %} badge-cpeh-d2{% elif d|slice:':2' == 'D3' %} badge-cpeh-d3{% elif d|slice:':2' == 'D4' %} badge-cpeh-d4{% elif d == 'Pendiente' %} badge-cpeh-pending{% endif %}">{{ d }}</span>
+                {% endwith %}
+              </td>
+              <td>{{ caso.estado_2da|default:"—" }}</td>
+              <td class="small" title="Última modificación en el sistema">{{ caso.updated_at|date:"d/m/Y H:i"|default:"—" }}</td>
+              <td>{{ caso.fecha_v2|date:"d/m/Y"|default:"—" }}</td>
+              <td class="small">
+                {% if caso.coordinador_asignado %}{{ caso.coordinador_asignado.get_full_name|default:caso.coordinador_asignado.username }}{% else %}—{% endif %}
+              </td>
+              <td class="small">{{ caso.equipo_label|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if cr_paginacion and cr_paginacion.num_pages > 1 %}
+      <nav class="cpeh-pager" aria-label="Páginas de casos">
+        <div class="cpeh-pager-info">
+          Página {{ cr_paginacion.page }} de {{ cr_paginacion.num_pages }}
+          · {{ cr_paginacion.per_page }} por página
+        </div>
+        <div class="cpeh-pager-btns">
+          {% if cr_paginacion.first_url %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.first_url }}" title="Primera">«</a>
+          {% endif %}
+          {% if cr_paginacion.has_prev %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.prev_url }}">‹ Anterior</a>
+          {% else %}
+          <span class="cpeh-pager-btn is-disabled">‹ Anterior</span>
+          {% endif %}
+          {% for p in cr_paginacion.pages %}
+          <a class="cpeh-pager-btn{% if p.active %} is-active{% endif %}" href="{{ p.url }}">{{ p.n }}</a>
+          {% endfor %}
+          {% if cr_paginacion.has_next %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.next_url }}">Siguiente ›</a>
+          {% else %}
+          <span class="cpeh-pager-btn is-disabled">Siguiente ›</span>
+          {% endif %}
+          {% if cr_paginacion.last_url %}
+          <a class="cpeh-pager-btn" href="{{ cr_paginacion.last_url }}" title="Última">»</a>
+          {% endif %}
+        </div>
+      </nav>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  {# Acciones recientes — ancho completo + filtros (brigada / coordinador / básicos) #}
+  <div class="card mb-4 cpeh-recent-actions-card" id="acciones-recientes">
+    <div class="card-header cpeh-card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <h5 class="m-0"><i class="fas fa-history mr-2"></i>{% trans 'Recent actions' %}</h5>
+      <div class="cpeh-hdr-pager">
+        {% if ra_alcance_restringido %}
+        <span class="badge badge-info">Solo sus casos</span>
+        {% endif %}
+        {% if ra_paginacion and ra_paginacion.num_pages > 1 %}
+          {% if ra_paginacion.has_prev %}
+          <a class="cpeh-hdr-page-btn" href="{{ ra_paginacion.prev_url }}">‹ Anterior</a>
+          {% else %}
+          <span class="cpeh-hdr-page-btn is-disabled">‹ Anterior</span>
+          {% endif %}
+        {% endif %}
+        {% if ra_total %}
+        <span class="badge cpeh-ra-count">
+          {% if ra_paginacion %}
+            {{ ra_paginacion.showing_from }}–{{ ra_paginacion.showing_to }} de {{ ra_total }}
+            · pág. {{ ra_paginacion.page }}/{{ ra_paginacion.num_pages }}
+          {% else %}
+            {{ ra_entries|length }} de {{ ra_total }}
+          {% endif %}
+        </span>
+        {% endif %}
+        {% if ra_paginacion and ra_paginacion.num_pages > 1 %}
+          {% if ra_paginacion.has_next %}
+          <a class="cpeh-hdr-page-btn" href="{{ ra_paginacion.next_url }}">Siguiente ›</a>
+          {% else %}
+          <span class="cpeh-hdr-page-btn is-disabled">Siguiente ›</span>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-body" id="recent-actions-module">
+      <form method="get" action="{% url 'admin:index' %}#acciones-recientes" class="cpeh-ra-filters mb-3">
+        {% for k, v in ra_hidden_cr %}
+        <input type="hidden" name="{{ k }}" value="{{ v }}">
+        {% endfor %}
+        <div class="cpeh-ra-filters-row">
+          <label class="cpeh-ra-field cpeh-ra-field--search">
+            <span>Buscar</span>
+            <input type="search" name="ra_q" class="form-control form-control-sm"
+                   value="{{ ra_filtros.q }}"
+                   placeholder="ID, caso, usuario…"
+                   autocomplete="off">
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--sm">
+            <span>Brigada</span>
+            <select name="ra_equipo" class="form-control form-control-sm">
+              <option value="">Todas</option>
+              {% for eq in ra_equipos %}
+              <option value="{{ eq.numero }}" {% if ra_filtros.equipo == eq.numero %}selected{% endif %}>{{ eq.etiqueta }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--md">
+            <span>Coordinador</span>
+            <select name="ra_coord" class="form-control form-control-sm">
+              <option value="">Todos</option>
+              {% for u in ra_coordinadores %}
+              <option value="{{ u.pk }}" {% if ra_filtros.coord == u.pk|stringformat:"s" %}selected{% endif %}>
+                {{ u.get_full_name|default:u.username }}
+              </option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--md">
+            <span>Quién editó</span>
+            <select name="ra_actor" class="form-control form-control-sm">
+              <option value="">Cualquiera</option>
+              {% for u in ra_actores %}
+              <option value="{{ u.pk }}" {% if ra_filtros.actor == u.pk|stringformat:"s" %}selected{% endif %}>
+                {{ u.username }}
+              </option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--sm">
+            <span>Tipo</span>
+            <select name="ra_tipo" class="form-control form-control-sm">
+              <option value="" {% if not ra_filtros.tipo %}selected{% endif %}>Todos</option>
+              <option value="change" {% if ra_filtros.tipo == "change" %}selected{% endif %}>Modificaciones</option>
+              <option value="add" {% if ra_filtros.tipo == "add" %}selected{% endif %}>Altas</option>
+              <option value="delete" {% if ra_filtros.tipo == "delete" %}selected{% endif %}>Bajas</option>
+            </select>
+          </label>
+          <label class="cpeh-ra-field cpeh-ra-field--sm">
+            <span>Periodo</span>
+            <select name="ra_dias" class="form-control form-control-sm">
+              <option value="7" {% if ra_filtros.dias == "7" %}selected{% endif %}>7 días</option>
+              <option value="14" {% if ra_filtros.dias == "14" %}selected{% endif %}>14 días</option>
+              <option value="30" {% if ra_filtros.dias == "30" %}selected{% endif %}>30 días</option>
+              <option value="90" {% if ra_filtros.dias == "90" %}selected{% endif %}>90 días</option>
+              <option value="0" {% if ra_filtros.dias == "0" %}selected{% endif %}>Sin límite</option>
+            </select>
+          </label>
+          <div class="cpeh-ra-actions">
+            <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
+            {% if ra_activo %}
+            <a href="{{ ra_limpiar_url }}" class="btn btn-sm btn-outline-secondary">Limpiar</a>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+
+      {% if ra_paginacion and ra_paginacion.num_pages > 1 %}
+      <nav class="cpeh-pager cpeh-pager-top" aria-label="Paginación acciones (arriba)">
+        <div class="cpeh-pager-info">
+          Página {{ ra_paginacion.page }} de {{ ra_paginacion.num_pages }}
+          · {{ ra_paginacion.showing_from }}–{{ ra_paginacion.showing_to }} de {{ ra_total }}
+        </div>
+        <div class="cpeh-pager-btns">
+          {% if ra_paginacion.first_url %}
+          <a class="cpeh-pager-btn" href="{{ ra_paginacion.first_url }}" title="Primera">«</a>
+          {% endif %}
+          {% if ra_paginacion.has_prev %}
+          <a class="cpeh-pager-btn" href="{{ ra_paginacion.prev_url }}">‹ Anterior</a>
+          {% else %}
+          <span class="cpeh-pager-btn is-disabled">‹ Anterior</span>
+          {% endif %}
+          {% for p in ra_paginacion.pages %}
+          <a class="cpeh-pager-btn{% if p.active %} is-active{% endif %}" href="{{ p.url }}">{{ p.n }}</a>
+          {% endfor %}
+          {% if ra_paginacion.has_next %}
+          <a class="cpeh-pager-btn" href="{{ ra_paginacion.next_url }}">Siguiente ›</a>
+          {% else %}
+          <span class="cpeh-pager-btn is-disabled">Siguiente ›</span>
+          {% endif %}
+          {% if ra_paginacion.last_url %}
+          <a class="cpeh-pager-btn" href="{{ ra_paginacion.last_url }}" title="Última">»</a>
+          {% endif %}
+        </div>
+      </nav>
+      {% endif %}
+
+      {% if not ra_entries %}
+        <p class="mb-0 cpeh-ra-empty">No hay acciones con estos filtros.</p>
+      {% else %}
+        <ul class="cpeh-recent-actions-list">
+          {% for entry in ra_entries %}
+            <li class="cpeh-recent-action-row">
+              <span class="cpeh-recent-action-icon" aria-hidden="true">
+                {% if entry.is_change %}
+                  <i class="fas fa-edit"></i>
+                {% elif entry.is_deletion %}
+                  <i class="fas fa-trash text-danger"></i>
+                {% elif entry.is_addition %}
+                  <i class="fas fa-plus-circle text-success"></i>
+                {% endif %}
+              </span>
+              <span class="cpeh-recent-action-time">
+                <i class="fas fa-clock"></i>
+                {% blocktrans with timesince=entry.action_time|timesince %}{{ timesince }} ago{% endblocktrans %}
+              </span>
+              <span class="cpeh-ra-actor">
+                {% if entry.user %}{{ entry.user.username }}{% else %}—{% endif %}
+              </span>
+              <span class="cpeh-recent-action-title">
+                {% if entry.is_deletion or not entry.get_admin_url %}
+                  {{ entry.object_repr }}
+                {% else %}
+                  <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% endif %}
+              </span>
+              <span class="cpeh-recent-action-msg">
+                {% if entry.is_deletion %}
+                  —
+                {% elif entry.is_addition %}
+                  {{ entry }}
+                {% elif entry.change_message == "[]" or not entry.change_message %}
+                  —
+                {% else %}
+                  {% action_message_to_list entry as action_message_list %}
+                  {% if action_message_list %}
+                    {% for action_message in action_message_list %}
+                      {% if action_message.msg %}{{ action_message.msg|style_bold_first_word }}{% if not forloop.last %}; {% endif %}{% endif %}
+                    {% endfor %}
+                  {% else %}
+                    —
+                  {% endif %}
+                {% endif %}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+        {% if ra_paginacion and ra_paginacion.num_pages > 1 %}
+        <nav class="cpeh-pager" aria-label="Páginas de acciones">
+          <div class="cpeh-pager-info">
+            Página {{ ra_paginacion.page }} de {{ ra_paginacion.num_pages }}
+            · {{ ra_paginacion.per_page }} por página
+          </div>
+          <div class="cpeh-pager-btns">
+            {% if ra_paginacion.first_url %}
+            <a class="cpeh-pager-btn" href="{{ ra_paginacion.first_url }}" title="Primera">«</a>
+            {% endif %}
+            {% if ra_paginacion.has_prev %}
+            <a class="cpeh-pager-btn" href="{{ ra_paginacion.prev_url }}">‹ Anterior</a>
+            {% else %}
+            <span class="cpeh-pager-btn is-disabled">‹ Anterior</span>
+            {% endif %}
+            {% for p in ra_paginacion.pages %}
+            <a class="cpeh-pager-btn{% if p.active %} is-active{% endif %}" href="{{ p.url }}">{{ p.n }}</a>
+            {% endfor %}
+            {% if ra_paginacion.has_next %}
+            <a class="cpeh-pager-btn" href="{{ ra_paginacion.next_url }}">Siguiente ›</a>
+            {% else %}
+            <span class="cpeh-pager-btn is-disabled">Siguiente ›</span>
+            {% endif %}
+            {% if ra_paginacion.last_url %}
+            <a class="cpeh-pager-btn" href="{{ ra_paginacion.last_url }}" title="Última">»</a>
+            {% endif %}
+          </div>
+        </nav>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{# Módulos admin a ANCHO COMPLETO (sin col-lg-3 de Jazzmin) #}
+<div class="cpeh-admin-modules col-12">
+  {% get_side_menu using="app_list" as dashboard_list %}
+  {% if dashboard_list %}
+    {% widthratio dashboard_list|length 2 1 as middle %}
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-6 col-12 mb-3">
+      {% for app in dashboard_list %}
+        <div class="card mb-3">
+          <div class="card-header">
+            <h5 class="m-0">{{ app.name }}</h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-sm mb-0">
+              <tbody>
+              {% for model in app.models %}
+                <tr>
+                  <td>
+                    {% if model.url %}<a href="{{ model.url }}">{{ model.name }}</a>{% else %}{{ model.name }}{% endif %}
+                  </td>
+                  <td>
+                    <div class="btn-group float-end">
+                      {% if model.add_url %}
+                        <a href="{{ model.add_url }}" class="btn btn-sm {{ jazzmin_ui.button_classes.success }} addlink">{% trans 'Add' %}</a>
+                      {% endif %}
+                      {% if model.url %}
+                        {% if model.view_only %}
+                          <a href="{{ model.url }}" class="btn btn-sm {{ jazzmin_ui.button_classes.info }} viewlink">{% trans 'View' %}</a>
+                        {% else %}
+                          <a href="{{ model.url }}" class="btn btn-sm {{ jazzmin_ui.button_classes.info }} changelink">{% if model.custom %}{% trans 'Go' %}{% else %}{% trans 'Change' %}{% endif %}</a>
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% if forloop.counter == middle|add:"0" %}
+    </div>
+    <div class="col-md-6 col-12 mb-3">
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="cpeh-dashboard-wrap col-12">
+  {% include "includes/cpeh_guia_fase.html" %}
+  {% include "includes/cpeh_guia_tutorial_sistema.html" %}
+  {% include "includes/cpeh_guia_informe.html" %}
+  {% include "includes/cpeh_guia_desarrolladores.html" %}
+</div>
+{% endblock %}

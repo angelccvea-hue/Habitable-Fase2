@@ -1,0 +1,74 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="container-fluid" style="max-width:720px;margin:1.5rem auto;">
+  <h1>{% if caso %}Cargar Excel — caso {{ caso.hab_id }}{% else %}Cargar Excel de informe(s){% endif %}</h1>
+
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}" role="alert">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="alert alert-success border-success" role="status">
+    <strong>No se exige PDF.</strong>
+    Suba solo el Excel llenado: los datos se vuelcan a la ficha.
+    El PDF del sistema es opcional y se genera aparte (requiere fotos).
+  </div>
+
+  <p class="text-muted">
+    Use la plantilla Excel que descargó del sistema y completó en campo
+    (informe individual, varias pestañas o lote). Los datos se volcarán al caso correspondiente.
+  </p>
+  {% if caso %}
+  <p><strong>Edificio:</strong> {{ caso.nombre_conf|default:caso.nombre_hab }} (ID Habitable {{ caso.hab_id }})</p>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="card card-body shadow-sm">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_archivo_excel"><strong>Archivo Excel (.xlsx)</strong></label>
+      <input type="file" name="archivo_excel" id="id_archivo_excel" class="form-control-file" accept=".xlsx,.xlsm" required>
+    </div>
+    {% if puede_overwrite_precarga %}
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" name="overwrite_precarga" value="1" id="id_overwrite">
+      <label class="form-check-label" for="id_overwrite">
+        Sobrescribir también campos de precarga Habitable (solo coordinador)
+      </label>
+    </div>
+    {% endif %}
+    <button type="submit" class="btn btn-success">
+      <i class="fas fa-file-upload"></i> Cargar y actualizar caso(s)
+    </button>
+    {% if caso %}
+    <a class="btn btn-outline-secondary ml-2" href="{% url 'admin:inspecciones_casorojo_change' caso.pk %}">Cancelar</a>
+    {% else %}
+    <a class="btn btn-outline-secondary ml-2" href="{% url 'admin:inspecciones_casorojo_changelist' %}">Cancelar</a>
+    {% endif %}
+  </form>
+
+  <div class="alert alert-light border mt-4">
+    <strong>Flujo recomendado</strong>
+    <ol class="mb-0 pl-3">
+      <li>Descargar plantilla Excel desde la ficha del caso.</li>
+      <li>Completar secciones de visita (3–11) en Excel — incluye bloque <em>Losas</em>.</li>
+      <li>Volver aquí y subir el archivo para actualizar el sistema.</li>
+      <li>Adjuntar croquis y fotos en la ficha solo cuando vaya a elevar o generar PDF.</li>
+    </ol>
+    <p class="mb-0 mt-2">
+      Las celdas vacías del Excel <strong>no</strong> borran datos ya guardados en la ficha.
+      Si un desplegable tiene un valor inventado, ese campo se omite y el resto sí se carga.
+    </p>
+    <p class="mb-0 mt-2 text-muted">
+      Si falla: use siempre la plantilla descargada del sistema (no copie a un Excel nuevo),
+      guarde como <strong>.xlsx</strong> y verifique que el ID Habitable coincida con esta ficha.
+    </p>
+  </div>
+</div>
+{% endblock %}

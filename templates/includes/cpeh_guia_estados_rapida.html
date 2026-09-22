@@ -1,0 +1,145 @@
+{# Menú rápido: significado de cada estado + quién actúa. Usar junto a botones de flujo. #}
+<details class="cpeh-accordion cpeh-guia-estados-rapida mb-3"{% if guia_estados_abierta %} open{% endif %}>
+  <summary class="cpeh-accordion-header">
+    <i class="fas fa-map-signs" aria-hidden="true"></i>
+    Menú rápido — ¿qué significa cada estado?
+    {% if estado_actual %}
+    <span class="cpeh-estado-pill cpeh-estado-pill-inline">Ahora: {{ estado_actual }}</span>
+    {% endif %}
+  </summary>
+  <div class="cpeh-accordion-body">
+    <p class="cpeh-about-text mb-2">
+      El <strong>estado</strong> indica en qué paso va el caso y <strong>quién debe actuar</strong>.
+      Los botones de flujo solo se habilitan en el paso correcto para su rol.
+    </p>
+
+    <div class="cpeh-status-glossary" role="list">
+      <div class="cpeh-status-item{% if estado_actual == 'Pendiente verificación' %} is-current{% endif %}" role="listitem">
+        <div class="cpeh-status-name">Pendiente verificación</div>
+        <div class="cpeh-status-def">Caso precargado / asignado; aún no hay visita detallada.</div>
+        <div class="cpeh-status-who"><strong>Quién actúa:</strong> Coordinador (reparte) · Ingeniero (inicia visita)</div>
+        <div class="cpeh-status-do"><strong>Qué hacer:</strong> Asignar ingeniero → pasar a <em>En visita</em>.</div>
+      </div>
+      <div class="cpeh-status-item{% if estado_actual == 'En visita' %} is-current{% endif %}" role="listitem">
+        <div class="cpeh-status-name">En visita</div>
+        <div class="cpeh-status-def">Levantamiento en campo (secciones 4–10, fotos, croquis).</div>
+        <div class="cpeh-status-who"><strong>Quién actúa:</strong> Ingeniero / inspector</div>
+        <div class="cpeh-status-do"><strong>Qué hacer:</strong> Completar datos → botón <em>Pasar a borrador</em> (aún no aparece Pend.Rev.).</div>
+      </div>
+      <div class="cpeh-status-item{% if estado_actual == 'Borrador' %} is-current{% endif %}" role="listitem">
+        <div class="cpeh-status-name">Borrador</div>
+        <div class="cpeh-status-def">Informe en elaboración; aún no está en cola del revisor.</div>
+        <div class="cpeh-status-who"><strong>Quién actúa:</strong> Ingeniero / inspector</div>
+        <div class="cpeh-status-do"><strong>Qué hacer:</strong> Revisar checklist → <em>Enviar a revisión</em> (pasa a Pendiente revisión).</div>
+      </div>
+      <div class="cpeh-status-item{% if estado_actual == 'Pendiente revisión' %} is-current{% endif %}" role="listitem">
+        <div class="cpeh-status-name">Pendiente revisión</div>
+        <div class="cpeh-status-def">Informe elevado: está en la <strong>cola del revisor</strong> (entre Borrador y Revisado).</div>
+        <div class="cpeh-status-who"><strong>Quién actúa:</strong> Revisor</div>
+        <div class="cpeh-status-do"><strong>Qué hacer:</strong> Controlar dictamen → <em>Marcar como revisado</em>, <em>Aprobar</em> o <em>Devolver</em>.</div>
+      </div>
+      <div class="cpeh-status-item{% if estado_actual == 'Revisado' %} is-current{% endif %}" role="listitem">
+        <div class="cpeh-status-name">Revisado</div>
+        <div class="cpeh-status-def">El revisor ya confirmó el control técnico del dictamen.</div>
+        <div class="cpeh-status-who"><strong>Quién actúa:</strong> Revisor</div>
+        <div class="cpeh-status-do"><strong>Qué hacer:</strong> <em>Aprobar</em> o <em>Devolver a borrador</em> si hace falta corregir.</div>
+      </div>
+      <div class="cpeh-status-item{% if estado_actual == 'Aprobado' %} is-current{% endif %}" role="listitem">
+        <div class="cpeh-status-name">Aprobado</div>
+        <div class="cpeh-status-def">Dictamen técnico validado; listo para cierre operativo.</div>
+        <div class="cpeh-status-who"><strong>Quién actúa:</strong> Coordinador / administrador</div>
+        <div class="cpeh-status-do"><strong>Qué hacer:</strong> <em>Publicar caso</em> cuando corresponda al tablero/reportes.</div>
+      </div>
+      <div class="cpeh-status-item{% if estado_actual == 'Publicado' %} is-current{% endif %}" role="listitem">
+        <div class="cpeh-status-name">Publicado</div>
+        <div class="cpeh-status-def">Caso cerrado para operación y reportes. Sin más transiciones normales.</div>
+        <div class="cpeh-status-who"><strong>Quién actúa:</strong> — (solo consulta)</div>
+        <div class="cpeh-status-do"><strong>Qué hacer:</strong> Usar en tablero / Excel de Dashboard.</div>
+      </div>
+    </div>
+
+    <h3 class="cpeh-about-heading cpeh-mt-lg">Flujograma (camino normal)</h3>
+    <div class="cpeh-flowchart cpeh-flowchart-compact" role="img" aria-label="Flujograma compacto de estados">
+      <div class="cpeh-flow-step{% if estado_actual == 'Pendiente verificación' %} is-current{% endif %}">
+        <span class="cpeh-flow-num">1</span>
+        <strong>Pendiente verif.</strong>
+        <small>Asignación</small>
+        <span class="cpeh-flow-actor">Coord. / Ing.</span>
+      </div>
+      <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+      <div class="cpeh-flow-step cpeh-flow-insp{% if estado_actual == 'En visita' %} is-current{% endif %}">
+        <span class="cpeh-flow-num">2</span>
+        <strong>En visita</strong>
+        <small>Campo</small>
+        <span class="cpeh-flow-actor cpeh-flow-actor-insp">Ingeniero</span>
+      </div>
+      <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+      <div class="cpeh-flow-step cpeh-flow-insp{% if estado_actual == 'Borrador' %} is-current{% endif %}">
+        <span class="cpeh-flow-num">3</span>
+        <strong>Borrador</strong>
+        <small>Informe</small>
+        <span class="cpeh-flow-actor cpeh-flow-actor-insp">Ingeniero</span>
+      </div>
+      <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+      <div class="cpeh-flow-step cpeh-flow-rev{% if estado_actual == 'Pendiente revisión' %} is-current{% endif %}">
+        <span class="cpeh-flow-num">4</span>
+        <strong>Pend. revisión</strong>
+        <small>Cola revisor</small>
+        <span class="cpeh-flow-actor cpeh-flow-actor-rev">Revisor</span>
+      </div>
+      <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+      <div class="cpeh-flow-step cpeh-flow-rev{% if estado_actual == 'Revisado' %} is-current{% endif %}">
+        <span class="cpeh-flow-num">5</span>
+        <strong>Revisado</strong>
+        <small>Control OK</small>
+        <span class="cpeh-flow-actor cpeh-flow-actor-rev">Revisor</span>
+      </div>
+      <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+      <div class="cpeh-flow-step cpeh-flow-coord{% if estado_actual == 'Aprobado' %} is-current{% endif %}">
+        <span class="cpeh-flow-num">6</span>
+        <strong>Aprobado</strong>
+        <small>Dictamen OK</small>
+        <span class="cpeh-flow-actor cpeh-flow-actor-rev">Revisor</span>
+      </div>
+      <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+      <div class="cpeh-flow-step cpeh-flow-final{% if estado_actual == 'Publicado' %} is-current{% endif %}">
+        <span class="cpeh-flow-num">7</span>
+        <strong>Publicado</strong>
+        <small>Cierre</small>
+        <span class="cpeh-flow-actor cpeh-flow-actor-coord">Coord. / Admin</span>
+      </div>
+    </div>
+
+    <div class="cpeh-flow-return">
+      <strong>Devoluciones:</strong>
+      Pendiente revisión / Revisado → Borrador (revisor) ·
+      Aprobado → Revisado o Pendiente revisión (ajuste) ·
+      Borrador ↔ En visita (ingeniero).
+    </div>
+
+    <h3 class="cpeh-about-heading cpeh-mt-lg">Resumen por rol</h3>
+    <div class="cpeh-role-mini-grid">
+      <div class="cpeh-role-mini cpeh-role-insp">
+        <strong>Ingeniero</strong>
+        <span>Pendiente verif. → En visita → Borrador → Enviar (Pendiente revisión)</span>
+      </div>
+      <div class="cpeh-role-mini cpeh-role-rev">
+        <strong>Revisor</strong>
+        <span>Cola «Pendiente revisión» → Marcar revisado / Aprobar / Devolver</span>
+      </div>
+      <div class="cpeh-role-mini cpeh-role-coord">
+        <strong>Coordinador</strong>
+        <span>Asigna equipo · Publica (Aprobado → Publicado)</span>
+      </div>
+      <div class="cpeh-role-mini">
+        <strong>Administrador</strong>
+        <span>Ve todo · Puede intervenir en cualquier paso</span>
+      </div>
+    </div>
+
+    <p class="cpeh-about-text mb-0 mt-2 small text-muted">
+      Tutorial completo (roles y cascada de asignación):
+      <a href="/admin/#tutorial-sistema">panel de inicio → Tutorial del sistema</a>.
+    </p>
+  </div>
+</details>

@@ -1,0 +1,26 @@
+<details class="cpeh-accordion cpeh-guia-asignacion mb-3">
+  <summary class="cpeh-accordion-header">
+    <i class="fas fa-tasks" aria-hidden="true"></i>
+    Guía de este tablero — asignación de casos
+  </summary>
+  <div class="cpeh-accordion-body">
+    <p class="cpeh-about-text">
+      Cascada: <strong>administrador</strong> → <strong>coordinador</strong> → <strong>ingeniero</strong>.
+      El admin también puede asignar ingenieros directo.
+      <strong>No se asignan revisores</strong>: al enviar a revisión el caso entra solo a la
+      bandeja compartida <em>Por revisión</em>; cualquier revisor puede abrirlo.
+      Tutorial en el <a href="/admin/#tutorial-sistema">panel de inicio</a>.
+    </p>
+
+    {% include "includes/cpeh_guia_flujo_core.html" %}
+
+    <h3 class="cpeh-about-heading cpeh-mt-lg">Cómo usar este tablero</h3>
+    <ol class="cpeh-about-list cpeh-about-ordered mb-0">
+      <li><strong>Administrador:</strong> filtre «Sin coordinador», marque casos y asígnelos a un coordinador (barra amarilla). Opcionalmente asigne también ingeniero.</li>
+      <li><strong>Coordinador:</strong> verá solo su bolsa. Filtre «Sin inspector», asigne ingenieros en lote o fila a fila.</li>
+      <li>Use la columna <strong>Asignar</strong> para un solo edificio y pulse OK.</li>
+      <li>Seleccione casos y pulse <strong>Excel lote</strong> o <strong>Excel informes</strong> para entregar plantillas al equipo.</li>
+      <li>El ingeniero completa el informe y lo envía a revisión → el caso aparece en la bandeja de todos los revisores.</li>
+    </ol>
+  </div>
+</details>

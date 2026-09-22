@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{{ ficha.codigo }} — {{ ficha.titulo }}</title>
+  <style>
+    @page { size: A4; margin: 1.4cm 1.2cm; }
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: #1a2332; line-height: 1.35; }
+    .barra-tricolor { display: flex; height: 5px; margin-bottom: 6px; }
+    .barra-tricolor span { flex: 1; }
+    .ve-amarillo { background: #ffcc00; }
+    .ve-azul { background: #00247d; }
+    .ve-rojo { background: #cf142b; }
+    .header { border-bottom: 2px solid #00247d; padding-bottom: 8px; margin-bottom: 12px; }
+    .org { font-size: 8.5pt; color: #00247d; font-weight: 700; line-height: 1.25; }
+    .org-sm { font-size: 8pt; font-weight: 500; }
+    h1 { font-size: 13pt; color: #001a5c; margin: 6px 0 2px; }
+    .meta { font-size: 8.5pt; color: #555; margin-bottom: 4px; }
+    .badge {
+      display: inline-block; background: #00247d; color: #fff; font-weight: 700;
+      padding: 3px 10px; border-radius: 4px; font-size: 11pt; letter-spacing: 0.04em;
+      border-left: 4px solid #ffcc00;
+    }
+    .badge-draft { background: #9a3412; border-left-color: #fbbf24; }
+    h2 {
+      font-size: 10pt; background: #00247d; color: #fff; padding: 4px 8px;
+      margin: 12px 0 0; border-left: 4px solid #ffcc00;
+    }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 4px; page-break-inside: avoid; }
+    th, td { border: 1px solid #c8d0dc; padding: 5px 7px; vertical-align: top; text-align: left; }
+    th { width: 28%; background: #eef2f8; font-weight: 600; color: #001a5c; }
+    ul { margin: 4px 0 4px 1.1rem; padding: 0; }
+    li { margin: 2px 0; }
+    .check { list-style: none; margin-left: 0; }
+    .check li:before { content: "☐ "; color: #00247d; font-weight: 700; }
+    .note {
+      margin-top: 10px; padding: 8px 10px; background: #fff8e6; border: 1px solid #f0d080;
+      font-size: 8.5pt;
+    }
+    .foot { margin-top: 14px; font-size: 7.5pt; color: #64748b; border-top: 1px solid #d0d7e2; padding-top: 6px; }
+    .leyenda-mini { font-size: 7.5pt; color: #475569; margin: 0 0 6px; }
+    .leyenda-mini span { display: inline-block; margin-right: 10px; }
+    .swatch { display: inline-block; width: 10px; height: 10px; border: 1px solid #64748b; vertical-align: middle; margin-right: 3px; }
+    .swatch-node { background: #dbeafe; }
+    .swatch-dmg { background: #fee2e2; border-color: #ef4444; }
+    .swatch-void { background: #f1f5f9; }
+    .swatch-aux { background: #fef9c3; }
+    .sym-row td { vertical-align: middle; }
+    .sym-box {
+      display: inline-block; width: 28px; height: 18px; vertical-align: middle;
+      border: 1px solid #64748b; margin-right: 6px;
+    }
+    .sym-eje {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%; background: #fce7f3;
+      border: 2px solid #db2777; color: #9d174d; font-weight: 800; font-size: 8pt;
+      margin-right: 6px;
+    }
+    .sym-col {
+      display: inline-block; width: 14px; height: 14px; background: #3b82f6;
+      margin-right: 8px; vertical-align: middle;
+    }
+    .sym-col-a {
+      display: inline-block; width: 16px; height: 16px; border-radius: 50%;
+      background: #fef08a; border: 2px solid #eab308; margin-right: 8px; vertical-align: middle;
+    }
+    .sym-col-bc {
+      display: inline-block; width: 16px; height: 16px; border-radius: 50%;
+      background: #fecaca; border: 2px solid #dc2626; margin-right: 8px; vertical-align: middle;
+    }
+    .sym-tramo-a { background: #fef9c3; border: 2px solid #ca8a04; }
+    .sym-tramo-bc { background: #fecaca; border: 2px solid #b91c1c; }
+    .sym-flecha { background: #fbcfe8; border: 2px solid #db2777; width: 36px; text-align: center; font-size: 6pt; font-weight: 700; color: #9d174d; line-height: 16px; }
+    .sym-orient { color: #cf142b; font-weight: 800; font-size: 8pt; margin-right: 6px; }
+    .plano-svg { margin: 4px 0; max-width: 100%; }
+    .plano-svg svg { max-width: 100%; height: auto; display: block; }
+  </style>
+</head>
+<body>
+  <div class="barra-tricolor">
+    <span class="ve-amarillo"></span><span class="ve-azul"></span><span class="ve-rojo"></span>
+  </div>
+  <div class="header">
+    <div class="org">REPÚBLICA BOLIVARIANA DE VENEZUELA</div>
+    <div class="org org-sm">Comisión Presidencial para la Evaluación de Habitabilidad de Infraestructuras</div>
+    <div class="org org-sm">Inspecciones post-sísmicas — Fase II ROJO</div>
+    <h1>Ficha técnica de procedimiento</h1>
+    <div class="meta">Catálogo de procedimientos · documento de referencia para campo y revisión</div>
+    <p style="margin:8px 0 0">
+      <span class="badge{% if ficha.borrador %} badge-draft{% endif %}">{{ ficha.codigo }}</span>
+      {% if ficha.borrador %}<span style="margin-left:8px;color:#9a3412;font-weight:700;font-size:9pt;">BORRADOR PARA REVISIÓN</span>{% endif %}
+    </p>
+  </div>
+
+  <table>
+    <tr><th>Código</th><td><strong>{{ ficha.codigo }}</strong></td></tr>
+    <tr><th>Categoría</th><td>{{ ficha.categoria }}</td></tr>
+    <tr><th>Título</th><td>{{ ficha.titulo }}</td></tr>
+    <tr><th>Alcance</th><td>{{ ficha.alcance }}</td></tr>
+    {% if ficha.jerga %}
+    <tr><th>Jerga (norma)</th><td>{{ ficha.jerga }}</td></tr>
+    {% endif %}
+  </table>
+
+  <h2>Aplicar cuando (lista de verificación)</h2>
+  <ul class="check">
+    {% for item in ficha.aplicar_cuando %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+
+  {% if ficha.no_aplicar %}
+  <h2>No aplicar / derivar a otro código</h2>
+  <ul>
+    {% for item in ficha.no_aplicar %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <h2>Especificación técnica</h2>
+  <table>
+    <tr><td>{{ ficha.especificacion }}</td></tr>
+  </table>
+
+  {% if ficha.mapa_estilo %}
+  <h2>{{ ficha.mapa_estilo.titulo }}</h2>
+  <p class="meta">{{ ficha.mapa_estilo.intro }}</p>
+  <table class="sym-row">
+    <thead>
+      <tr>
+        <th style="width:28%">Símbolo</th>
+        <th style="width:24%">Elemento</th>
+        <th>Regla de uso</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in ficha.mapa_estilo.capas %}
+      <tr>
+        <td>
+          {% if c.simbolo == "titulo" %}<span style="color:#00247d;font-weight:800">TÍTULO</span>
+          {% elif c.simbolo == "eje" %}<span class="sym-eje">A</span><span class="sym-eje">3</span>
+          {% elif c.simbolo == "grid" %}<span style="letter-spacing:2px;color:#64748b">- - - - -</span>
+          {% elif c.simbolo == "col" %}<span class="sym-col"></span>
+          {% elif c.simbolo == "col_a" %}<span class="sym-col-a"></span>
+          {% elif c.simbolo == "col_bc" %}<span class="sym-col-bc"></span>
+          {% elif c.simbolo == "tramo_a" %}<span class="sym-box sym-tramo-a"></span>
+          {% elif c.simbolo == "tramo_bc" %}<span class="sym-box sym-tramo-bc"></span>
+          {% elif c.simbolo == "flecha" %}<span class="sym-box sym-flecha">Flecha</span>
+          {% elif c.simbolo == "orient" %}<span class="sym-orient">NORTE</span><span class="sym-orient">Calle</span>
+          {% elif c.simbolo == "cota" %}<span style="font-weight:700;color:#334155">22,2</span>
+          {% else %}—{% endif %}
+        </td>
+        <td><strong>{{ c.nombre }}</strong></td>
+        <td>{{ c.regla }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if ficha.mapa_estilo.reglas_id %}
+  <h2>Reglas de ID al usar el mapa de estilo</h2>
+  <ul class="check">
+    {% for r in ficha.mapa_estilo.reglas_id %}
+    <li>{{ r }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if ficha.mapa_estilo.mini_ejemplo %}
+  <h2>Aplicación rápida del mapa de estilo</h2>
+  {% if ficha.mapa_estilo.mini_ejemplo.svg_html %}
+  <div class="plano-svg">{{ ficha.mapa_estilo.mini_ejemplo.svg_html|safe }}</div>
+  {% if ficha.mapa_estilo.mini_ejemplo.nota_pie %}
+  <p class="meta">{{ ficha.mapa_estilo.mini_ejemplo.nota_pie }}</p>
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  {% endif %}
+
+  {% if ficha.normativa_detalle %}
+  <h2>Normas COVENIN — qué dicen y cómo se usan en PLN-01</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:22%">Norma</th>
+        <th style="width:28%">Para qué sirve</th>
+        <th>Uso en este documento</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for n in ficha.normativa_detalle %}
+      <tr>
+        <td><strong>{{ n.codigo }}</strong><br/><span style="font-size:8pt;color:#475569">{{ n.titulo }}</span></td>
+        <td>{{ n.para_que }}</td>
+        <td>{{ n.uso_en_pln01 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% elif ficha.normativa %}
+  <h2>Referencias normativas / de dibujo</h2>
+  <ul>
+    {% for item in ficha.normativa %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if ficha.ejemplos_irregulares %}
+  <h2>Ejemplos prácticos por tipología de planta</h2>
+  <p class="meta">
+    Los diagramas usan el <strong>mismo lenguaje gráfico</strong> que el plano de
+    campo (estilo Carimar): cuadrado azul = columna, círculo = severidad en nudo,
+    rectángulo = tramo, magenta = flecha. La retícula es el sistema de referencia;
+    el contorno real se dibuja encima en CAD.
+  </p>
+  <p class="leyenda-mini">
+    <span><i class="sym-col"></i>columna</span>
+    <span><i class="sym-col-a"></i>daño A</span>
+    <span><i class="sym-col-bc"></i>daño B/C</span>
+    <span><i class="sym-box sym-tramo-bc"></i>tramo</span>
+    <span><i class="sym-box sym-flecha">Flecha</i></span>
+  </p>
+  {% for ej in ficha.ejemplos_irregulares %}
+  <table style="margin-top:10px;page-break-inside:avoid">
+    <tr><th colspan="2" style="background:#00247d;color:#fff;border-left:4px solid #ffcc00">{{ ej.nombre }}</th></tr>
+    <tr><th>Forma</th><td>{{ ej.descripcion }}</td></tr>
+    <tr><th>Cómo poner ejes</th><td>{{ ej.como_ejes }}</td></tr>
+    <tr><th>Ejemplo de daño</th><td>{{ ej.ejemplo_dano }}</td></tr>
+    {% if ej.svg_html %}
+    <tr>
+      <th>Diagrama</th>
+      <td>
+        <div class="plano-svg">{{ ej.svg_html|safe }}</div>
+        {% if ej.nota_pie %}
+        <p class="meta" style="margin:4px 0 0">{{ ej.nota_pie }}</p>
+        {% endif %}
+      </td>
+    </tr>
+    {% endif %}
+  </table>
+  {% endfor %}
+  {% endif %}
+
+  {% if ficha.contenido_plantilla %}
+  <h2>Contenido mínimo de la plantilla de plano</h2>
+  <ul class="check">
+    {% for item in ficha.contenido_plantilla %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if ficha.plantilla_cad %}
+  <div class="note">
+    <strong>Plantilla CAD:</strong>
+    {{ ficha.plantilla_cad.formato }} · {{ ficha.plantilla_cad.archivo }}.
+    {{ ficha.plantilla_cad.nota }}
+    Descarga desde el catálogo (columna CAD) o ruta
+    <code>/catalogo/procedimientos/PLN-01.dxf</code>.
+  </div>
+  {% endif %}
+
+  <h2>Referencias</h2>
+  <ul>
+    {% for r in referencias %}
+    <li>{{ r }}</li>
+    {% endfor %}
+  </ul>
+
+  {% if ficha.borrador %}
+  <div class="note">
+    <strong>Estado:</strong> borrador para revisión de la mesa técnica / coordinación.
+    No sustituye lineamientos oficiales hasta su adopción formal. Compatible con el catálogo
+    del sistema Fase II y con la futura declaración de estructura (mapa de ejes) en ficha.
+  </div>
+  {% endif %}
+
+  <div class="foot">
+    Generado desde el catálogo Fase II ROJO · {{ generado }} · {{ ficha.codigo }}.pdf
+  </div>
+</body>
+</html>

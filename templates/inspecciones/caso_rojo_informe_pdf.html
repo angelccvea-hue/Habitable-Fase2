@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Informe Fase II — {{ caso.hab_id }} — {{ nombre_display }}</title>
+  <style>
+    @page { size: A4; margin: 1.4cm 1.2cm; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 9.5pt;
+      color: #1a2332;
+      line-height: 1.35;
+    }
+    .barra-tricolor { display: flex; height: 5px; margin-bottom: 6px; }
+    .barra-tricolor span { flex: 1; }
+    .ve-amarillo { background: #ffcc00; }
+    .ve-azul { background: #00247d; }
+    .ve-rojo { background: #cf142b; }
+    .header {
+      border-bottom: 2px solid #00247d;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .org { font-size: 8.5pt; color: #00247d; font-weight: 700; line-height: 1.25; }
+    .org-sm { font-size: 8pt; font-weight: 500; }
+    h1 {
+      font-size: 13pt;
+      color: #001a5c;
+      margin: 6px 0 2px;
+    }
+    .meta { font-size: 8.5pt; color: #555; margin-bottom: 4px; }
+    h2 {
+      font-size: 10pt;
+      background: #00247d;
+      color: #fff;
+      padding: 4px 8px;
+      margin: 12px 0 0;
+      border-left: 4px solid #ffcc00;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 4px;
+      page-break-inside: avoid;
+    }
+    th, td {
+      border: 1px solid #c8d0dc;
+      padding: 4px 6px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      width: 34%;
+      background: #eef2f8;
+      font-weight: 600;
+      color: #001a5c;
+    }
+    td { background: #fff; }
+    .resumen td { min-height: 48px; }
+
+    /* Tabla metrados — estilo planilla Excel */
+    table.tabla-metrados {
+      page-break-inside: auto;
+      font-size: 7.5pt;
+      margin: 4px 0 8px;
+    }
+    table.tabla-metrados thead { display: table-header-group; }
+    table.tabla-metrados tr { page-break-inside: avoid; }
+    table.tabla-metrados th {
+      width: auto !important;
+      background: #00247d;
+      color: #fff;
+      font-size: 7pt;
+      padding: 3px 4px;
+      white-space: nowrap;
+      border-color: #001a5c;
+    }
+    table.tabla-metrados td {
+      padding: 3px 4px;
+      border-color: #b8c4d6;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      max-width: 28mm;
+    }
+    table.tabla-metrados td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    table.tabla-metrados td.cod { white-space: nowrap; font-family: Consolas, monospace; font-size: 7pt; }
+    table.tabla-metrados tr:nth-child(even) td { background: #f4f7fb; }
+    .metrados-caption {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #00247d;
+      margin: 6px 0 2px;
+    }
+
+    /* Tabla procedimientos seleccionados — estilo Procedimientos_sel */
+    table.tabla-proc {
+      page-break-inside: avoid;
+      font-size: 8pt;
+      margin: 4px 0 8px;
+    }
+    table.tabla-proc th {
+      width: auto !important;
+      background: #2e7d32;
+      color: #fff;
+      font-size: 7.5pt;
+      padding: 3px 5px;
+      border-color: #1b5e20;
+    }
+    table.tabla-proc td {
+      padding: 3px 5px;
+      border-color: #a5d6a7;
+      word-wrap: break-word;
+    }
+    table.tabla-proc td.cod { font-family: Consolas, monospace; white-space: nowrap; }
+    table.tabla-proc td.si { text-align: center; font-weight: 700; color: #1b5e20; }
+    table.tabla-proc tr:nth-child(even) td { background: #f1f8e9; }
+    .proc-caption {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #1b5e20;
+      margin: 6px 0 2px;
+    }
+    .footer {
+      margin-top: 14px;
+      font-size: 7.5pt;
+      color: #666;
+      border-top: 1px solid #ccc;
+      padding-top: 6px;
+    }
+    /* Anexo: una foto por hoja A4, máxima área útil */
+    .anexo-portada {
+      page-break-before: always;
+      margin-top: 0;
+    }
+    .foto-hoja {
+      page-break-before: always;
+      page-break-inside: avoid;
+      width: 100%;
+      height: 270mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .foto-hoja img {
+      max-width: 100%;
+      max-height: 252mm;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      image-rendering: auto;
+    }
+    .foto-caption {
+      margin: 6px 0 0;
+      font-size: 8.5pt;
+      color: #333;
+      text-align: center;
+      max-width: 100%;
+    }
+    .foto-caption .meta-foto {
+      color: #666;
+      font-size: 7.5pt;
+    }
+  </style>
+</head>
+<body>
+  <div class="barra-tricolor">
+    <span class="ve-amarillo"></span>
+    <span class="ve-azul"></span>
+    <span class="ve-rojo"></span>
+  </div>
+  <div class="header">
+    <div class="org">★ Comisión Presidencial</div>
+    <div class="org org-sm">para la Evaluación de Habitabilidad de Infraestructuras</div>
+    <h1>Informe verificación ROJO — Fase II</h1>
+    <div class="meta">
+      <strong>ID Habitable:</strong> {{ caso.hab_id }} ·
+      <strong>Edificio:</strong> {{ nombre_display }} ·
+      <strong>Decisión:</strong> {{ caso.decision_D|default:"Pendiente" }} ·
+      <strong>Estado:</strong> {{ caso.estado_2da|default:"—" }}
+    </div>
+  </div>
+
+  {% for section in sections %}
+  <h2>{{ section.title }}</h2>
+  <table class="{% if 'Resumen' in section.title %}resumen{% endif %}">
+    {% for row in section.rows %}
+    {% if row.es_tabla and row.tabla %}
+    <tr>
+      <th colspan="2">{{ row.label }}</th>
+    </tr>
+    </table>
+    <p class="metrados-caption">{{ row.label }} — detalle tipificado</p>
+    <table class="tabla-metrados">
+      <thead>
+      <tr>
+        <th>#</th><th>Código</th><th>Partida</th><th>Elemento</th><th>Ubicación</th>
+        <th>Cant.</th><th>Ud</th><th>Sev.</th><th>Acción</th><th>Conf.</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for ln in row.tabla %}
+      <tr>
+        <td class="num">{{ ln.orden }}</td>
+        <td class="cod">{{ ln.codigo }}</td>
+        <td>{{ ln.titulo }}</td>
+        <td>{{ ln.elemento }}</td>
+        <td>{{ ln.ubicacion }}</td>
+        <td class="num">{{ ln.cantidad }}</td>
+        <td>{{ ln.unidad }}</td>
+        <td>{{ ln.severidad }}</td>
+        <td>{{ ln.accion }}</td>
+        <td>{{ ln.confianza }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <table>
+    {% elif row.es_tabla_proc and row.tabla_proc %}
+    <tr>
+      <th colspan="2">{{ row.label }}</th>
+    </tr>
+    </table>
+    <p class="proc-caption">{{ row.label }} (equivalente a Procedimientos_sel)</p>
+    <table class="tabla-proc">
+      <thead>
+      <tr>
+        <th>codigo</th><th>categoria</th><th>titulo</th><th>seleccionar</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for p in row.tabla_proc %}
+      <tr>
+        <td class="cod">{{ p.codigo }}</td>
+        <td>{{ p.categoria }}</td>
+        <td>{{ p.titulo }}</td>
+        <td class="si">{{ p.seleccion }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <table>
+    {% else %}
+    <tr>
+      <th>{{ row.label }}</th>
+      <td>{{ row.value|linebreaksbr }}</td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+  </table>
+  {% endfor %}
+
+  <div class="footer">
+    Generado el {{ generado|date:"d/m/Y H:i" }} · CPEH Fase II ROJO · Uso institucional
+    {% if fotos_anexo %} · Anexo fotográfico: {{ fotos_anexo|length }} foto(s){% endif %}
+    {% if croquis_anexo or croquis_pdf_count %}
+      · Anexo croquis:
+      {% if croquis_anexo %}{{ croquis_anexo|length }} imagen(es){% endif %}
+      {% if croquis_anexo and croquis_pdf_count %} + {% endif %}
+      {% if croquis_pdf_count %}{{ croquis_pdf_count }} PDF{% endif %}
+    {% endif %}
+    {% if informes_pdf_count %} · Anexo PDF de campo: {{ informes_pdf_count }}{% endif %}
+  </div>
+
+  {% if fotos_anexo %}
+  <h2 class="anexo-portada">Anexo — Evidencia fotográfica ({{ fotos_anexo|length }})</h2>
+  <p class="meta">
+    Una fotografía por hoja, a tamaño máximo de página (calidad de campo).
+    ID Habitable {{ caso.hab_id }} — {{ nombre_display }}.
+  </p>
+  {% for f in fotos_anexo %}
+  <div class="foto-hoja">
+    <img src="{{ f.src }}" alt="Foto {{ forloop.counter }}">
+    <p class="foto-caption">
+      <strong>Foto {{ forloop.counter }} / {{ fotos_anexo|length }}</strong>
+      {% if f.descripcion %} — {{ f.descripcion }}{% endif %}
+      {% if f.fecha %}<br><span class="meta-foto">{{ f.fecha|date:"d/m/Y H:i" }}</span>{% endif %}
+    </p>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if croquis_anexo %}
+  <h2 class="anexo-portada">Anexo — Croquis / esquemas ({{ croquis_anexo|length }})</h2>
+  <p class="meta">
+    Un croquis por hoja, a tamaño máximo de página.
+    ID Habitable {{ caso.hab_id }} — {{ nombre_display }}.
+    {% if croquis_pdf_count %}
+      Además se anexan {{ croquis_pdf_count }} croquis en PDF al final del documento.
+    {% endif %}
+  </p>
+  {% for c in croquis_anexo %}
+  <div class="foto-hoja">
+    <img src="{{ c.src }}" alt="Croquis {{ forloop.counter }}">
+    <p class="foto-caption">
+      <strong>Croquis {{ forloop.counter }} / {{ croquis_anexo|length }}</strong>
+      {% if c.descripcion %} — {{ c.descripcion }}{% endif %}
+      {% if c.fecha %}<br><span class="meta-foto">{{ c.fecha|date:"d/m/Y H:i" }}{% if c.nombre %} · {{ c.nombre }}{% endif %}</span>{% endif %}
+    </p>
+  </div>
+  {% endfor %}
+  {% elif croquis_pdf_count %}
+  <h2 class="anexo-portada">Anexo — Croquis en PDF</h2>
+  <p class="meta">
+    Se anexan a continuación {{ croquis_pdf_count }} archivo(s) PDF de croquis
+    (páginas completas, calidad original).
+    ID Habitable {{ caso.hab_id }} — {{ nombre_display }}.
+  </p>
+  {% endif %}
+
+  {% if informes_pdf_count %}
+  <h2 class="anexo-portada">Anexo — Informes PDF de campo ({{ informes_pdf_count }})</h2>
+  <p class="meta">
+    Se fusionan a continuación los PDF originales adjuntos al caso
+    (formato libre / escaneados), en calidad original.
+    ID Habitable {{ caso.hab_id }} — {{ nombre_display }}.
+  </p>
+  {% if informes_pdf_anexo %}
+  <table>
+    <tr><th>#</th><th>Título / archivo</th><th>Tipo</th><th>Código</th><th>Fecha</th></tr>
+    {% for d in informes_pdf_anexo %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ d.titulo }}</td>
+      <td>{{ d.tipo|default:"—" }}</td>
+      <td>{{ d.codigo|default:"—" }}</td>
+      <td>{% if d.fecha %}{{ d.fecha|date:"d/m/Y H:i" }}{% else %}—{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
+  {% endif %}
+</body>
+</html>

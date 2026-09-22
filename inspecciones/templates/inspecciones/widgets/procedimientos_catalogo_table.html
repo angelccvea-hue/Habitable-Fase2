@@ -1,0 +1,166 @@
+{% comment %}Procedimientos: Sí + columnas tipo Excel Metrados (ubicación…nota){% endcomment %}
+<div class="cpeh-proc-excel" id="id_{{ widget.name }}_wrap">
+  <p class="cpeh-proc-excel-hint">
+    Igual que Excel: marque <strong>Sí</strong> y complete
+    <strong>ubicación · cantidad · unidad · severidad · acción · confianza · nota</strong>
+    en la misma fila. Al guardar se reflejan en <strong>Líneas de metrado</strong>.
+  </p>
+  {% for section in widget.sections %}
+  <div class="cpeh-proc-excel-sec" data-cat="{{ section.key }}">
+    <div class="cpeh-proc-excel-sec-h">{{ section.label }}</div>
+    <div class="cpeh-proc-excel-scroll">
+      <table class="cpeh-proc-excel-table cpeh-proc-excel-wide">
+        <thead>
+          <tr class="cpeh-proc-h1">
+            <th class="cpeh-pc-si">Sí</th>
+            <th class="cpeh-pc-cod">código</th>
+            <th class="cpeh-pc-tit">título</th>
+            <th class="cpeh-pc-ubic">ubicacion</th>
+            <th class="cpeh-pc-cant">cantidad</th>
+            <th class="cpeh-pc-uni">unidad</th>
+            <th class="cpeh-pc-sev">severidad</th>
+            <th class="cpeh-pc-acc">accion</th>
+            <th class="cpeh-pc-conf">confianza</th>
+            <th class="cpeh-pc-nota">nota</th>
+          </tr>
+          <tr class="cpeh-proc-h2">
+            <th></th>
+            <th>catálogo</th>
+            <th>referencia</th>
+            <th>TEXTO LIBRE: piso / eje / zona</th>
+            <th>Número</th>
+            <th>Lista cerrada</th>
+            <th>A / B / C</th>
+            <th>Lista cerrada</th>
+            <th>Alta / Media / Estimada</th>
+            <th>TEXTO LIBRE (opcional)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in section.items %}
+          <tr class="{% if item.checked %}is-on{% endif %}">
+            <td class="cpeh-pc-si">
+              <label class="cpeh-proc-si">
+                <input type="checkbox"
+                       name="{{ widget.name }}"
+                       value="{{ item.codigo }}"
+                       {% if item.checked %}checked{% endif %}
+                       aria-label="Seleccionar {{ item.codigo }}">
+                <span>Sí</span>
+              </label>
+            </td>
+            <td class="cpeh-pc-cod"><code>{{ item.codigo }}</code></td>
+            <td class="cpeh-pc-tit">{{ item.titulo }}</td>
+            <td class="cpeh-pc-ubic">
+              <input type="text" name="proc_m_{{ item.codigo }}__ubicacion"
+                     value="{{ item.ubicacion }}" placeholder="piso / eje / zona"
+                     maxlength="128" autocomplete="off">
+            </td>
+            <td class="cpeh-pc-cant">
+              <input type="text" name="proc_m_{{ item.codigo }}__cantidad"
+                     value="{{ item.cantidad }}" placeholder="0" inputmode="decimal"
+                     autocomplete="off">
+            </td>
+            <td class="cpeh-pc-uni">
+              <select name="proc_m_{{ item.codigo }}__unidad">
+                {% for val, lab in widget.choices_unidad %}
+                <option value="{{ val }}" {% if item.unidad == val %}selected{% endif %}>{{ lab }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td class="cpeh-pc-sev">
+              <select name="proc_m_{{ item.codigo }}__severidad">
+                {% for val, lab in widget.choices_severidad %}
+                <option value="{{ val }}" {% if item.severidad == val %}selected{% endif %}>{{ lab }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td class="cpeh-pc-acc">
+              <select name="proc_m_{{ item.codigo }}__accion">
+                {% for val, lab in widget.choices_accion %}
+                <option value="{{ val }}" {% if item.accion == val %}selected{% endif %}>{{ lab }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td class="cpeh-pc-conf">
+              <select name="proc_m_{{ item.codigo }}__confianza">
+                {% for val, lab in widget.choices_confianza %}
+                <option value="{{ val }}" {% if item.confianza == val %}selected{% endif %}>{{ lab }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td class="cpeh-pc-nota">
+              <input type="text" name="proc_m_{{ item.codigo }}__nota"
+                     value="{{ item.nota }}" placeholder="opcional"
+                     maxlength="500" autocomplete="off">
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% empty %}
+  <p class="cpeh-proc-excel-empty">Catálogo de procedimientos no disponible.</p>
+  {% endfor %}
+</div>
+<script>
+(function () {
+  function ready(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+  ready(function () {
+    var wrap = document.getElementById("id_procedimientos_catalogo_wrap");
+    if (!wrap) return;
+    var dest = document.getElementById("id_proc_codigos");
+    if (!dest) return;
+
+    function catalogCodes() {
+      var set = {};
+      wrap.querySelectorAll('input[type="checkbox"][name="procedimientos_catalogo"]').forEach(function (cb) {
+        set[String(cb.value || "").toUpperCase()] = true;
+      });
+      return set;
+    }
+
+    function parseCodes(raw) {
+      return String(raw || "")
+        .split(/[,;\n]+/)
+        .map(function (s) { return s.trim().toUpperCase(); })
+        .filter(Boolean);
+    }
+
+    function syncFromChecks() {
+      var catalog = catalogCodes();
+      var selected = [];
+      wrap.querySelectorAll('input[type="checkbox"][name="procedimientos_catalogo"]').forEach(function (cb) {
+        var tr = cb.closest("tr");
+        if (tr) tr.classList.toggle("is-on", cb.checked);
+        if (cb.checked) selected.push(String(cb.value || "").toUpperCase());
+      });
+      var extras = parseCodes(dest.value).filter(function (c) { return !catalog[c]; });
+      var seen = {};
+      var merged = [];
+      selected.concat(extras).forEach(function (c) {
+        if (!seen[c]) { seen[c] = true; merged.push(c); }
+      });
+      dest.value = merged.join(", ");
+    }
+
+    wrap.addEventListener("change", function (ev) {
+      var t = ev.target;
+      if (t && t.matches && t.matches('input[type="checkbox"][name="procedimientos_catalogo"]')) {
+        syncFromChecks();
+      }
+    });
+    // Clic en la etiqueta «Sí» también dispara change vía checkbox
+    wrap.addEventListener("click", function (ev) {
+      var lab = ev.target.closest && ev.target.closest("label.cpeh-proc-si");
+      if (!lab) return;
+      // change se dispara al togglear; reforzar tras el ciclo de eventos
+      setTimeout(syncFromChecks, 0);
+    });
+  });
+})();
+</script>

@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — CPEH Fase II</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <style>
+    :root {
+      --bg: #eef2f7;
+      --bg-accent: linear-gradient(145deg, #e8eef8 0%, #f5f7fb 45%, #eef6f3 100%);
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: #d7dee8;
+      --brand: #00247d;
+      --brand-2: #0b3d91;
+      --accent: #c8102e;
+      --ok: #0f766e;
+      --warn: #b45309;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg-accent);
+      min-height: 100vh;
+    }
+    .op-top {
+      background: linear-gradient(120deg, #001a5c 0%, #00247d 55%, #0a3a8a 100%);
+      color: #fff;
+      padding: 1.1rem 1.4rem 1.25rem;
+      border-bottom: 3px solid #ffcc00;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 8px 24px rgba(0, 20, 80, 0.25);
+    }
+    .op-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .op-top h1 {
+      margin: 0 0 0.2rem;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .op-top p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 0.88rem;
+      max-width: 42rem;
+    }
+    .op-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .op-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.08);
+    }
+    .op-nav a:hover { background: rgba(255,255,255,0.18); }
+    .op-wrap { padding: 1.1rem 1.25rem 2rem; max-width: 1400px; margin: 0 auto; }
+
+    .op-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: end;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .op-filters label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .op-filters select,
+    .op-filters input[type="date"] {
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      border: 1px solid #b8c4d6;
+      border-radius: 8px;
+      padding: 0.4rem 0.55rem;
+      min-width: 9rem;
+      background: #fff;
+    }
+    .op-filters button {
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: 0;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      background: var(--brand);
+      color: #fff;
+      cursor: pointer;
+    }
+    .op-filters button:hover { background: var(--brand-2); }
+    .op-filters .op-reset {
+      background: #fff;
+      color: var(--brand);
+      border: 1px solid #9eb0cc;
+    }
+
+    .op-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      gap: 0.45rem;
+      margin-bottom: 1rem;
+      align-items: stretch;
+    }
+    .op-kpi {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.55rem 0.55rem 0.55rem 0.7rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .op-kpi::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--brand);
+    }
+    .op-kpi.accent-ok::before { background: var(--ok); }
+    .op-kpi.accent-warn::before { background: var(--warn); }
+    .op-kpi.accent-danger::before { background: var(--accent); }
+    .op-kpi .v {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--brand);
+      line-height: 1.1;
+    }
+    .op-kpi .l {
+      margin-top: 0.15rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+    .op-kpi .s {
+      margin-top: 0.12rem;
+      font-size: 0.62rem;
+      color: #64748b;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    @media (max-width: 1180px) {
+      .op-kpi-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.45rem;
+        padding-bottom: 0.35rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .op-kpi {
+        flex: 0 0 7.6rem;
+        min-width: 7.6rem;
+      }
+    }
+    .op-section-title {
+      margin: 0.35rem 0 0.75rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--brand);
+      letter-spacing: -0.01em;
+      grid-column: 1 / -1;
+    }
+    .op-section-title span {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+    .op-alertas {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .op-alertas-head {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #edf1f7;
+      background: #f8fafc;
+    }
+    .op-alertas-head h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    .op-alertas-head p {
+      margin: 0.2rem 0 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .op-alertas table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    .op-alertas th, .op-alertas td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      vertical-align: top;
+      color: #0f172a;
+    }
+    .op-alertas th {
+      background: #f1f5f9;
+      font-weight: 800;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #334155;
+    }
+    .op-sev {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      color: #fff;
+    }
+    .op-sev-danger { background: #c8102e; }
+    .op-sev-warn { background: #b45309; }
+    .op-alertas .n {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--brand);
+    }
+    .op-alertas .muestras {
+      max-width: 36rem;
+      line-height: 1.7;
+    }
+    .op-alertas .muestras a {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      margin: 0 0.35rem 0.35rem 0;
+      font-size: 0.78rem;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+    }
+    .op-alertas .muestras a:hover { filter: brightness(0.95); text-decoration: underline; }
+    .op-alertas .muestras .dias {
+      font-weight: 800;
+      font-size: 0.72rem;
+      opacity: 0.95;
+    }
+    /* Antigüedad: verdes → ámbar → naranja → rojo (prioridad de atención) */
+    .op-alertas .muestras a.op-case-ok {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+      color: #065f46;
+    }
+    .op-alertas .muestras a.op-case-media {
+      background: #fffbeb;
+      border-color: #fcd34d;
+      color: #92400e;
+    }
+    .op-alertas .muestras a.op-case-alta {
+      background: #fff7ed;
+      border-color: #fb923c;
+      color: #9a3412;
+    }
+    .op-alertas .muestras a.op-case-crit {
+      background: #fef2f2;
+      border-color: #f87171;
+      color: #991b1b;
+    }
+    .op-alertas-leyenda {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem 0.85rem;
+      margin-top: 0.45rem;
+      font-size: 0.72rem;
+      color: #475569;
+      font-weight: 600;
+    }
+    .op-alertas-leyenda span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .op-alertas-leyenda i {
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .op-alertas-leyenda .lg-ok { background: #34d399; }
+    .op-alertas-leyenda .lg-media { background: #fbbf24; }
+    .op-alertas-leyenda .lg-alta { background: #fb923c; }
+    .op-alertas-leyenda .lg-crit { background: #ef4444; }
+    .op-alertas .ayuda { color: #475569; font-size: 0.8rem; }
+    .op-empty-alertas {
+      padding: 1rem;
+      color: #166534;
+      font-weight: 600;
+      background: #ecfdf5;
+    }
+
+    .op-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 0.85rem;
+    }
+    @media (max-width: 980px) {
+      .op-grid { grid-template-columns: 1fr; }
+    }
+    .op-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+    }
+    .op-card-head {
+      padding: 0.8rem 1rem 0.55rem;
+      border-bottom: 1px solid #edf1f7;
+    }
+    .op-card-head h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .op-card-head p {
+      margin: 0.2rem 0 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .op-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.65rem;
+      padding: 0.55rem 1rem 0.15rem;
+      align-items: center;
+    }
+    .op-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 650;
+      color: #334155;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .op-legend-swatch {
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+    }
+    .op-legend-item.muted { color: #94a3b8; font-weight: 550; }
+    .op-legend-item.muted .op-legend-swatch { opacity: 0.45; }
+    .op-codes-legend {
+      margin: 0 1rem 0.35rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+    .op-codes-legend > summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #0f172a;
+      user-select: none;
+    }
+    .op-codes-legend > summary::-webkit-details-marker { display: none; }
+    .op-codes-legend > summary::before {
+      content: "▸ ";
+      color: #00247d;
+      font-weight: 900;
+    }
+    .op-codes-legend[open] > summary::before { content: "▾ "; }
+    .op-codes-legend .op-codes-body {
+      padding: 0 0.7rem 0.55rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.25rem 0.75rem;
+    }
+    .op-codes-legend .op-code-row {
+      font-size: 0.74rem;
+      color: #334155;
+      line-height: 1.35;
+    }
+    .op-codes-legend .op-code-row strong {
+      color: #0f172a;
+      font-family: ui-monospace, Consolas, monospace;
+      background: #dbeafe;
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+      margin-right: 0.25rem;
+    }
+    .op-dm-legend {
+      margin: 0 0 0.85rem;
+    }
+    .op-dm-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 1.25rem;
+      padding: 0 0.7rem 0.65rem;
+    }
+    .op-dm-h {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #00247d;
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.01em;
+    }
+    @media (max-width: 720px) {
+      .op-dm-grid { grid-template-columns: 1fr; }
+    }
+    .op-chart {
+      flex: 1;
+      width: 100%;
+      min-height: 280px;
+      padding: 0.25rem 0.35rem 0.5rem;
+    }
+    .op-card.tall .op-chart { min-height: 340px; }
+    .op-chart-note {
+      margin: 0 1rem 0.85rem;
+      padding: 0.4rem 0.55rem;
+      font-size: 0.74rem;
+      line-height: 1.35;
+      color: #64748b;
+      background: #f8fafc;
+      border-left: 3px solid #cbd5e1;
+      border-radius: 0 6px 6px 0;
+    }
+    .op-chart-note:empty { display: none; }
+    .op-chart-note strong { color: #475569; font-weight: 700; }
+    .op-span-2 { grid-column: 1 / -1; }
+
+    .op-export {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      justify-content: space-between;
+      background: #ecfdf5;
+      border: 1px solid #6ee7b7;
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .op-export p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #065f46;
+      max-width: 48rem;
+    }
+    .op-export a.op-btn-dl {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 800;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: #fff;
+      background: #0f766e;
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      white-space: nowrap;
+    }
+    .op-export a.op-btn-dl:hover { background: #0d9488; }
+    .op-export-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+    }
+    .op-export a.op-btn-dl.pdf {
+      background: #00247d;
+    }
+    .op-export a.op-btn-dl.pdf:hover { background: #0a3a8a; }
+
+    .op-presets a {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--brand);
+      border: 1px solid #9eb0cc;
+      background: #fff;
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+    }
+    .op-presets a.is-active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+    .op-zona-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      padding: 0.35rem 0.5rem 0.65rem;
+      min-height: 320px;
+    }
+    @media (max-width: 720px) {
+      .op-zona-grid { grid-template-columns: 1fr; }
+    }
+    .op-zona-cell {
+      min-height: 280px;
+      border: 1px solid #edf1f7;
+      border-radius: 10px;
+      background: #fafbfd;
+    }
+    .op-zona-cell h3 {
+      margin: 0;
+      padding: 0.45rem 0.65rem 0;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #334155;
+      text-align: center;
+    }
+    .op-zona-chart { width: 100%; height: 250px; }
+
+  </style>
+</head>
+<body>
+  <header class="op-top">
+    <div class="op-top-row">
+      <div>
+        <h1>Dashboard</h1>
+        <p>
+          Análisis de la <strong>bandeja de equipos</strong> (casos ya asignados a brigadas).
+          No incluye el inventario sin asignar.
+          Vista: <strong>{{ rol_etiqueta }}</strong> — {{ alcance }}.
+        </p>
+      </div>
+      <nav class="op-nav" aria-label="Navegación">
+        <a href="/admin/">Inicio admin</a>
+        <a href="/asignacion/">Asignación</a>
+        <a href="/mapa/">Mapa GPS</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="op-wrap">
+    <form class="op-filters" method="get" action="">
+      <label>Equipo
+        <select name="equipo">
+          <option value="">Todos</option>
+          {% for eq in filtros.equipos %}
+          <option value="{{ eq.numero }}" {% if filtros.equipo == eq.numero %}selected{% endif %}>{{ eq.etiqueta }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Estado
+        <select name="estado">
+          <option value="">Todos</option>
+          {% for est in filtros.estados %}
+          <option value="{{ est }}" {% if filtros.estado == est %}selected{% endif %}>{{ est }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Decisión
+        <select name="decision">
+          {% for val, lab in filtros.decisiones %}
+          <option value="{{ val }}" {% if filtros.decision == val %}selected{% endif %}>{{ lab }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Zona
+        <select name="zona">
+          {% for val, lab in filtros.zonas %}
+          <option value="{{ val }}" {% if filtros.zona == val %}selected{% endif %}>{{ lab }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Visita 2
+        <select name="visita">
+          {% for val, lab in filtros.visitas %}
+          <option value="{{ val }}" {% if filtros.visita == val %}selected{% endif %}>{{ lab }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Desde
+        <input type="date" name="desde" value="{{ filtros.desde }}">
+      </label>
+      <label>Hasta
+        <input type="date" name="hasta" value="{{ filtros.hasta }}">
+      </label>
+      <button type="submit">Aplicar</button>
+      <div class="op-presets" aria-label="Lapso rápido">
+        <a class="{% if filtros.dias == 7 %}is-active{% endif %}" href="?dias=7{% if filtros.equipo %}&equipo={{ filtros.equipo }}{% endif %}{% if filtros.estado %}&estado={{ filtros.estado|urlencode }}{% endif %}{% if filtros.decision %}&decision={{ filtros.decision }}{% endif %}{% if filtros.zona %}&zona={{ filtros.zona }}{% endif %}{% if filtros.visita %}&visita={{ filtros.visita }}{% endif %}">7 días</a>
+        <a class="{% if filtros.dias == 14 %}is-active{% endif %}" href="?dias=14{% if filtros.equipo %}&equipo={{ filtros.equipo }}{% endif %}{% if filtros.estado %}&estado={{ filtros.estado|urlencode }}{% endif %}{% if filtros.decision %}&decision={{ filtros.decision }}{% endif %}{% if filtros.zona %}&zona={{ filtros.zona }}{% endif %}{% if filtros.visita %}&visita={{ filtros.visita }}{% endif %}">14 días</a>
+        <a class="{% if filtros.dias == 30 %}is-active{% endif %}" href="?dias=30{% if filtros.equipo %}&equipo={{ filtros.equipo }}{% endif %}{% if filtros.estado %}&estado={{ filtros.estado|urlencode }}{% endif %}{% if filtros.decision %}&decision={{ filtros.decision }}{% endif %}{% if filtros.zona %}&zona={{ filtros.zona }}{% endif %}{% if filtros.visita %}&visita={{ filtros.visita }}{% endif %}">30 días</a>
+      </div>
+      <a class="op-reset" href="{% url 'tablero_operacion' %}?dias=14" style="display:inline-flex;align-items:center;padding:0.5rem 1rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem;border:1px solid #9eb0cc;color:#00247d;background:#fff;">Reset</a>
+    </form>
+
+    <div class="op-export">
+      <p>
+        <strong>Exportar bandeja</strong> con los filtros actuales
+        (<strong>{{ kpis.total }}</strong> casos).
+        Excel = filas de plantilla (máx. 2000).
+        PDF = vista dashboard (KPIs + gráficos resumidos).
+      </p>
+      <div class="op-export-actions">
+        <a class="op-btn-dl pdf" href="{% url 'export_operacion_pdf' %}?{{ export_qs }}" target="_blank" rel="noopener">
+          ↓ Descargar PDF (vista dashboard)
+        </a>
+        <a class="op-btn-dl" href="{% url 'export_operacion_excel' %}?{{ export_qs }}">
+          ↓ Descargar Excel ({{ kpis.total }})
+        </a>
+      </div>
+    </div>
+
+    <section class="op-kpi-grid" aria-label="Indicadores">
+      <div class="op-kpi">
+        <div class="v">{{ kpis.total }}</div>
+        <div class="l">Casos en bandeja</div>
+        <div class="s">Asignados a equipos</div>
+      </div>
+      <div class="op-kpi accent-ok">
+        <div class="v">{{ kpis.pct_con_visita }}%</div>
+        <div class="l">Avance visita 2</div>
+        <div class="s">{{ kpis.con_visita }} de {{ kpis.total }} · faltan {{ kpis.sin_visita }}</div>
+      </div>
+      <div class="op-kpi accent-ok">
+        <div class="v">{{ kpis.pct_con_dictamen }}%</div>
+        <div class="l">Cobertura dictamen</div>
+        <div class="s">{{ kpis.con_dictamen }} / {{ kpis.total }} · D1 {{ kpis.n_d1 }} · D2 {{ kpis.n_d2 }} · D3 {{ kpis.n_d3 }} · D4 {{ kpis.n_d4 }}</div>
+      </div>
+      <div class="op-kpi {% if kpis.n_alertas %}accent-danger{% else %}accent-ok{% endif %}">
+        <div class="v">{{ kpis.n_alertas_casos|default:0 }}</div>
+        <div class="l">Alertas de calidad D</div>
+        <div class="s">{{ kpis.n_alertas|default:0 }} tipos · ver tabla abajo</div>
+      </div>
+      <div class="op-kpi">
+        <div class="v">{{ kpis.visitas_7d }}</div>
+        <div class="l">Visitas (7 días)</div>
+        <div class="s">Prom. {{ kpis.promedio_visitas_dia }}/día en ventana</div>
+      </div>
+      <div class="op-kpi accent-warn">
+        <div class="v">{{ kpis.n_d34|default:0 }}</div>
+        <div class="l">D3 + D4</div>
+        <div class="s">D3 {{ kpis.n_d3 }} · D4 {{ kpis.n_d4 }} · {{ kpis.vol_escombros_m3|default:0 }} m³</div>
+      </div>
+      <div class="op-kpi accent-warn">
+        <div class="v">{{ kpis.cola_revision }}</div>
+        <div class="l">Cola revisión</div>
+        <div class="s">Pendiente revisión</div>
+      </div>
+      <div class="op-kpi">
+        <div class="v">{{ kpis.borrador }}</div>
+        <div class="l">En borrador</div>
+        <div class="s">{{ kpis.en_visita }} en visita · {{ kpis.pendiente }} pend. verif.</div>
+      </div>
+      <div class="op-kpi accent-ok">
+        <div class="v">{{ kpis.aprobados }}</div>
+        <div class="l">Aprobados / publicados</div>
+        <div class="s">Cierre operativo · elev. 7d: {{ kpis.revisados_7d }}</div>
+      </div>
+    </section>
+
+    <section class="op-grid">
+      <article class="op-card tall op-span-2">
+        <div class="op-card-head">
+          <h2>Ritmo operativo (acumulado)</h2>
+          <p>Visitas · elevados a revisión · dictámenes con visita en la ventana</p>
+        </div>
+        <div id="chart-ritmo" class="op-chart"></div>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Composición por equipo</h2>
+          <p>% del embudo de estados en cada brigada (apilado al 100%)</p>
+        </div>
+        <div class="op-legend" id="legend-equipo" aria-label="Leyenda composición por estado"></div>
+        <div id="chart-equipo" class="op-chart"></div>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Avance % por equipo</h2>
+          <p>% con visita 2 y % con dictamen D (fácil de comparar)</p>
+        </div>
+        <div class="op-legend" id="legend-avance" aria-label="Leyenda avance por equipo"></div>
+        <div id="chart-avance" class="op-chart"></div>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Embudo por estado</h2>
+          <p>Cantidad y % sobre la bandeja</p>
+        </div>
+        <div id="chart-estado" class="op-chart"></div>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Dictámenes D1–D4</h2>
+          <p>Solo casos con decisión (sin el bloque «Sin dictamen»)</p>
+        </div>
+        <div id="chart-decision" class="op-chart"></div>
+      </article>
+
+      <div class="op-section-title op-span-2">
+        Analítica de decisiones
+        <span>Cruce por brigada y zona · D1/D2 · D3/D4 (escombros, prioridad) · embudo · alertas</span>
+      </div>
+
+      <details class="op-codes-legend op-span-2 op-dm-legend">
+        <summary>Leyenda D y M (clic para abrir)</summary>
+        <div class="op-dm-grid">
+          <div>
+            <div class="op-dm-h">Decisión D (gravedad)</div>
+            {% for c in stats.d_leyenda %}
+            <div class="op-code-row"><strong>{{ c.code }}</strong> {{ c.desc }}</div>
+            {% endfor %}
+          </div>
+          <div>
+            <div class="op-dm-h">Magnitud M (solo si D2)</div>
+            {% for c in stats.m_leyenda %}
+            <div class="op-code-row"><strong>{{ c.code }}</strong> {{ c.desc }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </details>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Decisión × equipo</h2>
+          <p>Mix D1–D4 en cada brigada (apilado al 100% sobre dictaminados)</p>
+        </div>
+        <div class="op-legend" id="legend-dec-equipo"></div>
+        <div id="chart-dec-equipo" class="op-chart"></div>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Decisión × zona</h2>
+          <p>Conteo D1–D4 en La Guaira y Caracas</p>
+        </div>
+        <div class="op-legend" id="legend-dec-zona"></div>
+        <div id="chart-dec-zona" class="op-chart"></div>
+        <p class="op-chart-note" id="note-dec-zona"></p>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>D1 — tipos de complemento</h2>
+          <p>Códigos GEO / ENS / MOD… entre casos D1 (un caso puede aportar varios)</p>
+        </div>
+        <details class="op-codes-legend">
+          <summary>Leyenda de códigos (clic para abrir)</summary>
+          <div class="op-codes-body">
+            {% for c in stats.d1_leyenda %}
+            <div class="op-code-row"><strong>{{ c.code }}</strong> {{ c.desc }}</div>
+            {% endfor %}
+          </div>
+        </details>
+        <div id="chart-d1-comp" class="op-chart"></div>
+        <p class="op-chart-note" id="note-d1-comp"></p>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>D2 — magnitud M1–M4</h2>
+          <p>Intensidad de reparación / reconstrucción</p>
+        </div>
+        <div id="chart-d2-mag" class="op-chart"></div>
+        <p class="op-chart-note" id="note-d2-mag"></p>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>D3/D4 — escombros (m³)</h2>
+          <p>Tramos de volumen · {{ kpis.n_d34|default:0 }} casos · suma {{ kpis.vol_escombros_m3|default:0 }} m³</p>
+        </div>
+        <div id="chart-d34-vol" class="op-chart"></div>
+        <p class="op-chart-note" id="note-d34-vol"></p>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>D3/D4 — prioridad operativa</h2>
+          <p>Inmediata / Alta / Programable · score medio {{ stats.d34.score_prom|default:"—" }} (referencia)</p>
+        </div>
+        <div id="chart-d34-prio" class="op-chart"></div>
+        <p class="op-chart-note" id="note-d34-prio"></p>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Embudo de dictamen</h2>
+          <p>Bandeja → visita → dictamen → cola → aprobado+</p>
+        </div>
+        <div id="chart-embudo" class="op-chart"></div>
+      </article>
+
+      <article class="op-card">
+        <div class="op-card-head">
+          <h2>Estado por decisión D</h2>
+          <p>Campo / borrador / cola / aprobado+ dentro de cada D</p>
+        </div>
+        <div class="op-legend" id="legend-estado-d"></div>
+        <div id="chart-estado-d" class="op-chart"></div>
+      </article>
+
+      <article class="op-card op-span-2" style="min-height:auto;box-shadow:none;border:0;background:transparent;padding:0">
+        <div class="op-alertas">
+          <div class="op-alertas-head">
+            <h2>Alertas de calidad del dictamen</h2>
+            <p>Casos incompletos o inconsistentes en la bandeja filtrada. Lista ordenada por días sin actualizar (más antiguos primero).</p>
+            <div class="op-alertas-leyenda" aria-label="Leyenda de antigüedad">
+              <span><i class="lg-ok" aria-hidden="true"></i> 0–3 días</span>
+              <span><i class="lg-media" aria-hidden="true"></i> 4–7 días</span>
+              <span><i class="lg-alta" aria-hidden="true"></i> 8–14 días</span>
+              <span><i class="lg-crit" aria-hidden="true"></i> 15+ días (priorizar)</span>
+            </div>
+          </div>
+          {% if alertas_dictamen %}
+          <table>
+            <thead>
+              <tr>
+                <th>Severidad</th>
+                <th>Alerta</th>
+                <th>N.º</th>
+                <th>Qué hacer</th>
+                <th>Lista de casos (días sin actualizar)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for a in alertas_dictamen %}
+              <tr>
+                <td>
+                  {% if a.severidad == "danger" %}
+                  <span class="op-sev op-sev-danger">Alta</span>
+                  {% else %}
+                  <span class="op-sev op-sev-warn">Media</span>
+                  {% endif %}
+                </td>
+                <td><strong>{{ a.titulo }}</strong></td>
+                <td class="n">{{ a.n }}</td>
+                <td class="ayuda">{{ a.ayuda }}</td>
+                <td class="muestras">
+                  {% for m in a.muestras %}
+                  <a href="{{ m.url }}" target="_blank" rel="noopener"
+                     class="{{ m.clase_antiguedad }}"
+                     title="{{ m.nombre }} · {{ m.titulo_antiguedad }}">
+                    #{{ m.hab_id }}
+                    <span class="dias">{{ m.dias_sin_actualizar }}d</span>
+                  </a>
+                  {% empty %}—{% endfor %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div class="op-empty-alertas">Sin alertas de calidad en la bandeja actual.</div>
+          {% endif %}
+        </div>
+      </article>
+
+      <article class="op-card op-span-2">
+        <div class="op-card-head">
+          <h2>Caracas y La Guaira — estado y decisión</h2>
+          <p>Tortas de la bandeja por zona (municipio/parroquia). La Guaira ≈ Vargas; Caracas ≈ Libertador y municipios del AMM.</p>
+        </div>
+        <div class="op-zona-grid">
+          <div class="op-zona-cell">
+            <h3>La Guaira · Estado (<span id="n-guaira-est">0</span>)</h3>
+            <div id="chart-guaira-estado" class="op-zona-chart"></div>
+          </div>
+          <div class="op-zona-cell">
+            <h3>La Guaira · Decisión D (<span id="n-guaira-dec">0</span>)</h3>
+            <div id="chart-guaira-decision" class="op-zona-chart"></div>
+          </div>
+          <div class="op-zona-cell">
+            <h3>Caracas · Estado (<span id="n-caracas-est">0</span>)</h3>
+            <div id="chart-caracas-estado" class="op-zona-chart"></div>
+          </div>
+          <div class="op-zona-cell">
+            <h3>Caracas · Decisión D (<span id="n-caracas-dec">0</span>)</h3>
+            <div id="chart-caracas-decision" class="op-zona-chart"></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <p class="op-foot">
+      CPEH · Fase II ROJO — solo bandeja de equipos (asignados a brigadas).
+      Ventana {{ filtros.desde }} → {{ filtros.hasta }}.
+      Gráficos: Apache ECharts 5 · lectura por % y acumulados.
+    </p>
+  </main>
+
+  <script>
+    window.CPEH_OPERACION = {{ stats_json|safe }};
+    (function () {
+      var S = window.CPEH_OPERACION || {};
+      var brand = "#00247d";
+      var teal = "#0f766e";
+      var amber = "#d97706";
+      var rose = "#c8102e";
+      var slate = "#64748b";
+      var EST_KEYS = ["Pendiente verificación", "En visita", "Borrador", "Pendiente revisión", "Revisado", "Aprobado+"];
+      var EST_LABELS = ["Pend. verificación", "En visita", "Borrador", "Pend. revisión", "Revisado", "Aprobado+"];
+      var EST_COLORS = ["#94a3b8", "#3b82f6", "#0ea5e9", "#d97706", "#166534", "#4c1d95"];
+
+      function baseText() {
+        return { fontFamily: "Plus Jakarta Sans, sans-serif", color: "#334155" };
+      }
+
+      function fillLegend(elId, items) {
+        var el = document.getElementById(elId);
+        if (!el) return;
+        el.innerHTML = items.map(function (it) {
+          var cls = "op-legend-item" + (it.muted ? " muted" : "");
+          return '<span class="' + cls + '" title="' + (it.title || it.label) + '">' +
+            '<span class="op-legend-swatch" style="background:' + it.color + '"></span>' +
+            it.label +
+            "</span>";
+        }).join("");
+      }
+
+      /** «Equipo 1 — Ataguia» → dos líneas para que no se corte. */
+      function equipoLabel2L(label) {
+        var s = String(label || "");
+        var m = s.match(/^(Equipo\s+\d+)\s*[—\-–]\s*(.+)$/i);
+        if (m) return m[1] + "\n" + m[2];
+        if (s.length > 14) {
+          var cut = s.indexOf(" ", 8);
+          if (cut > 0) return s.slice(0, cut) + "\n" + s.slice(cut + 1);
+        }
+        return s;
+      }
+
+      function yAxisEquipo(rows) {
+        return {
+          type: "category",
+          data: rows.map(function (r) { return r.equipo; }),
+          inverse: true, // Equipo 1 arriba … último abajo
+          axisLabel: {
+            fontSize: 11,
+            fontWeight: 700,
+            color: "#0f172a",
+            lineHeight: 15,
+            interval: 0,
+            formatter: function (v) { return equipoLabel2L(v); }
+          },
+          axisTick: { alignWithLabel: true }
+        };
+      }
+
+      function initRitmo() {
+        var el = document.getElementById("chart-ritmo");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var r = S.ritmo || {};
+        chart.setOption({
+          color: [teal, amber, rose],
+          tooltip: {
+            trigger: "axis",
+            formatter: function (params) {
+              var lines = [params[0].axisValue];
+              params.forEach(function (p) {
+                lines.push(p.marker + " " + p.seriesName + ": <b>" + p.value + "</b>");
+              });
+              return lines.join("<br/>");
+            }
+          },
+          legend: {
+            data: [
+              "Visitas acumuladas",
+              "Elevados a Revisado (acum.)",
+              "Dictámenes (acum.)"
+            ],
+            top: 4,
+            textStyle: baseText()
+          },
+          grid: { left: 48, right: 24, top: 52, bottom: 40 },
+          xAxis: {
+            type: "category",
+            data: r.dias || [],
+            boundaryGap: false,
+            axisLabel: { rotate: 40, fontSize: 10, color: slate },
+            axisLine: { lineStyle: { color: "#cbd5e1" } }
+          },
+          yAxis: {
+            type: "value",
+            minInterval: 1,
+            name: "casos acum.",
+            nameTextStyle: { color: slate, fontSize: 11 },
+            splitLine: { lineStyle: { color: "#eef2f7" } },
+            axisLabel: { color: slate }
+          },
+          series: [
+            {
+              name: "Visitas acumuladas",
+              type: "line",
+              smooth: true,
+              symbol: "circle",
+              symbolSize: 6,
+              areaStyle: { opacity: 0.12 },
+              data: r.acum_visitas || []
+            },
+            {
+              name: "Elevados a Revisado (acum.)",
+              type: "line",
+              smooth: true,
+              symbol: "circle",
+              symbolSize: 6,
+              lineStyle: { width: 2.5 },
+              data: r.acum_revisados || []
+            },
+            {
+              name: "Dictámenes (acum.)",
+              type: "line",
+              smooth: true,
+              symbol: "diamond",
+              symbolSize: 7,
+              lineStyle: { width: 2.5, type: "dashed" },
+              data: r.acum_dictamenes || []
+            }
+          ]
+        });
+        return chart;
+      }
+
+      function initEquipo() {
+        var el = document.getElementById("chart-equipo");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var rows = S.por_equipo || [];
+        var totalsByKey = {};
+        EST_KEYS.forEach(function (key) {
+          totalsByKey[key] = rows.reduce(function (acc, r) {
+            return acc + ((r.estados && r.estados[key]) || 0);
+          }, 0);
+        });
+        fillLegend(
+          "legend-equipo",
+          EST_KEYS.map(function (key, i) {
+            return {
+              label: EST_LABELS[i],
+              title: key + (totalsByKey[key] ? " · " + totalsByKey[key] + " casos" : " · sin casos aún"),
+              color: EST_COLORS[i],
+              muted: !totalsByKey[key]
+            };
+          })
+        );
+        var series = EST_KEYS.map(function (key, i) {
+          return {
+            name: key,
+            type: "bar",
+            stack: "pct",
+            barMaxWidth: 28,
+            itemStyle: { color: EST_COLORS[i] },
+            label: {
+              show: true,
+              formatter: function (p) {
+                return p.value >= 8 ? p.value + "%" : "";
+              },
+              color: "#fff",
+              fontSize: 10,
+              fontWeight: 700
+            },
+            data: rows.map(function (r) {
+              var n = (r.estados && r.estados[key]) || 0;
+              return r.total ? Math.round(1000 * n / r.total) / 10 : 0;
+            })
+          };
+        });
+        // Barra fantasma al 100%: etiqueta «N casos» siempre a la derecha (no usa stack=0)
+        series.push({
+          name: "_total_lbl",
+          type: "bar",
+          barGap: "-100%",
+          barMaxWidth: 28,
+          data: rows.map(function () { return 100; }),
+          itemStyle: { color: "transparent", borderWidth: 0 },
+          tooltip: { show: false },
+          silent: true,
+          z: 20,
+          label: {
+            show: true,
+            position: "right",
+            distance: 8,
+            formatter: function (p) {
+              var row = rows[p.dataIndex];
+              var n = row && row.total != null ? row.total : 0;
+              return n + "\ncasos";
+            },
+            color: "#0f172a",
+            fontWeight: 800,
+            fontSize: 11,
+            lineHeight: 14
+          }
+        });
+        chart.setOption({
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "shadow" },
+            formatter: function (params) {
+              var idx = params[0].dataIndex;
+              var row = rows[idx];
+              var lines = [row.equipo + " · " + row.total + " casos"];
+              params.forEach(function (p) {
+                if (!p.value || p.seriesName === "_total_lbl") return;
+                var key = p.seriesName;
+                var abs = (row.estados && row.estados[key]) || 0;
+                lines.push(p.marker + " " + key + ": " + abs + " (" + p.value + "%)");
+              });
+              return lines.join("<br/>");
+            }
+          },
+          legend: { show: false },
+          grid: { left: 78, right: 56, top: 12, bottom: 24 },
+          xAxis: {
+            type: "value",
+            max: 100,
+            axisLabel: { formatter: "{value}%", color: slate },
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          yAxis: yAxisEquipo(rows),
+          series: series
+        });
+        return chart;
+      }
+
+      function initAvance() {
+        var el = document.getElementById("chart-avance");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var rows = S.por_equipo || [];
+        fillLegend("legend-avance", [
+          { label: "Con visita 2.ª", title: "% de casos con visita de 2.ª ronda", color: teal },
+          { label: "Con dictamen D", title: "% de casos con decisión D1–D4", color: brand }
+        ]);
+        chart.setOption({
+          color: [teal, brand],
+          tooltip: {
+            trigger: "axis",
+            formatter: function (params) {
+              var idx = params[0].dataIndex;
+              var row = rows[idx];
+              return row.equipo + "<br/>Visita: <b>" + row.pct_visita + "%</b> (" + row.con_visita + "/" + row.total + ")" +
+                "<br/>Dictamen: <b>" + row.pct_dictamen + "%</b> (" + row.con_dictamen + "/" + row.total + ")";
+            }
+          },
+          legend: { show: false },
+          grid: { left: 78, right: 52, top: 12, bottom: 24 },
+          xAxis: {
+            type: "value",
+            max: 100,
+            axisLabel: { formatter: "{value}%", color: slate },
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          yAxis: yAxisEquipo(rows),
+          series: [
+            {
+              name: "Con visita 2.ª",
+              type: "bar",
+              barMaxWidth: 16,
+              data: rows.map(function (r) { return r.pct_visita; }),
+              label: { show: true, position: "right", formatter: "{c}%", fontWeight: 700, fontSize: 11 }
+            },
+            {
+              name: "Con dictamen D",
+              type: "bar",
+              barMaxWidth: 16,
+              data: rows.map(function (r) { return r.pct_dictamen; }),
+              label: { show: true, position: "right", formatter: "{c}%", fontWeight: 700, fontSize: 11 }
+            }
+          ]
+        });
+        return chart;
+      }
+
+      function initEstado() {
+        var el = document.getElementById("chart-estado");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var rows = (S.por_estado || []).slice().reverse();
+        chart.setOption({
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "shadow" },
+            formatter: function (p) {
+              var i = p[0].dataIndex;
+              var row = rows[i];
+              return row.name + "<br/><b>" + row.value + "</b> casos (" + row.pct + "%)";
+            }
+          },
+          grid: { left: 120, right: 56, top: 16, bottom: 24 },
+          xAxis: {
+            type: "value",
+            minInterval: 1,
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          yAxis: {
+            type: "category",
+            data: rows.map(function (r) { return r.name; }),
+            axisLabel: { fontSize: 11, fontWeight: 600, color: "#0f172a" }
+          },
+          series: [{
+            type: "bar",
+            barMaxWidth: 22,
+            data: rows.map(function (r) { return r.value; }),
+            itemStyle: {
+              borderRadius: [0, 6, 6, 0],
+              color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                { offset: 0, color: "#1e3a8a" },
+                { offset: 1, color: "#3b82f6" }
+              ])
+            },
+            label: {
+              show: true,
+              position: "right",
+              formatter: function (p) {
+                var row = rows[p.dataIndex];
+                return row.value + " · " + row.pct + "%";
+              },
+              color: "#334155",
+              fontWeight: 700,
+              fontSize: 11
+            }
+          }]
+        });
+        return chart;
+      }
+
+      function initDecision() {
+        var el = document.getElementById("chart-decision");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var rows = (S.por_decision_dictamen || []).slice().reverse();
+        var k = S.kpis || {};
+        if (!rows.length) {
+          chart.setOption({
+            title: {
+              text: "Aún no hay dictámenes D1–D4",
+              subtext: (k.sin_dictamen || 0) + " casos sin dictamen en bandeja",
+              left: "center",
+              top: "middle",
+              textStyle: { fontSize: 14, color: slate, fontWeight: 600 },
+              subtextStyle: { fontSize: 12, color: "#94a3b8" }
+            }
+          });
+          return chart;
+        }
+        chart.setOption({
+          tooltip: {
+            trigger: "axis",
+            formatter: function (p) {
+              var row = rows[p[0].dataIndex];
+              return row.name + "<br/><b>" + row.value + "</b> (" + (row.pct_dictamen || row.pct) + "% de dictaminados)";
+            }
+          },
+          grid: { left: 56, right: 56, top: 16, bottom: 24 },
+          xAxis: {
+            type: "value",
+            minInterval: 1,
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          yAxis: {
+            type: "category",
+            data: rows.map(function (r) { return r.name; }),
+            axisLabel: { fontWeight: 800, fontSize: 13, color: "#0f172a" }
+          },
+          series: [{
+            type: "bar",
+            barMaxWidth: 26,
+            data: rows.map(function (r) { return r.value; }),
+            itemStyle: {
+              borderRadius: [0, 6, 6, 0],
+              color: function (p) {
+                var map = { D1: "#0ea5e9", D2: "#0f766e", D3: "#d97706", D4: "#c8102e" };
+                return map[rows[p.dataIndex].name] || brand;
+              }
+            },
+            label: {
+              show: true,
+              position: "right",
+              formatter: function (p) {
+                var row = rows[p.dataIndex];
+                return row.value + " · " + (row.pct_dictamen || row.pct) + "%";
+              },
+              fontWeight: 700
+            }
+          }]
+        });
+        return chart;
+      }
+
+      var DEC_KEYS = S.dec_keys || ["D1", "D2", "D3", "D4"];
+      var DEC_COLORS = { D1: "#0ea5e9", D2: "#0f766e", D3: "#d97706", D4: "#c8102e" };
+
+      function initDecEquipo() {
+        var el = document.getElementById("chart-dec-equipo");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var rows = (S.por_equipo || []).filter(function (r) {
+          return (r.n_dictamen_d || 0) > 0;
+        });
+        fillLegend(
+          "legend-dec-equipo",
+          DEC_KEYS.map(function (k) {
+            return { label: k, color: DEC_COLORS[k], title: k };
+          })
+        );
+        if (!rows.length) {
+          chart.setOption({
+            title: {
+              text: "Sin dictámenes por equipo",
+              left: "center",
+              top: "middle",
+              textStyle: { fontSize: 13, color: slate, fontWeight: 600 }
+            }
+          });
+          return chart;
+        }
+        var series = DEC_KEYS.map(function (key) {
+          return {
+            name: key,
+            type: "bar",
+            stack: "pct",
+            barMaxWidth: 26,
+            itemStyle: { color: DEC_COLORS[key] },
+            label: {
+              show: true,
+              formatter: function (p) { return p.value >= 10 ? p.value + "%" : ""; },
+              color: "#fff",
+              fontSize: 10,
+              fontWeight: 700
+            },
+            data: rows.map(function (r) {
+              var n = (r.decisiones && r.decisiones[key]) || 0;
+              var den = r.n_dictamen_d || 0;
+              return den ? Math.round(1000 * n / den) / 10 : 0;
+            })
+          };
+        });
+        series.push({
+          name: "_tot",
+          type: "bar",
+          barGap: "-100%",
+          barMaxWidth: 26,
+          data: rows.map(function () { return 100; }),
+          itemStyle: { color: "transparent" },
+          tooltip: { show: false },
+          silent: true,
+          z: 20,
+          label: {
+            show: true,
+            position: "right",
+            distance: 6,
+            formatter: function (p) {
+              var r = rows[p.dataIndex];
+              return (r.n_dictamen_d || 0) + "\nD";
+            },
+            color: "#0f172a",
+            fontWeight: 800,
+            fontSize: 11,
+            lineHeight: 13
+          }
+        });
+        chart.setOption({
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "shadow" },
+            formatter: function (params) {
+              var r = rows[params[0].dataIndex];
+              var lines = [r.equipo + " · " + (r.n_dictamen_d || 0) + " dictámenes"];
+              params.forEach(function (p) {
+                if (!p.value || p.seriesName === "_tot") return;
+                var abs = (r.decisiones && r.decisiones[p.seriesName]) || 0;
+                lines.push(p.marker + " " + p.seriesName + ": " + abs + " (" + p.value + "%)");
+              });
+              return lines.join("<br/>");
+            }
+          },
+          legend: { show: false },
+          grid: { left: 78, right: 48, top: 10, bottom: 20 },
+          xAxis: {
+            type: "value",
+            max: 100,
+            axisLabel: { formatter: "{value}%", color: slate },
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          yAxis: yAxisEquipo(rows),
+          series: series
+        });
+        return chart;
+      }
+
+      function setChartNote(elId, text) {
+        var el = document.getElementById(elId);
+        if (!el) return;
+        el.innerHTML = text || "";
+      }
+
+      function isErrorBucketName(name) {
+        var s = String(name || "").toLowerCase();
+        return (
+          s.indexOf("n/a") >= 0 ||
+          s.indexOf("sin clasificar") >= 0 ||
+          s.indexOf("otras") === 0 ||
+          s.indexOf("sin código") >= 0 ||
+          s.indexOf("sin codigo") >= 0 ||
+          s === "sin dato" ||
+          s === "pendiente" ||
+          s === "sin magnitud" ||
+          s === "sin prioridad" ||
+          s === "—" ||
+          s === "-"
+        );
+      }
+
+      function splitChartRows(rows, isErrorFn) {
+        var ok = [];
+        var bad = [];
+        (rows || []).forEach(function (r) {
+          if (isErrorFn(r)) bad.push(r);
+          else ok.push(r);
+        });
+        return { ok: ok, bad: bad };
+      }
+
+      function noteFromRows(bad, fmt) {
+        if (!bad || !bad.length) return "";
+        return "<strong>Nota:</strong> " + bad.map(fmt).join(" · ");
+      }
+
+      function initDecZona() {
+        var el = document.getElementById("chart-dec-zona");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var split = splitChartRows(S.decision_x_zona || [], function (r) {
+          return isErrorBucketName(r.zona);
+        });
+        var rows = split.ok;
+        setChartNote(
+          "note-dec-zona",
+          noteFromRows(split.bad, function (r) {
+            var parts = DEC_KEYS.map(function (k) {
+              var n = (r.decisiones && r.decisiones[k]) || 0;
+              return n ? k + "=" + n : "";
+            }).filter(Boolean);
+            return (
+              (r.zona || "Otras") +
+              " " +
+              (r.total || 0) +
+              " caso" +
+              ((r.total || 0) === 1 ? "" : "s") +
+              (parts.length ? " (" + parts.join(", ") + ")" : "") +
+              " — fuera del gráfico (ubicación no clasificada)"
+            );
+          })
+        );
+        fillLegend(
+          "legend-dec-zona",
+          DEC_KEYS.map(function (k) {
+            return { label: k, color: DEC_COLORS[k], title: k };
+          })
+        );
+        if (!rows.length) {
+          chart.setOption({
+            title: {
+              text: "Sin datos por zona",
+              left: "center",
+              top: "middle",
+              textStyle: { fontSize: 13, color: slate, fontWeight: 600 }
+            }
+          });
+          return chart;
+        }
+        chart.setOption({
+          tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+          legend: { show: false },
+          grid: { left: 110, right: 24, top: 12, bottom: 28 },
+          xAxis: {
+            type: "value",
+            minInterval: 1,
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          yAxis: {
+            type: "category",
+            data: rows.map(function (r) { return r.zona; }),
+            axisLabel: { fontWeight: 700, color: "#0f172a", fontSize: 11 }
+          },
+          series: DEC_KEYS.map(function (key) {
+            return {
+              name: key,
+              type: "bar",
+              barMaxWidth: 14,
+              itemStyle: { color: DEC_COLORS[key] },
+              data: rows.map(function (r) {
+                return (r.decisiones && r.decisiones[key]) || 0;
+              }),
+              label: {
+                show: true,
+                position: "right",
+                formatter: function (p) { return p.value ? p.value : ""; },
+                fontSize: 10,
+                fontWeight: 700,
+                color: "#334155"
+              }
+            };
+          })
+        });
+        return chart;
+      }
+
+      function initBarList(elId, rows, emptyMsg, colorFn) {
+        var el = document.getElementById(elId);
+        if (!el || !window.echarts) return null;
+        var chart = echarts.init(el);
+        var data = (rows || []).slice().reverse();
+        if (!data.length) {
+          chart.setOption({
+            title: {
+              text: emptyMsg || "Sin datos",
+              left: "center",
+              top: "middle",
+              textStyle: { fontSize: 13, color: slate, fontWeight: 600 }
+            }
+          });
+          return chart;
+        }
+        chart.setOption({
+          tooltip: {
+            trigger: "axis",
+            formatter: function (p) {
+              var row = data[p[0].dataIndex];
+              return (row.name_full || row.name) + "<br/><b>" + row.value + "</b> (" + row.pct + "%)";
+            }
+          },
+          grid: { left: 88, right: 56, top: 12, bottom: 20 },
+          xAxis: {
+            type: "value",
+            minInterval: 1,
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          yAxis: {
+            type: "category",
+            data: data.map(function (r) { return r.name; }),
+            axisLabel: { fontWeight: 700, color: "#0f172a", fontSize: 11 }
+          },
+          series: [{
+            type: "bar",
+            barMaxWidth: 20,
+            data: data.map(function (r) {
+              var c = brand;
+              if (typeof colorFn === "function") c = colorFn(r.name) || brand;
+              else if (colorFn) c = colorFn;
+              return { value: r.value, itemStyle: { color: c, borderRadius: [0, 5, 5, 0] } };
+            }),
+            label: {
+              show: true,
+              position: "right",
+              formatter: function (p) {
+                var row = data[p.dataIndex];
+                return row.value + " · " + row.pct + "%";
+              },
+              fontWeight: 700,
+              fontSize: 11,
+              color: "#334155"
+            }
+          }]
+        });
+        return chart;
+      }
+
+      function initD1Comp() {
+        var split = splitChartRows(S.d1_complementos || [], function (r) {
+          return isErrorBucketName(r.name) || isErrorBucketName(r.name_full);
+        });
+        var totalOk = split.ok.reduce(function (a, r) { return a + (r.value || 0); }, 0);
+        var rows = split.ok.map(function (r) {
+          return Object.assign({}, r, {
+            pct: totalOk ? Math.round((1000 * r.value) / totalOk) / 10 : 0
+          });
+        });
+        setChartNote(
+          "note-d1-comp",
+          noteFromRows(split.bad, function (r) {
+            return (r.name || "sin código") + " " + r.value + " — fuera del gráfico (dato incompleto)";
+          })
+        );
+        return initBarList(
+          "chart-d1-comp",
+          rows,
+          "Aún no hay casos D1",
+          "#0ea5e9"
+        );
+      }
+
+      function initD2Mag() {
+        var split = splitChartRows(S.d2_magnitudes || [], function (r) {
+          return isErrorBucketName(r.name) || isErrorBucketName(r.name_full);
+        });
+        var totalOk = split.ok.reduce(function (a, r) { return a + (r.value || 0); }, 0);
+        var rows = split.ok.map(function (r) {
+          return Object.assign({}, r, {
+            pct: totalOk ? Math.round((1000 * r.value) / totalOk) / 10 : 0
+          });
+        });
+        setChartNote(
+          "note-d2-mag",
+          noteFromRows(split.bad, function (r) {
+            return (
+              (r.name_full || r.name || "N/A") +
+              " " +
+              r.value +
+              " — fuera del gráfico (magnitud inconsistente o pendiente)"
+            );
+          })
+        );
+        return initBarList(
+          "chart-d2-mag",
+          rows,
+          "Aún no hay casos D2 con M1–M4",
+          "#0f766e"
+        );
+      }
+
+      function initD34Vol() {
+        var d34 = S.d34 || {};
+        var split = splitChartRows(d34.vol_tramos || [], function (r) {
+          return isErrorBucketName(r.name);
+        });
+        var totalOk = split.ok.reduce(function (a, r) { return a + (r.value || 0); }, 0);
+        var rows = split.ok.map(function (r) {
+          return Object.assign({}, r, {
+            pct: totalOk ? Math.round((1000 * r.value) / totalOk) / 10 : 0
+          });
+        });
+        setChartNote(
+          "note-d34-vol",
+          noteFromRows(split.bad, function (r) {
+            return (r.name || "Sin dato") + " " + r.value + " — fuera del gráfico (volumen no cargado)";
+          })
+        );
+        return initBarList(
+          "chart-d34-vol",
+          rows,
+          "Aún no hay casos D3/D4 con volumen",
+          function (name) {
+            if (name.indexOf("<") === 0) return "#0ea5e9";
+            if (name.indexOf("50") === 0) return "#d97706";
+            return "#c8102e";
+          }
+        );
+      }
+
+      function initD34Prio() {
+        var el = document.getElementById("chart-d34-prio");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var prios = (S.d34 && S.d34.prioridades) || [];
+        var split = splitChartRows(prios, function (r) {
+          return isErrorBucketName(r.name);
+        });
+        // nota de prioridad pendiente / sin dato — reutilizar note-d34-vol no; añadir note en HTML si falta
+        var noteEl = document.getElementById("note-d34-prio");
+        if (noteEl) {
+          setChartNote(
+            "note-d34-prio",
+            noteFromRows(split.bad, function (r) {
+              return (r.name || "Pendiente") + " " + r.value + " — fuera del gráfico (prioridad no definida)";
+            })
+          );
+        }
+        var colorMap = {
+          Inmediata: "#c8102e",
+          Alta: "#d97706",
+          Programable: "#0f766e",
+          Pendiente: "#94a3b8",
+          "Sin prioridad": "#64748b"
+        };
+        var fallback = ["#c8102e", "#d97706", "#0f766e", "#94a3b8", "#0ea5e9"];
+        var rows = split.ok
+          .filter(function (p) { return p.value > 0; })
+          .map(function (p, i) {
+            return {
+              name: p.name,
+              value: p.value,
+              itemStyle: {
+                color: colorMap[p.name] || fallback[i % fallback.length]
+              }
+            };
+          });
+        chart.setOption(pieOption(rows, "Aún no hay casos D3/D4"));
+        return chart;
+      }
+
+      function initEmbudo() {
+        var el = document.getElementById("chart-embudo");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var pasos = (S.embudo_dictamen && S.embudo_dictamen.pasos) || [];
+        if (!pasos.length) {
+          chart.setOption({
+            title: {
+              text: "Sin datos de embudo",
+              left: "center",
+              top: "middle",
+              textStyle: { fontSize: 13, color: slate, fontWeight: 600 }
+            }
+          });
+          return chart;
+        }
+        var colors = ["#94a3b8", "#3b82f6", "#0f766e", "#d97706", "#4c1d95"];
+        chart.setOption({
+          tooltip: {
+            trigger: "item",
+            formatter: function (p) {
+              var row = pasos[p.dataIndex] || {};
+              return p.name + ": <b>" + p.value + "</b> (" + (row.pct || 0) + "% bandeja)";
+            }
+          },
+          series: [{
+            type: "funnel",
+            left: "8%",
+            top: 16,
+            bottom: 16,
+            width: "78%",
+            min: 0,
+            max: Math.max.apply(null, pasos.map(function (r) { return r.value; }).concat([1])),
+            minSize: "18%",
+            maxSize: "100%",
+            sort: "none",
+            gap: 4,
+            label: {
+              show: true,
+              position: "inside",
+              formatter: function (p) {
+                var row = pasos[p.dataIndex] || {};
+                return p.name + "\n" + p.value + " · " + (row.pct || 0) + "%";
+              },
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: 11
+            },
+            itemStyle: { borderColor: "#fff", borderWidth: 1 },
+            data: pasos.map(function (r, i) {
+              return {
+                name: r.name,
+                value: r.value,
+                itemStyle: { color: colors[i % colors.length] }
+              };
+            })
+          }]
+        });
+        return chart;
+      }
+
+      function initEstadoPorD() {
+        var el = document.getElementById("chart-estado-d");
+        if (!el || !window.echarts) return;
+        var chart = echarts.init(el);
+        var rows = (S.embudo_dictamen && S.embudo_dictamen.por_d) || [];
+        var stages = [
+          { key: "campo", label: "Campo", color: "#3b82f6" },
+          { key: "borrador", label: "Borrador", color: "#0ea5e9" },
+          { key: "cola", label: "Cola revisión", color: "#d97706" },
+          { key: "aprobado", label: "Aprobado+", color: "#4c1d95" }
+        ];
+        fillLegend(
+          "legend-estado-d",
+          stages.map(function (s) {
+            return { label: s.label, color: s.color, title: s.label };
+          })
+        );
+        if (!rows.length) {
+          chart.setOption({
+            title: {
+              text: "Sin dictámenes por D",
+              left: "center",
+              top: "middle",
+              textStyle: { fontSize: 13, color: slate, fontWeight: 600 }
+            }
+          });
+          return chart;
+        }
+        chart.setOption({
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "shadow" },
+            formatter: function (params) {
+              var idx = params[0].dataIndex;
+              var row = rows[idx] || {};
+              var lines = [row.d + " · total " + (row.total || 0)];
+              params.forEach(function (p) {
+                if (p.value) lines.push(p.marker + " " + p.seriesName + ": <b>" + p.value + "</b>");
+              });
+              return lines.join("<br/>");
+            }
+          },
+          grid: { left: 48, right: 24, top: 16, bottom: 32 },
+          xAxis: {
+            type: "category",
+            data: rows.map(function (r) { return r.d; }),
+            axisLabel: { fontWeight: 700, color: "#0f172a" }
+          },
+          yAxis: {
+            type: "value",
+            minInterval: 1,
+            splitLine: { lineStyle: { color: "#eef2f7" } }
+          },
+          series: stages.map(function (s) {
+            return {
+              name: s.label,
+              type: "bar",
+              stack: "est",
+              barMaxWidth: 36,
+              itemStyle: { color: s.color },
+              data: rows.map(function (r) { return r[s.key] || 0; }),
+              label: {
+                show: true,
+                formatter: function (p) { return p.value >= 3 ? p.value : ""; },
+                color: "#fff",
+                fontSize: 10,
+                fontWeight: 700
+              }
+            };
+          })
+        });
+        return chart;
+      }
+
+      function pieOption(rows, emptyMsg) {
+        if (!rows || !rows.length) {
+          return {
+            title: {
+              text: emptyMsg || "Sin casos",
+              left: "center",
+              top: "middle",
+              textStyle: { fontSize: 13, color: slate, fontWeight: 600 }
+            }
+          };
+        }
+        return {
+          tooltip: { trigger: "item", formatter: "{b}: {c} ({d}%)" },
+          series: [{
+            type: "pie",
+            radius: ["34%", "62%"],
+            center: ["50%", "54%"],
+            itemStyle: { borderRadius: 5, borderColor: "#fff", borderWidth: 2 },
+            label: {
+              fontSize: 10,
+              color: "#334155",
+              formatter: "{b}\n{c} ({d}%)"
+            },
+            data: rows
+          }]
+        };
+      }
+
+      function initZonaPies() {
+        var z = S.por_zona || {};
+        var gua = z.la_guaira || { total: 0, por_estado: [], por_decision: [] };
+        var car = z.caracas || { total: 0, por_estado: [], por_decision: [] };
+        function setN(id, n) {
+          var el = document.getElementById(id);
+          if (el) el.textContent = String(n || 0);
+        }
+        setN("n-guaira-est", gua.total);
+        setN("n-guaira-dec", gua.total);
+        setN("n-caracas-est", car.total);
+        setN("n-caracas-dec", car.total);
+
+        var specs = [
+          ["chart-guaira-estado", gua.por_estado, "Sin casos La Guaira"],
+          ["chart-guaira-decision", gua.por_decision, "Sin casos La Guaira"],
+          ["chart-caracas-estado", car.por_estado, "Sin casos Caracas en bandeja"],
+          ["chart-caracas-decision", car.por_decision, "Sin casos Caracas en bandeja"]
+        ];
+        var out = [];
+        specs.forEach(function (sp) {
+          var el = document.getElementById(sp[0]);
+          if (!el || !window.echarts) return;
+          var chart = echarts.init(el);
+          chart.setOption(pieOption(sp[1], sp[2]));
+          out.push(chart);
+        });
+        return out;
+      }
+
+      var charts = [];
+      function boot() {
+        charts = [
+          initRitmo(),
+          initEquipo(),
+          initAvance(),
+          initEstado(),
+          initDecision(),
+          initDecEquipo(),
+          initDecZona(),
+          initD1Comp(),
+          initD2Mag(),
+          initD34Vol(),
+          initD34Prio(),
+          initEmbudo(),
+          initEstadoPorD()
+        ].filter(Boolean).concat(initZonaPies());
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+      } else {
+        boot();
+      }
+      window.addEventListener("resize", function () {
+        charts.forEach(function (c) { c && c.resize(); });
+      });
+    })();
+  </script>
+</body>
+</html>

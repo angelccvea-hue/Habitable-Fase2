@@ -1,0 +1,65 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container-fluid" style="max-width:960px;margin:1.5rem auto;">
+  <h1><i class="fas fa-users"></i> Nombres del equipo</h1>
+  <p class="text-muted">
+    Complete <strong>nombre</strong> y <strong>apellido</strong> de cada usuario.
+    Cada persona también puede hacerlo en <a href="{% url 'mi_perfil' %}">Mi perfil</a>.
+  </p>
+
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" class="card card-body shadow-sm">
+    {% csrf_token %}
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Equipo</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for fila in filas %}
+          <tr>
+            <td><code>{{ fila.user.username }}</code></td>
+            <td class="small">{{ fila.equipo }}</td>
+            <td>
+              <input type="text" class="form-control form-control-sm"
+                     name="first_{{ fila.user.pk }}"
+                     value="{{ fila.user.first_name }}"
+                     maxlength="150" placeholder="Nombre">
+            </td>
+            <td>
+              <input type="text" class="form-control form-control-sm"
+                     name="last_{{ fila.user.pk }}"
+                     value="{{ fila.user.last_name }}"
+                     maxlength="150" placeholder="Apellido">
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">No hay usuarios en su alcance.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Guardar todos
+      </button>
+      <a href="{% url 'mi_perfil' %}" class="btn btn-outline-secondary ml-2">Mi perfil</a>
+      <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary ml-1">Inicio</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

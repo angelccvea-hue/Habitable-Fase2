@@ -1,0 +1,398 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+<style>
+  /* Panel claro: Jazzmin oscuro deja h1/hint ilegibles fuera de las cards */
+  .cpeh-ug {
+    max-width: 1280px;
+    margin: 1.25rem auto;
+    padding: 1rem 1.1rem 1.35rem;
+    color: #0f172a !important;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+  }
+  .cpeh-ug .cpeh-ug-head {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    background: #fff;
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+  }
+  .cpeh-ug h1 {
+    color: #0f172a !important;
+    font-weight: 800;
+    margin: 0 0 0.35rem;
+    font-size: 1.45rem;
+  }
+  .cpeh-ug h1 i { color: #1d4ed8 !important; }
+  .cpeh-ug .cpeh-ug-head .hint {
+    margin: 0;
+    color: #1e293b !important;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .cpeh-ug .cpeh-card {
+    background: #fff !important;
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  }
+  .cpeh-ug .cpeh-card h2 {
+    font-size: 1.05rem;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #94a3b8;
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    font-weight: 800;
+  }
+  .cpeh-ug .cpeh-card-body {
+    padding: 1rem;
+    background: #fff !important;
+    color: #0f172a !important;
+  }
+  .cpeh-ug table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    color: #0f172a;
+  }
+  .cpeh-ug thead th {
+    text-align: left;
+    color: #0f172a !important;
+    font-weight: 800;
+    white-space: nowrap;
+    background: #f1f5f9;
+    border-bottom: 2px solid #94a3b8;
+    padding: 0.55rem 0.6rem;
+  }
+  .cpeh-ug td {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid #cbd5e1;
+    vertical-align: top;
+    color: #0f172a;
+  }
+  .cpeh-ug tbody tr:nth-child(even) { background: #f8fafc; }
+  .cpeh-ug tbody tr:hover { background: #eef2ff; }
+  .cpeh-ug .ug-name {
+    display: block;
+    color: #0f172a !important;
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+  .cpeh-ug .ug-name.is-placeholder { color: #475569 !important; }
+  .cpeh-ug code,
+  .cpeh-ug .ug-user {
+    font-family: ui-monospace, Consolas, monospace;
+    color: #1e3a8a !important;
+    background: #dbeafe !important;
+    padding: 0.12rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+  .cpeh-ug .ug-equipo {
+    color: #0f172a !important;
+    font-weight: 700;
+  }
+  .cpeh-ug .ug-num {
+    color: #0f172a !important;
+    font-weight: 800;
+  }
+  .cpeh-ug .ug-meta {
+    color: #334155 !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .cpeh-ug .clave {
+    font-family: ui-monospace, Consolas, monospace;
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+  .cpeh-ug .ug-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    margin: 0 0.15rem 0.15rem 0;
+    border: 1px solid transparent;
+    letter-spacing: 0.01em;
+  }
+  .cpeh-ug .b-coord { background: #fbbf24; color: #422006; border-color: #b45309; }
+  .cpeh-ug .b-insp { background: #3b82f6; color: #fff; border-color: #1d4ed8; }
+  .cpeh-ug .b-rev { background: #16a34a; color: #fff; border-color: #15803d; }
+  .cpeh-ug .b-cons { background: #6366f1; color: #fff; border-color: #4338ca; }
+  .cpeh-ug .b-adm { background: #dc2626; color: #fff; border-color: #991b1b; }
+  .cpeh-ug .b-warn { background: #f59e0b; color: #422006; border-color: #b45309; }
+  .cpeh-ug .b-off { background: #64748b; color: #fff; border-color: #475569; }
+  .cpeh-ug tr.off { opacity: 1; background: #f1f5f9 !important; }
+  .cpeh-ug tr.off td { color: #475569; }
+  .cpeh-ug .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+  .cpeh-ug label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #0f172a !important;
+    margin-bottom: 0.25rem;
+  }
+  .cpeh-ug .hint {
+    font-size: 0.84rem;
+    color: #1e293b !important;
+    font-weight: 600;
+  }
+  /* Controles: fondo claro + texto oscuro (anulan tema Jazzmin dark) */
+  .cpeh-ug .form-control,
+  .cpeh-ug select.form-control,
+  .cpeh-ug input.form-control {
+    background: #fff !important;
+    color: #0f172a !important;
+    border: 1px solid #64748b !important;
+  }
+  .cpeh-ug .form-control::placeholder {
+    color: #64748b !important;
+    opacity: 1;
+  }
+  .cpeh-ug .form-control:focus {
+    background: #fff !important;
+    color: #0f172a !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 0.15rem rgba(37, 99, 235, 0.25);
+  }
+  .cpeh-ug option {
+    background: #fff;
+    color: #0f172a;
+  }
+  .cpeh-ug .flash-clave {
+    background: #ecfdf5;
+    border: 2px solid #059669;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    color: #064e3b;
+  }
+  .cpeh-ug .ug-btn {
+    display: inline-block;
+    border: none;
+    border-radius: 4px;
+    padding: 0.28rem 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin: 0 0.15rem 0.15rem 0;
+    line-height: 1.2;
+  }
+  .cpeh-ug .ug-btn-clave {
+    background: #d97706;
+    color: #fff;
+  }
+  .cpeh-ug .ug-btn-clave:hover { background: #b45309; color: #fff; }
+  .cpeh-ug .ug-btn-off {
+    background: #334155;
+    color: #fff;
+  }
+  .cpeh-ug .ug-btn-off:hover { background: #0f172a; color: #fff; }
+  .cpeh-ug .ug-btn-on {
+    background: #15803d;
+    color: #fff;
+  }
+  .cpeh-ug .ug-btn-on:hover { background: #166534; color: #fff; }
+  .cpeh-ug .ug-btn-link {
+    background: #e2e8f0;
+    color: #0f172a;
+    text-decoration: none;
+    border: 1px solid #64748b;
+  }
+  .cpeh-ug .ug-btn-link:hover {
+    background: #cbd5e1;
+    color: #0f172a;
+    text-decoration: none;
+  }
+  .cpeh-ug .btn-primary {
+    font-weight: 800;
+  }
+</style>
+
+<div class="cpeh-ug container-fluid">
+  <div class="cpeh-ug-head">
+    <h1><i class="fas fa-user-shield"></i> Gestión de usuarios</h1>
+    <p class="hint">
+      Solo administradores. Aquí ve datos, carga de casos, claves emitidas y puede crear usuarios
+      con contraseña automática al estilo <code>Prefijo-XXXXXXXX</code>.
+    </p>
+  </div>
+
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if ultima_clave %}
+  <div class="flash-clave">
+    <strong>Credencial lista para entregar</strong><br>
+    Usuario: <code>{{ ultima_clave.username }}</code>
+    · Clave: <span class="clave">{{ ultima_clave.password }}</span>
+    <span class="hint">(cópiela ahora; también queda guardada en la tabla)</span>
+  </div>
+  {% endif %}
+
+  <div class="cpeh-card">
+    <h2><i class="fas fa-user-plus"></i> Crear usuario</h2>
+    <div class="cpeh-card-body">
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="crear">
+        <div class="form-grid">
+          <div>
+            <label for="rol">Rol</label>
+            <select name="rol" id="rol" class="form-control form-control-sm" required>
+              {% for val, lab in roles_alta %}
+              <option value="{{ val }}">{{ lab }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="equipo">Equipo (coord / inspector)</label>
+            <select name="equipo" id="equipo" class="form-control form-control-sm">
+              <option value="">—</option>
+              {% for e in equipos %}
+              <option value="{{ e.numero }}">Equipo {{ e.numero }}{% if e.nombre %} — {{ e.nombre }}{% endif %}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="first_name">Nombre</label>
+            <input type="text" name="first_name" id="first_name" class="form-control form-control-sm" maxlength="150" required>
+          </div>
+          <div>
+            <label for="last_name">Apellido</label>
+            <input type="text" name="last_name" id="last_name" class="form-control form-control-sm" maxlength="150" required>
+          </div>
+          <div>
+            <label for="username">Usuario (opcional)</label>
+            <input type="text" name="username" id="username" class="form-control form-control-sm"
+                   maxlength="150" placeholder="auto: coord.equipoN / ing… / consulta.N">
+          </div>
+        </div>
+        <p class="hint mt-2 mb-2">
+          Si deja vacío el usuario, se propone automáticamente
+          <code>coord.equipoN</code>, <code>ing.equipoN.x</code>, <code>revisor.N</code> o <code>consulta.N</code>.
+        </p>
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="fas fa-key"></i> Crear y generar clave
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="cpeh-card">
+    <h2><i class="fas fa-users"></i> Usuarios del sistema ({{ filas|length }})</h2>
+    <div class="cpeh-card-body" style="padding:0; overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Usuario / nombre</th>
+            <th>Rol(es)</th>
+            <th>Equipo</th>
+            <th>Asignados</th>
+            <th>Procesados*</th>
+            <th>Clave emitida</th>
+            <th>Último acceso</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in filas %}
+          <tr class="{% if not u.activo %}off{% endif %}">
+            <td>
+              <span class="ug-name{% if not u.es_nombre_real %} is-placeholder{% endif %}">{{ u.nombre }}</span>
+              {% if not u.es_nombre_real %}<span class="ug-badge b-warn">sin nombre real</span>{% endif %}
+              <br><code class="ug-user">{{ u.username }}</code>
+              {% if not u.activo %}<span class="ug-badge b-off">inactivo</span>{% endif %}
+              {% if u.superuser %}<span class="ug-badge b-adm">admin</span>{% endif %}
+            </td>
+            <td>
+              {% for r in u.roles %}
+                {% if r == "Coordinador" %}<span class="ug-badge b-coord">{{ r }}</span>
+                {% elif r == "Inspector" %}<span class="ug-badge b-insp">{{ r }}</span>
+                {% elif r == "Revisor" %}<span class="ug-badge b-rev">{{ r }}</span>
+                {% elif r == "Consulta" %}<span class="ug-badge b-cons">{{ r }}</span>
+                {% else %}<span class="ug-badge b-adm">{{ r }}</span>{% endif %}
+              {% endfor %}
+            </td>
+            <td class="ug-equipo">{{ u.equipo }}</td>
+            <td title="Insp / Rev / Coord">
+              <span class="ug-num">{{ u.n_asignados }}</span>
+              <span class="ug-meta">(I{{ u.n_inspector }} · R{{ u.n_revisor }} · C{{ u.n_coord }})</span>
+            </td>
+            <td class="ug-num">{{ u.n_procesados }}</td>
+            <td>
+              {% if u.clave %}
+              <span class="clave">{{ u.clave }}</span>
+              {% if u.clave_en %}<br><span class="ug-meta">{{ u.clave_en|date:"d/m/Y H:i" }}</span>{% endif %}
+              {% else %}
+              <span class="ug-meta">— sin registro</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if u.last_login %}<span class="ug-meta">{{ u.last_login|date:"d/m/Y H:i" }}</span>{% else %}<span class="ug-meta">nunca</span>{% endif %}
+            </td>
+            <td style="white-space:nowrap">
+              <form method="post" style="display:inline" onsubmit="return confirm('¿Regenerar clave de {{ u.username }}? La anterior dejará de valer.');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="regenerar">
+                <input type="hidden" name="user_id" value="{{ u.id }}">
+                <button type="submit" class="ug-btn ug-btn-clave" title="Nueva clave">Clave</button>
+              </form>
+              {% if u.activo and not u.superuser %}
+              <form method="post" style="display:inline" onsubmit="return confirm('¿Desactivar {{ u.username }}?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="desactivar">
+                <input type="hidden" name="user_id" value="{{ u.id }}">
+                <button type="submit" class="ug-btn ug-btn-off">Off</button>
+              </form>
+              {% elif not u.activo %}
+              <form method="post" style="display:inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="activar">
+                <input type="hidden" name="user_id" value="{{ u.id }}">
+                <button type="submit" class="ug-btn ug-btn-on">On</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="8">No hay usuarios staff.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" style="padding:0.75rem 1rem;margin:0">
+      * <strong>Procesados</strong>: casos en Pendiente revisión / Revisado / Aprobado / Publicado
+      según el rol (bolsa de coordinador, inspector o revisor).
+      Las claves en claro solo viven en este panel para entrega operativa.
+    </p>
+  </div>
+
+  <p>
+    <a href="{% url 'gestionar_nombres' %}" class="ug-btn ug-btn-link">Nombres del equipo</a>
+    <a href="{% url 'admin:index' %}" class="ug-btn ug-btn-link">Inicio</a>
+  </p>
+</div>
+{% endblock %}

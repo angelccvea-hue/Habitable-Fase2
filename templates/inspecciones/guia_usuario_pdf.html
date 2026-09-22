@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Guía de usuario — Fase II ROJO</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 1.6cm 1.4cm 1.8cm 1.4cm;
+      @bottom-center {
+        content: "Comisión Presidencial para la Evaluación de Habitabilidad — Guía Fase II ROJO";
+        font-size: 7pt;
+        color: #666;
+      }
+      @bottom-right {
+        content: "Pág. " counter(page) " de " counter(pages);
+        font-size: 7pt;
+        color: #666;
+      }
+    }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+      color: #1a2332;
+      line-height: 1.45;
+    }
+    .barra-tricolor { display: flex; height: 6px; margin-bottom: 10px; }
+    .barra-tricolor span { flex: 1; }
+    .ve-amarillo { background: #ffcc00; }
+    .ve-azul { background: #00247d; }
+    .ve-rojo { background: #cf142b; }
+    .portada { text-align: center; padding: 2cm 0 1cm; page-break-after: always; }
+    .portada .org { font-size: 11pt; color: #00247d; font-weight: 700; line-height: 1.35; }
+    .portada .org-sm { font-size: 9.5pt; font-weight: 500; margin-bottom: 1.2cm; }
+    .portada h1 {
+      font-size: 20pt;
+      color: #001a5c;
+      margin: 0.4cm 0 0.2cm;
+      line-height: 1.2;
+    }
+    .portada .subtitulo { font-size: 12pt; color: #444; max-width: 14cm; margin: 0 auto 1cm; }
+    .portada .meta { font-size: 9pt; color: #555; }
+    .portada .audience {
+      margin-top: 1.2cm;
+      text-align: left;
+      max-width: 14cm;
+      margin-left: auto;
+      margin-right: auto;
+      background: #f4f7fb;
+      border-left: 4px solid #00247d;
+      padding: 12px 14px;
+      font-size: 10pt;
+    }
+    .watermark {
+      position: fixed;
+      top: 38%;
+      left: 5%;
+      width: 90%;
+      text-align: center;
+      font-size: 42pt;
+      font-weight: 700;
+      color: rgba(207, 20, 43, 0.11);
+      transform: rotate(-28deg);
+      z-index: -1;
+    }
+    h2 {
+      font-size: 12pt;
+      color: #fff;
+      background: #00247d;
+      padding: 6px 10px;
+      margin: 18px 0 10px;
+      border-left: 5px solid #ffcc00;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 10.5pt;
+      color: #001a5c;
+      margin: 14px 0 6px;
+      page-break-after: avoid;
+    }
+    p { margin: 0 0 8px; }
+    ul, ol { margin: 0 0 10px; padding-left: 1.2em; }
+    li { margin-bottom: 4px; }
+    .intro-box {
+      background: #eef2f8;
+      border: 1px solid #c8d0dc;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      border-radius: 2px;
+    }
+    .tip-box {
+      border: 1px solid #9bb5e0;
+      background: #f3f7ff;
+      padding: 8px 10px;
+      margin: 10px 0;
+      font-size: 9.5pt;
+    }
+    .tip-box strong { color: #00247d; }
+    .fase-grid {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+    }
+    .fase-grid td {
+      border: 1px solid #c8d0dc;
+      padding: 8px 10px;
+      vertical-align: top;
+    }
+    .fase-num {
+      width: 36px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14pt;
+      color: #00247d;
+      background: #ffcc00;
+    }
+    .fase-grid strong { color: #001a5c; display: block; margin-bottom: 3px; }
+    .rol-card {
+      border: 1px solid #c8d0dc;
+      margin-bottom: 10px;
+      page-break-inside: avoid;
+    }
+    .rol-header {
+      padding: 6px 10px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .rol-coord .rol-header { background: #001a5c; }
+    .rol-insp .rol-header { background: #0d6e3a; }
+    .rol-rev .rol-header { background: #7a4b00; }
+    .rol-body { padding: 8px 10px; background: #fff; }
+    .flow-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: 8px 0 12px;
+    }
+    .flow-table th {
+      background: #00247d;
+      color: #fff;
+      padding: 5px 6px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .flow-table td {
+      border: 1px solid #c8d0dc;
+      padding: 5px 6px;
+      vertical-align: top;
+    }
+    .flow-table tr:nth-child(even) td { background: #f8fafc; }
+    .estado { font-weight: 600; color: #001a5c; }
+    .actor {
+      display: inline-block;
+      font-size: 8.5pt;
+      padding: 1px 6px;
+      border-radius: 2px;
+      background: #eef2f8;
+      color: #333;
+    }
+    .actor-coord { background: #dce4f5; }
+    .actor-insp { background: #d4edda; }
+    .actor-rev { background: #fff3cd; }
+    .paso-num {
+      display: inline-block;
+      width: 1.4em;
+      height: 1.4em;
+      line-height: 1.4em;
+      text-align: center;
+      background: #00247d;
+      color: #fff;
+      font-weight: 700;
+      font-size: 9pt;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .decision-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 9.5pt;
+    }
+    .decision-table th, .decision-table td {
+      border: 1px solid #c8d0dc;
+      padding: 6px 8px;
+      vertical-align: top;
+    }
+    .decision-table th {
+      background: #eef2f8;
+      width: 12%;
+      text-align: center;
+      font-size: 11pt;
+      color: #001a5c;
+    }
+    .tool-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: 8px 0;
+    }
+    .tool-table th, .tool-table td {
+      border: 1px solid #c8d0dc;
+      padding: 5px 7px;
+      vertical-align: top;
+    }
+    .tool-table th { background: #eef2f8; width: 28%; }
+    .alert-box {
+      border: 1px solid #f0c040;
+      background: #fffbea;
+      padding: 8px 10px;
+      margin: 10px 0;
+      font-size: 9.5pt;
+    }
+    .section-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+    }
+    .section-table th, .section-table td {
+      border: 1px solid #c8d0dc;
+      padding: 5px 7px;
+      vertical-align: top;
+    }
+    .section-table th { width: 8%; text-align: center; background: #eef2f8; }
+    .catalogo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+      margin: 6px 0 12px;
+    }
+    .catalogo-table th, .catalogo-table td {
+      border: 1px solid #c8d0dc;
+      padding: 3px 4px;
+      vertical-align: top;
+      text-align: left;
+    }
+    .catalogo-table thead th {
+      background: #00247d;
+      color: #fff;
+      font-weight: 600;
+    }
+    .catalogo-table tbody tr:nth-child(even) { background: #f7f9fc; }
+    .muted { color: #666; font-size: 7.5pt; }
+    .ejemplo-caso {
+      border: 1px solid #c8d0dc;
+      border-left: 4px solid #00247d;
+      padding: 8px 10px;
+      margin: 8px 0 14px;
+      background: #fafbfd;
+    }
+    .ejemplo-caso h4 {
+      margin: 0 0 6px;
+      color: #001a5c;
+      font-size: 11pt;
+      background: none;
+      padding: 0;
+      border: none;
+    }
+    .ejemplo-meta { font-size: 9pt; color: #333; margin: 0 0 6px; }
+    .ejemplo-cierre { font-size: 9pt; margin: 8px 0 0; }
+    .warn-box {
+      background: #fff8e6;
+      border-left: 4px solid #c9a227;
+      padding: 8px 10px;
+      margin: 10px 0;
+      font-size: 9.5pt;
+    }
+    .page-break { page-break-before: always; }
+    .footer-note {
+      margin-top: 16px;
+      font-size: 8.5pt;
+      color: #666;
+      border-top: 1px solid #ccc;
+      padding-top: 8px;
+    }
+    .borrador-badge {
+      display: inline-block;
+      background: #cf142b;
+      color: #fff;
+      font-size: 9pt;
+      padding: 3px 10px;
+      margin-top: 8px;
+      font-weight: 700;
+    }
+    .toc { margin: 8px 0 14px; font-size: 10pt; }
+    .toc li { margin-bottom: 3px; }
+    .ejemplo-banner {
+      background: #001a5c;
+      color: #fff;
+      padding: 10px 12px;
+      margin: 0 0 12px;
+      font-size: 10pt;
+    }
+    .ejemplo-banner strong { color: #ffcc00; }
+    .ejemplo-meta {
+      font-size: 9pt;
+      color: #555;
+      margin-bottom: 10px;
+      border: 1px solid #c8d0dc;
+      background: #f8fafc;
+      padding: 8px 10px;
+    }
+    .informe-ejemplo h2 {
+      font-size: 10pt;
+      margin: 12px 0 0;
+    }
+    .informe-ejemplo table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 4px;
+      font-size: 8.5pt;
+      page-break-inside: avoid;
+    }
+    .informe-ejemplo th, .informe-ejemplo td {
+      border: 1px solid #c8d0dc;
+      padding: 3px 5px;
+      vertical-align: top;
+    }
+    .informe-ejemplo th {
+      width: 34%;
+      background: #eef2f8;
+      font-weight: 600;
+      color: #001a5c;
+    }
+  </style>
+</head>
+<body>
+
+{% if borrador %}
+<div class="watermark">BORRADOR EN REVISIÓN</div>
+{% endif %}
+
+<div class="portada">
+  <div class="barra-tricolor">
+    <span class="ve-amarillo"></span><span class="ve-azul"></span><span class="ve-rojo"></span>
+  </div>
+  <div class="org">★ Comisión Presidencial</div>
+  <div class="org org-sm">para la Evaluación de Habitabilidad de Infraestructuras</div>
+  <h1>Guía de usuario del sistema<br>Seguimiento ROJO — Fase II</h1>
+  <p class="subtitulo">
+    Manual didáctico ampliado para administradores, coordinadores, ingenieros y revisores:
+    qué es la Fase II, cómo se asigna el trabajo en cascada, cómo se documenta la visita
+    y cómo se ve un informe de ejemplo generado por el propio sistema.
+  </p>
+  {% if borrador %}<div class="borrador-badge">Versión borrador — sujeta a aprobación</div>{% endif %}
+  <p class="meta" style="margin-top:1cm">
+    Versión {{ version_guia }} · Generado {{ generado|date:"d/m/Y H:i" }}
+  </p>
+  <div class="audience">
+    <strong>¿Para quién es esta guía?</strong><br>
+    Para el personal que opera el panel web de la Fase II por primera vez o necesita
+    recordar el circuito completo. No requiere conocimientos avanzados de informática:
+    explica <em>qué hacer</em>, <em>en qué orden</em>, <em>quién es responsable</em>
+    y muestra un <em>informe de ejemplo</em> con la salida real del sistema.
+  </div>
+</div>
+
+<h2>Contenido de esta guía</h2>
+<ol class="toc">
+  <li>Qué es la Fase II ROJO y para qué sirve el sistema</li>
+  <li>Panorama del proceso (cinco momentos)</li>
+  <li>Roles y cascada de asignación</li>
+  <li>Estados del caso (flujo detallado)</li>
+  <li>Recorrido — Administrador</li>
+  <li>Recorrido — Coordinador</li>
+  <li>Recorrido — Ingeniero / Inspector</li>
+  <li>Recorrido — Revisor</li>
+  <li>Las doce secciones + cuantificación, catálogos y ejemplos de llenado</li>
+  <li>Decisiones D1–D4 (reparar = regla; demoler = última instancia)</li>
+  <li>Herramientas del panel y Excel</li>
+  <li>Preguntas frecuentes</li>
+  <li><strong>Anexo A — Informe de ejemplo (salida del sistema)</strong></li>
+</ol>
+
+<h2>1. ¿Qué es la Fase II ROJO?</h2>
+<div class="intro-box">
+  <p>
+    Tras el sismo del <strong>24 de junio de 2026</strong>, miles de edificaciones fueron
+    inspeccionadas en una <strong>primera ronda</strong> (Fase I) con etiqueta verde, amarilla o roja.
+    Las edificaciones <strong>ROJO</strong> — declaradas inseguras o de riesgo inmediato —
+    entran ahora a una <strong>segunda ronda de verificación detallada</strong> (Fase II).
+  </p>
+  <p style="margin-bottom:0">
+    En esta fase un equipo técnico visita nuevamente el edificio, confirma o corrige la precarga,
+    documenta daños estructurales y de mampostería con mayor profundidad, cuantifica la intervención
+    (metrados tipificados) y emite un <strong>dictamen de control</strong> orientado a
+    <strong>reparar</strong> (o complementar estudios). La demolición queda como
+    <strong>última instancia</strong>, no como camino habitual del programa.
+    El resultado queda registrado de forma trazable para la Comisión Presidencial.
+  </p>
+</div>
+
+<h3>¿Por qué un sistema web?</h3>
+<p>
+  Sin un panel único, la información se dispersa en correos, hojas sueltas y archivos PDF
+  difíciles de consolidar. El sistema centraliza:
+</p>
+<ul>
+  <li>el universo de casos ROJO y su prioridad (score / banda);</li>
+  <li>quién es responsable de cada edificio (coordinador, ingeniero, revisor);</li>
+  <li>el avance por estados (pendiente, en visita, borrador, revisado, aprobado, publicado);</li>
+  <li>evidencia (fotos, croquis), plantillas Excel y el PDF formal del dictamen.</li>
+</ul>
+<p>
+  Así la operación puede responder con evidencia: <em>¿cuántos casos faltan?</em>,
+  <em>¿quién los atiende?</em>, <em>¿cuál es la decisión técnica?</em>
+</p>
+
+<div class="tip-box">
+  <strong>Idea clave:</strong> la Fase II no sustituye la etiqueta ROJO de la 1.ª ronda;
+  la <em>profundiza</em> y cierra con una decisión D1–D4 documentada.
+</div>
+
+<h2>2. Panorama del proceso — cinco grandes momentos</h2>
+<p>
+  Antes del detalle por rol, conviene visualizar el recorrido completo de un edificio.
+  Cada caso que usted vea en el panel está (o estará) en uno de estos momentos:
+</p>
+
+<table class="fase-grid">
+  <tr>
+    <td class="fase-num">A</td>
+    <td>
+      <strong>Precarga e ingreso</strong>
+      Los datos de Habitable (Fase I) y el ranking CPEH ya están cargados. El administrador
+      verifica el universo (panel, mapa). Aún no hay visita detallada de Fase II.
+    </td>
+  </tr>
+  <tr>
+    <td class="fase-num">B</td>
+    <td>
+      <strong>Asignación en cascada</strong>
+      Administrador → coordinador (bolsa). El coordinador reparte casos a los ingenieros
+      de su cuadrilla o empresa (por defecto 6 perfiles A–F; se pueden ampliar).
+      El admin también puede asignar ingeniero de forma directa.
+      El revisor ve todo pero <em>no</em> asigna.
+    </td>
+  </tr>
+  <tr>
+    <td class="fase-num">C</td>
+    <td>
+      <strong>Visita y levantamiento</strong>
+      El ingeniero confirma datos en sitio, completa secciones 3–12 (incluye cuantificación/metrados),
+      adjunta fotos/croquis, carga Excel llenado y elabora el dictamen preliminar (por regla: D2 reparar).
+    </td>
+  </tr>
+  <tr>
+    <td class="fase-num">D</td>
+    <td>
+      <strong>Revisión y aprobación</strong>
+      El revisor valida coherencia técnica (cola «Para revisar» = estado Revisado).
+      El coordinador publica cuando el caso está listo para reportes.
+    </td>
+  </tr>
+  <tr>
+    <td class="fase-num">E</td>
+    <td>
+      <strong>Salida institucional</strong>
+      PDF del informe (mismo formato del Anexo A), tableros de avance y respaldo Excel.
+    </td>
+  </tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>3. Los cuatro roles y la cascada de asignación</h2>
+<p>
+  El sistema distingue cuatro perfiles. Entender <em>quién ve qué</em> evita confusiones
+  el primer día de uso (por ejemplo: un ingeniero nuevo verá cero casos hasta que le asignen).
+</p>
+
+<div class="rol-card rol-coord">
+  <div class="rol-header">Administrador — abre el circuito y ve todo</div>
+  <div class="rol-body">
+    <ul>
+      <li>Ve el inventario completo (~9.000 casos ROJO).</li>
+      <li><strong>Asigna</strong> casos a <strong>coordinadores</strong> desde el tablero de asignación.</li>
+      <li><strong>También puede</strong> asignar ingenieros y revisores de forma directa (urgencia).</li>
+      <li>Crea y gestiona usuarios de equipo; no sustituye la visita ni la revisión rutinaria.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="rol-card rol-coord">
+  <div class="rol-header">Coordinador — jefe de cuadrilla / líder de empresa de ingeniería</div>
+  <div class="rol-body">
+    <ul>
+      <li>Puede ser un <strong>ingeniero jefe de cuadrilla</strong> o el <strong>líder de una empresa</strong>
+        que recibe una bolsa de casos y la reparte a su equipo.</li>
+      <li><strong>Solo ve</strong> los casos donde figura como coordinador asignado (al inicio: ninguno).</li>
+      <li><strong>Asigna</strong> ingenieros de su equipo (por defecto 6 perfiles A–F; <strong>ampliable</strong>
+        si la cuadrilla o empresa crece) y, si aplica, revisores dentro de su bolsa.</li>
+      <li><strong>No reasigna</strong> el coordinador del caso (eso lo hace el administrador).</li>
+      <li>Distribuye Excel, monitorea avance y <strong>publica</strong> (Aprobado → Publicado).</li>
+    </ul>
+  </div>
+</div>
+
+<div class="rol-card rol-insp">
+  <div class="rol-header">Ingeniero / Inspector — levantamiento en campo (visita 2)</div>
+  <div class="rol-body">
+    <ul>
+      <li>Solo ve casos donde es el <strong>inspector asignado</strong>.</li>
+      <li>Marca «En visita»; completa el informe; adjunta fotos y croquis.</li>
+      <li>Puede trabajar offline con Excel y luego usar <strong>Cargar Excel llenado</strong>.</li>
+      <li>Envía a <strong>Revisado</strong> cuando el dictamen está listo. <strong>No asigna</strong> a otros.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="rol-card rol-rev">
+  <div class="rol-header">Revisor — control de calidad (ve todo; no asigna)</div>
+  <div class="rol-body">
+    <ul>
+      <li>Consulta el inventario completo; prioriza la cola <strong>Para revisar</strong> (estado Revisado).</li>
+      <li>Valida decisión D1–D4, complementos, magnitud M y resumen ejecutivo.</li>
+      <li>Aprueba → Aprobado, o devuelve a Borrador con observaciones claras.</li>
+      <li>No gestiona usuarios ni el tablero de asignación.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="tip-box">
+  <strong>Cascada en una frase:</strong> el administrador reparte a coordinadores;
+  el coordinador reparte a ingenieros; el ingeniero documenta; el revisor valida;
+  el coordinador/admin publica.
+</div>
+
+<h2>4. Flujo detallado — estado por estado</h2>
+<p>
+  Cada edificio avanza por una secuencia trazable. La tabla indica
+  <strong>qué significa cada estado</strong>, <strong>quién actúa</strong> y
+  <strong>qué debe ocurrir antes de pasar al siguiente</strong>.
+</p>
+
+<table class="flow-table">
+  <thead>
+    <tr>
+      <th style="width:6%">Paso</th>
+      <th style="width:20%">Estado</th>
+      <th style="width:18%">Responsable</th>
+      <th>Qué ocurre</th>
+      <th style="width:22%">Para avanzar…</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td class="estado">Precarga</td>
+      <td><span class="actor">Sistema / admin</span></td>
+      <td>Caso con datos Habitable y score. Sin visita Fase II.</td>
+      <td>Admin asigna coordinador.</td>
+    </tr>
+    <tr>
+      <td>★</td>
+      <td class="estado">Asignación</td>
+      <td><span class="actor actor-coord">Admin / coord.</span></td>
+      <td>Bolsa al coordinador; luego ingeniero (y revisor).</td>
+      <td>Ingeniero planifica visita.</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td class="estado">Pendiente verificación</td>
+      <td><span class="actor actor-coord">Coordinador</span></td>
+      <td>En cola operativa; aún sin levantamiento detallado.</td>
+      <td>Ingeniero → En visita.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td class="estado">En visita</td>
+      <td><span class="actor actor-insp">Ingeniero</span></td>
+      <td>Levantamiento en sitio: GPS, fotos, daños.</td>
+      <td>Registrar datos → Borrador.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td class="estado">Borrador</td>
+      <td><span class="actor actor-insp">Ingeniero</span></td>
+      <td>Informe en elaboración (secciones 3–11 + dictamen).</td>
+      <td>Enviar → Revisado.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td class="estado">Revisado</td>
+      <td><span class="actor actor-rev">Revisor</span></td>
+      <td>Control técnico de coherencia y decisión D.</td>
+      <td>Aprobar o devolver a Borrador.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td class="estado">Aprobado</td>
+      <td><span class="actor actor-coord">Coordinador</span></td>
+      <td>Dictamen validado; listo para cierre.</td>
+      <td>Publicar.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td class="estado">Publicado</td>
+      <td><span class="actor actor-coord">Coordinador / admin</span></td>
+      <td>Caso cerrado operativamente.</td>
+      <td>— Fin del ciclo —</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="alert-box">
+  <strong>Devoluciones (es normal corregir):</strong>
+  Revisado → Borrador (revisor) · Aprobado → Revisado (ajuste) · Borrador → En visita (regreso a campo).
+  Deje siempre una nota clara para quien debe corregir.
+</div>
+
+<div class="page-break"></div>
+
+<h2>5. Recorrido paso a paso — Administrador</h2>
+<p>Su objetivo es <strong>abrir el circuito</strong>: que cada caso tenga un coordinador (y, si hace falta, un ingeniero).</p>
+<ol>
+  <li><span class="paso-num">1</span>Ingrese al <strong>panel de inicio</strong> y revise el inventario completo y los chips KPI.</li>
+  <li><span class="paso-num">2</span>Abra el <strong>tablero de asignación</strong> (menú superior).</li>
+  <li><span class="paso-num">3</span>Filtre <strong>Sin coordinador</strong>, seleccione un lote y asígnelo a un coordinador (Equipo 1, 2 o 3).</li>
+  <li><span class="paso-num">4</span>Si hay urgencia (score alto / prioridad inmediata), asigne también ingeniero o revisor de forma directa.</li>
+  <li><span class="paso-num">5</span>Monitoree chips «Sin inspector» / «Sin revisor» y equilibre carga entre equipos.</li>
+  <li><span class="paso-num">6</span>Gestione altas de usuarios cuando se incorporen nuevos ingenieros o revisores.</li>
+</ol>
+
+<h2>6. Recorrido paso a paso — Coordinador</h2>
+<p>
+  Su objetivo es <strong>organizar la visita</strong> dentro de la bolsa que le asignó el administrador.
+  En la práctica, el coordinador suele ser el <strong>ingeniero jefe de una cuadrilla</strong>
+  o el <strong>líder de una empresa de ingeniería</strong> que reparte casos a su equipo.
+</p>
+<ol>
+  <li><span class="paso-num">1</span>En el panel verá «Mi bolsa». Si está en cero, aún no le han asignado casos.</li>
+  <li><span class="paso-num">2</span>Abra el <strong>tablero de asignación</strong>: filtre sin inspector y reparte
+    los casos entre los ingenieros de su equipo.
+    Por defecto hay <strong>6 perfiles</strong> (A–F); si la cuadrilla o empresa crece,
+    se pueden <strong>ampliar</strong> más ingenieros (solicite el alta al administrador).</li>
+  <li><span class="paso-num">3</span>Descargue Excel informe/lote para el equipo; ellos cargarán el archivo llenado.</li>
+  <li><span class="paso-num">4</span>Siga estados: En visita → Borrador → Revisado → Aprobado.</li>
+  <li><span class="paso-num">5</span>Cuando un caso esté <strong>Aprobado</strong>, páselo a <strong>Publicado</strong>.</li>
+</ol>
+<div class="tip-box">
+  <strong>Mapa GPS:</strong> existe como herramienta opcional de consulta.
+  En la operación diaria del coordinador <strong>no es necesario</strong>:
+  la asignación y el seguimiento se hacen desde el panel y el tablero.
+</div>
+
+<h2>7. Recorrido paso a paso — Ingeniero / Inspector</h2>
+<p>Su objetivo es <strong>documentar la visita 2</strong> y dejar un dictamen coherente para el revisor.</p>
+<ol>
+  <li><span class="paso-num">1</span>En <strong>Casos ROJO</strong> solo verá lo asignado a usted.</li>
+  <li><span class="paso-num">2</span>Abra la ficha. Revise precarga (secc. 1–2): valide, no re-digite salvo error evidente.</li>
+  <li><span class="paso-num">3</span>Al salir a campo, marque <strong>En visita</strong>.</li>
+  <li><span class="paso-num">4</span>Complete secciones 3–12: validación, visita, daños, mampostería,
+    procedimientos, <strong>cuantificación (metrados)</strong>, decisión D (por regla D2), evidencia y resumen.</li>
+  <li><span class="paso-num">5</span>En sección 9 agregue totales + 5–12 líneas del catálogo de partidas
+    (o complete la hoja <em>Metrados</em> del Excel).</li>
+  <li><span class="paso-num">6</span>Adjunte <strong>fotos</strong> y <strong>croquis</strong>. Si trabajó offline, use <strong>Cargar Excel llenado</strong>.</li>
+  <li><span class="paso-num">7</span>Previsualice el <strong>PDF</strong> (misma salida que el Anexo A) y envíe a <strong>Revisado</strong>.</li>
+  <li><span class="paso-num">8</span>Si le devuelven a Borrador, corrija según observaciones y reenvíe.</li>
+</ol>
+
+<div class="tip-box">
+  <strong>Sin conexión en campo:</strong> descargue la plantilla Excel antes de salir,
+  complete la visita y al regresar cargue el archivo en el sistema. No dependa solo del correo.
+</div>
+
+<h2>8. Recorrido paso a paso — Revisor</h2>
+<p>Su objetivo es <strong>asegurar calidad técnica</strong> del dictamen antes de la publicación.</p>
+<ol>
+  <li><span class="paso-num">1</span>En el panel use el chip <strong>Para revisar</strong> (o abra Casos ROJO: se filtra a estado Revisado).</li>
+  <li><span class="paso-num">2</span>Abra la ficha y contraste daños descritos ↔ decisión D1–D4.</li>
+  <li><span class="paso-num">3</span>Si es D1, exija complementos, plazo y medidas. Si es D2, confirme magnitud M1–M4
+    y que existan metrados de reparación coherentes. Si aparece D3/D4, exija justificación de
+    <strong>última instancia</strong> (por qué no reparar).</li>
+  <li><span class="paso-num">4</span>Revise el resumen ejecutivo y la sección 9 (totales + líneas).</li>
+  <li><span class="paso-num">5</span>Genere el PDF de vista previa; apruebe → <strong>Aprobado</strong> o devuelva a <strong>Borrador</strong>.</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>9. Las doce secciones del informe — qué documentar</h2>
+<p>
+  Cada edificio se documenta en un informe único. Las secciones 1–2 vienen <strong>precargadas</strong>
+  (validar). Las secciones 3–12 las completa el ingeniero en la visita 2.
+  El PDF formal (Anexo A) muestra exactamente estos campos.
+</p>
+
+<table class="section-table">
+  <tr><th>1</th><td><strong>Precarga Habitable</strong> — Identificador, dirección, inspector Fase I, GPS referencial, observaciones iniciales.</td></tr>
+  <tr><th>2</th><td><strong>Ranking de gravedad</strong> — Score 0–100, banda de prioridad y posición relativa.</td></tr>
+  <tr><th>3</th><td><strong>Validación</strong> — ¿Coincide el edificio, la etiqueta ROJO y la geometría con lo visto en sitio?</td></tr>
+  <tr><th>4</th><td><strong>Identidad y edificio (visita 2)</strong> — Nombre confirmado, fecha, evaluadores, uso, pisos, sistema, ocupación.</td></tr>
+  <tr><th>5</th><td><strong>Daño detallado</strong> — Piso crítico, % columnas, inclinación (obligatoria; Δ si midió), vigas, riesgo de fachada.</td></tr>
+  <tr><th>6</th><td><strong>Daño estructural</strong> — Si severidad A/B/C: mecanismo + evidencia (columnas/vigas/muros/losas); diagnóstico en mampostería; daños preexistentes.</td></tr>
+  <tr><th>7</th><td><strong>Mampostería</strong> — Mecanismo, nivel y diagnóstico de muros no portantes.</td></tr>
+  <tr><th>8</th><td><strong>Procedimientos sugeridos</strong> — Códigos VIG/COL/MAM y viabilidad de reparación.</td></tr>
+  <tr><th>9</th><td><strong>Cuantificación (metrados)</strong> — Totales del edificio + líneas tipificadas (catálogo de partidas) para anteproyecto y costos futuros.</td></tr>
+  <tr><th>10</th><td><strong>Decisión de control</strong> — Estado, D1–D4, magnitud M (si repara), prioridad, medidas inmediatas.</td></tr>
+  <tr><th>11</th><td><strong>Evidencia</strong> — Fotografías, croquis y firmas (elaboró / revisó / aprobó).</td></tr>
+  <tr><th>12</th><td><strong>Resumen ejecutivo</strong> — Síntesis clara para coordinación y mesas institucionales.</td></tr>
+</table>
+
+{% include "includes/cpeh_guia_metrados_ejemplos.html" %}
+
+<div class="page-break"></div>
+
+<h2>10. Decisiones D1 a D4 — cierre de la Fase II</h2>
+<p>
+  <strong>Toda visita debe cerrar con una decisión D.</strong> Esta escala es propia de la Fase II
+  (no sustituye el semáforo de la 1.ª ronda). En la práctica del programa:
+  <strong>D2 (reparar) es la regla</strong>; D1 cuando faltan estudios; D3/D4 solo como última instancia.
+</p>
+
+<table class="decision-table">
+  <tr>
+    <th>D1</th>
+    <td>
+      <strong>Complementos requeridos</strong> (cierre provisional)<br>
+      Aún no procede reparar ni demoler, pero la Fase II <strong>sí cierra</strong> con plan explícito:
+      estudios faltantes, plazo, medidas inmediatas y responsables.
+    </td>
+  </tr>
+  <tr>
+    <th>D2</th>
+    <td>
+      <strong>Reparar / reconstruir</strong> — <em>Camino esperado del programa.</em>
+      Intervención viable. Indique magnitud <strong>M1</strong> (local) a <strong>M4</strong> (obra mayor)
+      y complete metrados de reparación (sección 9).
+    </td>
+  </tr>
+  <tr>
+    <th>D3</th>
+    <td>
+      <strong>Demoler</strong> — <em>Última instancia.</em> Solo si el riesgo hace inviable reparar.
+      Exige justificación reforzada, evidencia y revisión. No es el caso típico de esta fase.
+    </td>
+  </tr>
+  <tr>
+    <th>D4</th>
+    <td>
+      <strong>Escombros / ya colapsado</strong> — También excepcional; documentar retiro y seguridad perimetral.
+    </td>
+  </tr>
+</table>
+
+<h3>Complementos habituales (solo si D1)</h3>
+<table class="tool-table">
+  <tr><th>GEO</th><td>Estudio geotécnico del terreno o cimentación.</td></tr>
+  <tr><th>ENS</th><td>Ensayos de materiales (testigos, esclerómetro).</td></tr>
+  <tr><th>MOD</th><td>Modelo o análisis estructural numérico.</td></tr>
+  <tr><th>MON</th><td>Monitoreo instrumentado (inclinómetro, fisurómetro).</td></tr>
+  <tr><th>INV</th><td>Investigación de elementos ocultos.</td></tr>
+  <tr><th>REI</th><td>Reinspección en fecha programada.</td></tr>
+  <tr><th>ALE</th><td>Evaluación de riesgo a edificaciones aledañas.</td></tr>
+  <tr><th>OTR</th><td>Otro complemento (detallar en el campo).</td></tr>
+</table>
+
+<h2>11. Herramientas del panel</h2>
+<table class="tool-table">
+  <tr><th>Panel de inicio</th><td>KPIs según rol; tutorial; cola de revisión (revisor).</td></tr>
+  <tr><th>Casos ROJO Fase II</th><td>Ficha completa, PDF, Excel, fotos, croquis.</td></tr>
+  <tr><th>Tablero de asignación</th><td>Cascada admin→coord→ingeniero. No disponible para revisores.</td></tr>
+  <tr><th>Mapa GPS</th><td>Consulta opcional de ubicación (filtrada por rol). No es el flujo habitual del coordinador.</td></tr>
+  <tr><th>Plantilla / Cargar Excel</th><td>Trabajo offline (plantilla <strong>v1.8-compacto</strong>): solo 4 pestañas visibles — Portada, Informe (verde), Metrados (ámbar), Procedimientos_sel. Códigos de partida van en desplegable.</td></tr>
+  <tr><th>Catálogo de partidas</th><td>Códigos tipificados en el panel web (Inspecciones → Catálogo). En Excel ya no hay pestaña de catálogo: use el desplegable de Metrados.</td></tr>
+  <tr><th>PDF del informe</th><td>Salida formal del dictamen (ver Anexo A).</td></tr>
+  <tr><th>Guía de usuario (PDF)</th><td>Este documento; disponible desde el panel para capacitación.</td></tr>
+</table>
+
+<h3>Plantilla Excel v1.8 — qué verá el ingeniero</h3>
+<ul>
+  <li><strong>Solo 4 pestañas:</strong> Portada · Informe del edificio (verde) · Metrados (ámbar) · Procedimientos_sel (Sí/No).
+    Las listas internas y los antiguos catálogos están ocultos.</li>
+  <li><strong>Vista limpia:</strong> sin cuadrícula; zona gris fuera del formulario — solo se ve lo que debe cargar.</li>
+  <li><strong>Edición:</strong> columna Valor (§3–12) en la hoja verde; columnas B–K en Metrados (hay filas vacías al final);
+    solo la columna Sí/No en Procedimientos. Precarga azul (§1–2) y ayudas (col. C) bloqueadas.</li>
+  <li>En Portada debe figurar <code>plantilla_version = v1.8-compacto</code>. Si ve catálogos grises o versión anterior, vuelva a descargar la plantilla.</li>
+</ul>
+
+<h3>Flujo recomendado con Excel</h3>
+<ol>
+  <li>Coordinador o admin descarga Excel informe o lote (plantilla protegida v1.8).</li>
+  <li>Ingeniero completa <strong>solo</strong> las celdas desbloqueadas: columna Valor (§3–12), Metrados (B–K) y Sí/No de procedimientos.
+    Precarga azul y columna de ayuda están bloqueadas; no hay pestañas de catálogo.</li>
+  <li>Carga con <strong>Cargar Excel llenado</strong>.</li>
+  <li>Adjunta evidencia (≥3 fotos, ≥1 croquis), envía a revisión; el sistema valida las mismas reglas que el Excel.</li>
+</ol>
+
+<h3>Campos obligatorios al elevar (ficha = Excel)</h3>
+<ul>
+  <li><strong>Fijos:</strong> validación §3, fecha visita, nombre confirmado, evaluadores, GPS visita 2,
+    inspector, decisión D1–D4, prioridad, medidas, resumen ejecutivo, ≥3 fotos y ≥1 croquis.</li>
+  <li><strong>Condicionales:</strong> Δ inclinación si midió Δ; mecanismo + evidencia si severidad A/B/C;
+    diagnóstico mampostería si A/B/C; complementos si D1; magnitud M si D2; nota de metrado si acción = Otro.</li>
+</ul>
+
+<h2>12. Preguntas frecuentes</h2>
+
+<h3>¿Por qué al entrar como ingeniero no veo casos?</h3>
+<p>Porque aún no le asignaron edificios. El administrador debe dar bolsa al coordinador y este (o el admin) asignarle casos.</p>
+
+<h3>¿Por qué la cola del revisor está en cero?</h3>
+<p>Solo aparecen casos en estado <strong>Revisado</strong>. Mientras no haya visitas cerradas y enviadas, la cola permanece vacía.</p>
+
+<h3>¿Debo re-digitar la 1.ª inspección?</h3>
+<p>No. Precarga (secciones 1–2) viene de Habitable. Solo corrija errores evidentes y anótelo en validación.</p>
+
+<h3>¿Puedo dejar un caso sin decisión D?</h3>
+<p>No. Toda visita cierra con D1–D4. Si falta información, use D1 con complementos y plazo.</p>
+
+<h3>¿La decisión habitual es demoler?</h3>
+<p>No. El programa opera en <strong>reparar (D2)</strong> o <strong>complementos (D1)</strong>.
+D3/D4 son última instancia y requieren justificación de por qué no se puede reparar.</p>
+
+<h3>¿Cuántas líneas de metrado debo cargar?</h3>
+<p>En un D2 típico, entre <strong>5 y 12 líneas</strong> del catálogo (apuntamiento + reparación/refuerzo).
+No es un presupuesto ejecutivo: es orden de magnitud para anteproyecto.</p>
+
+<h3>¿Los precios unitarios (PU) son obligatorios ya?</h3>
+<p>No. Pueden quedar vacíos. Lo importante es tipificar partidas y cantidades; el costeo puede venir después.</p>
+
+<h3>¿Qué diferencia hay entre Revisado, Aprobado y Publicado?</h3>
+<p><strong>Revisado</strong> = ingeniero envió. <strong>Aprobado</strong> = revisor validó. <strong>Publicado</strong> = coordinador/admin cerró operativamente.</p>
+
+<div class="page-break"></div>
+
+{# ===== ANEXO: INFORME DE EJEMPLO (SALIDA REAL DEL SISTEMA) ===== #}
+<h2>Anexo A — Informe de ejemplo (salida del sistema)</h2>
+
+<div class="ejemplo-banner">
+  Este anexo reproduce el <strong>PDF de informe Fase II</strong> tal como lo genera el panel
+  (botón PDF en la ficha del caso). Sirve de referencia visual y de contenido esperado.
+</div>
+
+{% if ejemplo_caso %}
+<div class="ejemplo-meta">
+  <strong>Caso de ejemplo tomado del sistema:</strong>
+  ID Habitable {{ ejemplo_hab_id }} ·
+  {{ ejemplo_nombre }} ·
+  Decisión: {{ ejemplo_decision }} ·
+  Estado: {{ ejemplo_estado }} ·
+  Score: {{ ejemplo_score }}
+  <br>
+  <em>Nota didáctica:</em> los campos con «—» aún no fueron completados en la visita 2;
+  en un caso cerrado deberían estar documentados según las secciones 3–12.
+</div>
+
+<div class="intro-box">
+  <p style="margin-bottom:0">
+    <strong>Cómo se obtiene esta salida en el día a día:</strong>
+    abra el caso → revise/complete la ficha → pulse <strong>PDF</strong>.
+    El archivo que descarga es el documento institucional de la verificación Fase II
+    (mismo diseño: barra tricolor, encabezado CPEH y tablas por sección).
+  </p>
+</div>
+
+<div class="informe-ejemplo">
+  <div class="barra-tricolor">
+    <span class="ve-amarillo"></span><span class="ve-azul"></span><span class="ve-rojo"></span>
+  </div>
+  <div style="border-bottom:2px solid #00247d; padding-bottom:8px; margin-bottom:10px;">
+    <div class="org" style="font-size:8.5pt; color:#00247d; font-weight:700;">★ Comisión Presidencial</div>
+    <div style="font-size:8pt; color:#00247d;">para la Evaluación de Habitabilidad de Infraestructuras</div>
+    <h1 style="font-size:13pt; color:#001a5c; margin:6px 0 2px; background:none; border:none; padding:0;">
+      Informe verificación ROJO — Fase II
+    </h1>
+    <div style="font-size:8.5pt; color:#555;">
+      <strong>ID Habitable:</strong> {{ ejemplo_hab_id }} ·
+      <strong>Edificio:</strong> {{ ejemplo_nombre }} ·
+      <strong>Decisión:</strong> {{ ejemplo_decision }} ·
+      <strong>Estado:</strong> {{ ejemplo_estado }}
+    </div>
+  </div>
+
+  {% for section in ejemplo_sections %}
+  <h2>{{ section.title }}</h2>
+  <table>
+    {% for row in section.rows %}
+    <tr>
+      <th>{{ row.label }}</th>
+      <td>{{ row.value|linebreaksbr }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endfor %}
+
+  <div class="footer-note">
+    Fragmento de guía · Ejemplo generado {{ generado|date:"d/m/Y H:i" }} ·
+    CPEH Fase II ROJO · Uso institucional / capacitación
+  </div>
+</div>
+
+{% else %}
+<div class="alert-box">
+  No se encontró un caso de ejemplo en la base al generar esta guía.
+  Genere el PDF de cualquier ficha desde el panel (botón PDF) para ver la salida del sistema.
+</div>
+{% endif %}
+
+<div class="footer-note">
+  Comisión Presidencial para la Evaluación de Habitabilidad de Infraestructuras ·
+  Sistema Seguimiento ROJO Fase II · Guía de usuario {{ version_guia }} ·
+  {% if borrador %}Documento borrador para revisión interna.{% else %}Documento aprobado para circulación operativa.{% endif %}
+</div>
+
+</body>
+</html>

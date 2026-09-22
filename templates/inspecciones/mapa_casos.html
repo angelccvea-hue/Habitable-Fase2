@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa casos ROJO — CPEH Fase II</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" crossorigin="">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" crossorigin="">
+  <link rel="stylesheet" href="/static/css/cpeh_admin.css">
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f4f6f9; color: #1a2332; }
+    .cpeh-mapa-header {
+      background: #00247d;
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 3px solid #ffcc00;
+    }
+    .cpeh-mapa-header h1 { font-size: 1.15rem; margin: 0 0 0.25rem; }
+    .cpeh-mapa-header p { margin: 0; font-size: 0.85rem; opacity: 0.92; }
+    .cpeh-mapa-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      padding: 0.65rem 1.25rem;
+      background: #fff;
+      border-bottom: 1px solid #d0d7e2;
+    }
+    .cpeh-mapa-toolbar label { font-size: 0.82rem; font-weight: 600; }
+    .cpeh-mapa-toolbar select, .cpeh-mapa-toolbar input {
+      font-size: 0.82rem;
+      padding: 0.25rem 0.45rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+    }
+    #map { height: calc(100vh - 200px); min-height: 480px; width: 100%; }
+    .cpeh-mapa-aviso-capa {
+      position: absolute;
+      z-index: 1000;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 10px;
+      max-width: min(520px, 92vw);
+      background: #fffbeb;
+      border: 1px solid #f59e0b;
+      color: #78350f;
+      border-radius: 8px;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+      display: none;
+      text-align: center;
+      line-height: 1.35;
+    }
+    .cpeh-mapa-aviso-capa.is-on { display: block; }
+    .cpeh-mapa-shell { position: relative; }
+    .cpeh-mapa-leyenda {
+      padding: 0.55rem 1.25rem 0.65rem;
+      font-size: 0.78rem;
+      background: #fff;
+      border-top: 1px solid #e8eef8;
+    }
+    .cpeh-mapa-leyenda-title {
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      color: #0f172a;
+    }
+    .cpeh-mapa-leyenda-note {
+      margin: 0.35rem 0 0;
+      color: #64748b;
+      font-size: 0.74rem;
+    }
+    .cpeh-mapa-fuentes {
+      margin-top: 0.55rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      padding: 0.35rem 0.65rem 0.45rem;
+    }
+    .cpeh-mapa-fuentes > summary {
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: #0f172a;
+      user-select: none;
+      padding: 0.2rem 0;
+    }
+    .cpeh-mapa-fuentes > summary::-webkit-details-marker { display: none; }
+    .cpeh-mapa-fuentes > summary::before {
+      content: "▸ ";
+      color: #00247d;
+      font-weight: 900;
+    }
+    .cpeh-mapa-fuentes[open] > summary::before { content: "▾ "; }
+    .cpeh-mapa-fuentes ul {
+      margin: 0.35rem 0 0.25rem;
+      padding-left: 1.1rem;
+      color: #334155;
+      font-size: 0.72rem;
+      line-height: 1.4;
+    }
+    .cpeh-mapa-fuentes li { margin: 0.2rem 0; }
+    .cpeh-mapa-fuentes code {
+      font-size: 0.68rem;
+      background: #e2e8f0;
+      padding: 0.05rem 0.25rem;
+      border-radius: 3px;
+    }
+    .cpeh-mapa-fuentes-foot {
+      margin: 0.25rem 0 0.15rem;
+      font-size: 0.7rem;
+      color: #64748b;
+      line-height: 1.35;
+    }
+    .cpeh-mapa-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem 1rem;
+      align-items: center;
+    }
+    .cpeh-mapa-swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 600;
+      color: #334155;
+    }
+    .cpeh-mapa-dot {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      border: 1px solid #fff;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.25);
+      flex-shrink: 0;
+    }
+    .cpeh-mapa-flujo {
+      padding: 0.65rem 1.25rem;
+      background: #eef2f8;
+      font-size: 0.78rem;
+      border-top: 1px solid #d0d7e2;
+    }
+    .cpeh-mapa-flujo ol { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+    .marker-cluster-small {
+      background-color: rgba(100, 116, 139, 0.45);
+    }
+    .marker-cluster-small div {
+      background-color: rgba(71, 85, 105, 0.85);
+      color: #fff;
+      font-weight: 800;
+    }
+    .marker-cluster-medium {
+      background-color: rgba(234, 88, 12, 0.4);
+    }
+    .marker-cluster-medium div {
+      background-color: rgba(194, 65, 12, 0.9);
+      color: #fff;
+      font-weight: 800;
+    }
+    .marker-cluster-large {
+      background-color: rgba(200, 16, 46, 0.4);
+    }
+    .marker-cluster-large div {
+      background-color: rgba(153, 27, 27, 0.92);
+      color: #fff;
+      font-weight: 800;
+    }
+    /* Leyenda geología Macrostrat (flotante) */
+    .cpeh-geo-legend {
+      position: absolute;
+      z-index: 1005;
+      left: 12px;
+      bottom: 18px;
+      width: min(380px, calc(100vw - 24px));
+      max-height: min(70vh, 640px);
+      display: none;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.97);
+      border: 1px solid #94a3b8;
+      border-radius: 10px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.22);
+      overflow: hidden;
+      font-size: 0.76rem;
+      color: #0f172a;
+    }
+    .cpeh-geo-legend.is-on { display: flex; }
+    .cpeh-geo-legend-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0.7rem;
+      background: #0f766e;
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+    }
+    .cpeh-geo-legend-head span { line-height: 1.25; }
+    .cpeh-geo-legend-toggle {
+      border: 1px solid rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 0.15rem 0.4rem;
+      cursor: pointer;
+    }
+    .cpeh-geo-legend-body {
+      overflow: auto;
+      padding: 0.55rem 0.7rem 0.7rem;
+    }
+    .cpeh-geo-legend.is-collapsed .cpeh-geo-legend-body { display: none; }
+    .cpeh-geo-legend h3 {
+      margin: 0.55rem 0 0.3rem;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .cpeh-geo-legend h3:first-child { margin-top: 0; }
+    .cpeh-geo-legend p.note {
+      margin: 0 0 0.45rem;
+      color: #475569;
+      font-size: 0.7rem;
+      line-height: 1.35;
+    }
+    .cpeh-geo-swatch {
+      width: 0.85rem;
+      height: 0.85rem;
+      border-radius: 3px;
+      border: 1px solid rgba(15, 23, 42, 0.35);
+      flex-shrink: 0;
+    }
+    .cpeh-geo-ages {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+    .cpeh-geo-age {
+      display: grid;
+      grid-template-columns: 0.85rem 1fr auto;
+      align-items: center;
+      gap: 0.4rem;
+      min-width: 0;
+      padding: 0.12rem 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .cpeh-geo-age .cpeh-geo-age-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 0.72rem;
+    }
+    .cpeh-geo-age .cpeh-geo-age-yrs {
+      font-size: 0.66rem;
+      font-weight: 650;
+      color: #334155;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .cpeh-geo-impacto {
+      margin: 0 0 0.5rem;
+      border: 1px solid #99f6e4;
+      border-radius: 6px;
+      background: #f0fdfa;
+      padding: 0.35rem 0.5rem;
+    }
+    .cpeh-geo-impacto > summary {
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.72rem;
+      color: #0f766e;
+      list-style: none;
+    }
+    .cpeh-geo-impacto > summary::-webkit-details-marker { display: none; }
+    .cpeh-geo-impacto > summary::before { content: "▸ "; }
+    .cpeh-geo-impacto[open] > summary::before { content: "▾ "; }
+    .cpeh-geo-impacto-list {
+      margin: 0.35rem 0 0;
+      padding-left: 1.05rem;
+      color: #1e293b;
+      font-size: 0.68rem;
+      line-height: 1.35;
+    }
+    .cpeh-geo-impacto-list li { margin: 0.2rem 0; }
+    .cpeh-geo-units .u-impacto {
+      color: #0f766e;
+      font-size: 0.66rem;
+      line-height: 1.3;
+      margin-top: 0.15rem;
+      font-weight: 600;
+    }
+    .cpeh-mapa-fuentes ul ul {
+      margin: 0.2rem 0 0.35rem;
+      padding-left: 1.1rem;
+    }
+    .cpeh-geo-units { list-style: none; margin: 0; padding: 0; }
+    .cpeh-geo-units li {
+      display: grid;
+      grid-template-columns: 0.9rem 1fr;
+      gap: 0.4rem;
+      align-items: start;
+      padding: 0.28rem 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .cpeh-geo-units li:last-child { border-bottom: 0; }
+    .cpeh-geo-units .u-name {
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+    .cpeh-geo-units .u-meta {
+      color: #475569;
+      font-size: 0.68rem;
+      line-height: 1.3;
+      margin-top: 0.1rem;
+    }
+    .cpeh-geo-status {
+      color: #64748b;
+      font-size: 0.7rem;
+      font-style: italic;
+      margin: 0.2rem 0 0;
+    }
+    .cpeh-geo-line-note {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.45rem;
+      padding: 0.35rem 0.45rem;
+      background: #f1f5f9;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      color: #334155;
+      font-weight: 650;
+    }
+    .cpeh-geo-line-sample {
+      width: 1.4rem;
+      height: 0;
+      border-top: 2px solid #111;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="cpeh-mapa-header">
+    <h1>Mapa operativo — casos ROJO Fase II</h1>
+    <p>
+      <span id="mapa-conteo">{{ total_mapa }}</span> con GPS
+      · bandeja {{ total_bandeja }} · inventario {{ total_inventario }}
+      {% if caso_foco %} · foco ID {{ caso_foco }}{% endif %}
+    </p>
+  </div>
+
+  <div class="cpeh-mapa-toolbar">
+    <label>Universo
+      <select id="filtro-universo">
+        <option value="bandeja" {% if universo != "todos" %}selected{% endif %}>Bandeja equipos</option>
+        <option value="todos" {% if universo == "todos" %}selected{% endif %}>Inventario completo</option>
+      </select>
+    </label>
+    <label>Estado
+      <select id="filtro-estado">
+        <option value="">Todos</option>
+        {% for e in estados %}<option value="{{ e }}">{{ e }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Decisión D
+      <select id="filtro-decision">
+        <option value="">Todas</option>
+        <option value="sin">Sin dictamen</option>
+        <option value="D1">D1</option>
+        <option value="D2">D2</option>
+        <option value="D3">D3</option>
+        <option value="D4">D4</option>
+      </select>
+    </label>
+    <label>Banda
+      <select id="filtro-banda">
+        <option value="">Todas</option>
+        {% for b in bandas %}<option value="{{ b }}">{{ b }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Score mín. <input type="number" id="filtro-score" min="0" max="100" placeholder="0"></label>
+    <button type="button" id="btn-aplicar" class="btn btn-primary btn-sm">Aplicar filtros</button>
+    <a href="/admin/" class="btn btn-secondary btn-sm">← Admin</a>
+    <a href="/admin/inspecciones/casorojo/" class="btn btn-outline-secondary btn-sm">Listado casos</a>
+  </div>
+
+  <div class="cpeh-mapa-shell">
+    <div id="cpeh-aviso-capa" class="cpeh-mapa-aviso-capa" role="status"></div>
+    <aside id="cpeh-geo-legend" class="cpeh-geo-legend is-on" aria-label="Leyenda de geología">
+      <div class="cpeh-geo-legend-head" id="cpeh-geo-legend-head" title="Clic para expandir/plegar">
+        <span>Leyenda — Geología · edad (Ma) e impacto</span>
+        <button type="button" class="cpeh-geo-legend-toggle" id="cpeh-geo-legend-btn" aria-expanded="true">Plegar</button>
+      </div>
+      <div class="cpeh-geo-legend-body">
+        <p class="note">
+          El color del polígono indica la <strong>antigüedad geológica</strong> de la unidad
+          (escala internacional Macrostrat, en <strong>Ma = millones de años</strong>).
+          Es contexto para el estudio post-sismo del <strong>24-jun-2026</strong>;
+          <em>no</em> sustituye inspección ni dictamen D.
+        </p>
+        <details class="cpeh-geo-impacto" open>
+          <summary>Cómo leer edad vs daño / sismo (detalle)</summary>
+          <ul class="cpeh-geo-impacto-list">
+            <li><strong>Amarillos / Cuaternario (0–2,6 Ma)</strong> — depósitos recientes, aluviones, suelos sueltos: suelen amplificar el movimiento y asociarse a asientos; contrastar con daños «preexistentes» vs atribuibles al sismo en la ficha.</li>
+            <li><strong>Naranjas / Neógeno–Paleógeno (2,6–66 Ma)</strong> — formaciones relativamente jóvenes: respuesta intermedia; mirar pendientes y rellenos.</li>
+            <li><strong>Verdes–azules / Mesozoico (66–252 Ma)</strong> — rocas más antiguas; menor amplificación típica en suelo blando, pero fallas y escarpes siguen siendo críticos.</li>
+            <li><strong>Violetas–rosas / Paleozoico–Precámbrico (&gt;252 Ma)</strong> — basamento / metamórficos (p. ej. Ávila): más competentes en mapa; el daño observado en visita 2 manda sobre el color.</li>
+            <li><strong>Líneas negras</strong> — contactos y trazas estructurales (fallas cartográficas de referencia).</li>
+          </ul>
+          <p class="note" style="margin-top:0.35rem">
+            Combine siempre con: banda/score Habitable, fotos, inclinación, daño A/B/C y decisión D de Fase II.
+          </p>
+        </details>
+        <h3>Escala de colores (antigüedad)</h3>
+        <div class="cpeh-geo-ages" id="cpeh-geo-ages"></div>
+        <div class="cpeh-geo-line-note">
+          <span class="cpeh-geo-line-sample" aria-hidden="true"></span>
+          Líneas negras: contactos, fallas y trazas estructurales
+        </div>
+        <h3>Unidades en esta vista</h3>
+        <p class="note">Al mover o acercar el mapa se listan nombre, edad en Ma, litología e interpretación breve para el estudio de daños.</p>
+        <p class="cpeh-geo-status" id="cpeh-geo-status">Cargando unidades…</p>
+        <ul class="cpeh-geo-units" id="cpeh-geo-units"></ul>
+      </div>
+    </aside>
+    <div id="map"></div>
+  </div>
+
+  <div class="cpeh-mapa-leyenda">
+    <div class="cpeh-mapa-leyenda-title">Leyenda — color = decisión D · clusters al alejar, casos al acercar</div>
+    <div class="cpeh-mapa-swatches">
+      <span class="cpeh-mapa-swatch"><span class="cpeh-mapa-dot" style="background:#6c757d"></span> Sin dictamen</span>
+      <span class="cpeh-mapa-swatch"><span class="cpeh-mapa-dot" style="background:#2a6f97"></span> D1</span>
+      <span class="cpeh-mapa-swatch"><span class="cpeh-mapa-dot" style="background:#e85d04"></span> D2</span>
+      <span class="cpeh-mapa-swatch"><span class="cpeh-mapa-dot" style="background:#cf142b"></span> D3</span>
+      <span class="cpeh-mapa-swatch"><span class="cpeh-mapa-dot" style="background:#7f1d1d"></span> D4</span>
+    </div>
+    <p class="cpeh-mapa-leyenda-note">
+      Por defecto solo <strong>bandeja de equipos</strong> (asignados a brigadas). Use «Inventario completo» solo si necesita ver todo el universo Habitable.
+    </p>
+    <details class="cpeh-mapa-fuentes">
+      <summary>Origen de las capas · antigüedad e impacto sísmico (clic)</summary>
+      <ul>
+        <li><strong>Geología (Macrostrat)</strong> — encendida por defecto. Color = <em>edad geológica</em> (Ma = millones de años). Leyenda flotante: escala por eras + unidades del recuadro con litología e interpretación para el estudio de daños post-sismo <strong>24-jun-2026</strong>. Mejor con fondo «Gris claro» y zoom 8–13.</li>
+        <li><strong>Antigüedad (lectura operativa)</strong>
+          <ul>
+            <li>0–2,6 Ma (Cuaternario, amarillo) → suelos/depósitos recientes → mayor amplificación típica.</li>
+            <li>2,6–66 Ma (Neógeno–Paleógeno) → respuesta intermedia.</li>
+            <li>&gt;66 Ma (Mesozoico y más antiguo) → rocas más antiguas / basamento → distinta respuesta; el daño en ficha prevalece.</li>
+          </ul>
+        </li>
+        <li><strong>Satélite nítido (Esri)</strong> — detalle de edificios; con geología encima se ve poco: cambie a gris o desactive geología.</li>
+        <li><strong>Calles (Esri) / OSM</strong> — planos urbanos.</li>
+        <li><strong>Topográfico (OpenTopo)</strong> — relieve y pendientes (útil junto a fallas/contactos).</li>
+        <li><strong>Etiquetas / Amenazas costeras / Playas</strong> — capas opcionales (marque el recuadro en el panel). Amenazas = referencia costera del Atlas Caribe; no es mapa de intensidad sísmica local.</li>
+      </ul>
+      <p class="cpeh-mapa-fuentes-foot">
+        OSM: ODbL. Capas Esri: visualización. Geología: Macrostrat (edad/litología de referencia mundial).
+        Amenazas/playas: Caribbean Marine Atlas.
+        Esta capa orienta el contexto geológico del sitio estudiado; <strong>no</strong> reemplaza GIS institucional, geotécnica ni el dictamen D de Fase II.
+      </p>
+    </details>
+  </div>
+
+  <details class="cpeh-mapa-flujo">
+    <summary><strong>Flujo de revisión (estados)</strong></summary>
+    <ol>{% for paso in flujo_pasos %}<li>{{ paso }}</li>{% endfor %}</ol>
+  </details>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" crossorigin=""></script>
+  <script>
+    const COLORS = {
+      D1: '#2a6f97',
+      D2: '#e85d04',
+      D3: '#cf142b',
+      D4: '#7f1d1d',
+      SIN: '#6c757d',
+    };
+
+    const map = L.map('map', { maxZoom: 19 }).setView([10.60, -66.90], 13);
+
+    const osm = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    });
+    const osmHot = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      subdomains: 'abc',
+      attribution: '&copy; OpenStreetMap, HOT',
+    });
+    const openTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      maxZoom: 17,
+      subdomains: 'abc',
+      attribution: 'Map data: &copy; OpenStreetMap, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)',
+    });
+    const grisEsri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 16,
+      attribution: 'Tiles &copy; Esri',
+    });
+    const callesEsri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Tiles &copy; Esri — World Street Map',
+    });
+    // Satélite nítido para operación
+    const satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      maxNativeZoom: 19,
+      attribution: 'Tiles &copy; Esri — World Imagery',
+    });
+    const etiquetasEsri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Tiles &copy; Esri',
+      opacity: 0.95,
+    });
+    // Geología Macrostrat (mejor lectura en zoom 8–13; a zoom de edificio se escala)
+    const geologia = L.tileLayer('https://tiles.macrostrat.org/carto/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      maxNativeZoom: 14,
+      minZoom: 0,
+      opacity: 0.72,
+      zIndex: 350,
+      attribution: '<a href="https://macrostrat.org" target="_blank" rel="noopener">Macrostrat</a> geology',
+      errorTileUrl:
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+    });
+    const amenazasCosteras = L.tileLayer.wms(
+      'https://www.caribbeanmarineatlas.net/geoserver/wms',
+      {
+        layers: 'geonode:amenazas_total_new',
+        format: 'image/png',
+        transparent: true,
+        version: '1.1.1',
+        opacity: 0.6,
+        zIndex: 360,
+        attribution:
+          '<a href="https://www.caribbeanmarineatlas.net/" target="_blank" rel="noopener">Caribbean Marine Atlas</a> · amenazas costeras',
+      }
+    );
+    const playasVe = L.tileLayer.wms(
+      'https://www.caribbeanmarineatlas.net/geoserver/wms',
+      {
+        layers: 'geonode:playasarenosas_venezuela',
+        format: 'image/png',
+        transparent: true,
+        version: '1.1.1',
+        opacity: 0.7,
+        zIndex: 360,
+        attribution:
+          '<a href="https://www.caribbeanmarineatlas.net/" target="_blank" rel="noopener">Caribbean Marine Atlas</a> · playas VE',
+      }
+    );
+
+    // Fondo claro + geología visible (el satélite tapa demasiado la capa)
+    grisEsri.addTo(map);
+    geologia.addTo(map);
+
+    const avisoEl = document.getElementById('cpeh-aviso-capa');
+    function setAviso(texto, ms) {
+      if (!avisoEl) return;
+      if (texto) {
+        avisoEl.textContent = texto;
+        avisoEl.classList.add('is-on');
+        if (ms) {
+          setTimeout(function () {
+            avisoEl.classList.remove('is-on');
+            avisoEl.textContent = '';
+          }, ms);
+        }
+      } else {
+        avisoEl.textContent = '';
+        avisoEl.classList.remove('is-on');
+      }
+    }
+
+    // —— Leyenda geología ——
+    const geoLegendEl = document.getElementById('cpeh-geo-legend');
+    const geoAgesEl = document.getElementById('cpeh-geo-ages');
+    const geoUnitsEl = document.getElementById('cpeh-geo-units');
+    const geoStatusEl = document.getElementById('cpeh-geo-status');
+    const geoBtn = document.getElementById('cpeh-geo-legend-btn');
+    const PERIOD_COLORS = [
+      { name: 'Cuaternario', age: '0–2,6 Ma', hint: 'Suelos/depósitos recientes · amplificación típica ↑', color: '#F9F97F' },
+      { name: 'Neógeno', age: '2,6–23 Ma', hint: 'Formaciones jóvenes · respuesta intermedia', color: '#FFE619' },
+      { name: 'Paleógeno', age: '23–66 Ma', hint: 'Cenozoico temprano', color: '#FD9A52' },
+      { name: 'Cretácico', age: '66–145 Ma', hint: 'Mesozoico · roca más antigua', color: '#7FC64E' },
+      { name: 'Jurásico', age: '145–201 Ma', hint: 'Mesozoico', color: '#34B2C9' },
+      { name: 'Triásico', age: '201–252 Ma', hint: 'Inicio Mesozoico', color: '#812B92' },
+      { name: 'Pérmico', age: '252–299 Ma', hint: 'Paleozoico tardío', color: '#F04028' },
+      { name: 'Carbonífero', age: '299–359 Ma', hint: 'Paleozoico', color: '#67A599' },
+      { name: 'Devónico', age: '359–420 Ma', hint: 'Paleozoico', color: '#CB8C37' },
+      { name: 'Silúrico', age: '420–443 Ma', hint: 'Paleozoico', color: '#B3E1B6' },
+      { name: 'Ordovícico', age: '443–487 Ma', hint: 'Paleozoico (p. ej. suites metamórficas)', color: '#009270' },
+      { name: 'Cámbrico', age: '487–539 Ma', hint: 'Paleozoico temprano', color: '#7FA056' },
+      { name: 'Neoproterozoico', age: '539–1000 Ma', hint: 'Precámbrico', color: '#FF9BCD' },
+      { name: 'Mesoproterozoico', age: '1000–1600 Ma', hint: 'Precámbrico', color: '#FF7EBF' },
+      { name: 'Paleoproterozoico', age: '1600–2500 Ma', hint: 'Precámbrico', color: '#E665A6' },
+      { name: 'Arcaico', age: '>2500 Ma', hint: 'Corteza muy antigua', color: '#FF5CAD' },
+    ];
+    if (geoAgesEl) {
+      PERIOD_COLORS.forEach(function (p) {
+        const row = document.createElement('div');
+        row.className = 'cpeh-geo-age';
+        row.title = p.name + ' · ' + p.age + (p.hint ? ' — ' + p.hint : '');
+        row.innerHTML =
+          '<span class="cpeh-geo-swatch" style="background:' + p.color + '"></span>' +
+          '<span class="cpeh-geo-age-name">' + p.name + '</span>' +
+          '<span class="cpeh-geo-age-yrs">' + p.age + '</span>';
+        geoAgesEl.appendChild(row);
+      });
+    }
+    function setGeoLegendVisible(on) {
+      if (!geoLegendEl) return;
+      if (on) geoLegendEl.classList.add('is-on');
+      else geoLegendEl.classList.remove('is-on');
+    }
+    if (geoBtn && geoLegendEl) {
+      function toggleGeoBody() {
+        const collapsed = geoLegendEl.classList.toggle('is-collapsed');
+        geoBtn.textContent = collapsed ? 'Expandir' : 'Plegar';
+        geoBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      }
+      geoBtn.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        toggleGeoBody();
+      });
+      document.getElementById('cpeh-geo-legend-head').addEventListener('click', function (ev) {
+        if (ev.target === geoBtn) return;
+        toggleGeoBody();
+      });
+    }
+    let geoLegendTimer = null;
+    async function refreshGeoLegend() {
+      if (!map.hasLayer(geologia) || !geoUnitsEl) return;
+      const b = map.getBounds();
+      const zoom = Math.min(14, Math.max(0, Math.round(map.getZoom())));
+      const bounds =
+        b.getWest().toFixed(4) + ',' +
+        b.getSouth().toFixed(4) + ',' +
+        b.getEast().toFixed(4) + ',' +
+        b.getNorth().toFixed(4);
+      if (geoStatusEl) geoStatusEl.textContent = 'Actualizando unidades…';
+      try {
+        const res = await fetch(
+          '/api/geologia/leyenda/?bounds=' + encodeURIComponent(bounds) + '&zoom=' + zoom,
+          { credentials: 'same-origin' }
+        );
+        const data = await res.json();
+        geoUnitsEl.innerHTML = '';
+        if (!data.ok || !(data.units || []).length) {
+          if (geoStatusEl) {
+            geoStatusEl.textContent = data.error
+              ? ('No se pudo cargar: ' + data.error)
+              : 'Sin unidades nombradas en esta vista (pruebe zoom 8–13).';
+          }
+          return;
+        }
+        if (geoStatusEl) {
+          geoStatusEl.textContent =
+            data.n + ' unidad(es) en el recuadro · mostrando ' + data.units.length;
+        }
+        data.units.forEach(function (u) {
+          const li = document.createElement('li');
+          const edad = u.edad_detalle || u.edad || '';
+          const meta = [edad, u.litologia].filter(Boolean).join(' · ');
+          li.innerHTML =
+            '<span class="cpeh-geo-swatch" style="background:' + (u.color || '#ccc') + '"></span>' +
+            '<div><div class="u-name"></div><div class="u-meta"></div><div class="u-impacto"></div></div>';
+          li.querySelector('.u-name').textContent = u.nombre;
+          li.querySelector('.u-meta').textContent = meta || 'Sin detalle de edad/litología';
+          const imp = li.querySelector('.u-impacto');
+          if (u.impacto) {
+            imp.textContent = u.impacto;
+          } else {
+            imp.remove();
+          }
+          geoUnitsEl.appendChild(li);
+        });
+        if (geoStatusEl && data.nota_estudio) {
+          geoStatusEl.title = data.nota_estudio;
+        }
+      } catch (err) {
+        if (geoStatusEl) geoStatusEl.textContent = 'Error al consultar leyenda geológica.';
+      }
+    }
+    function scheduleGeoLegend() {
+      if (!map.hasLayer(geologia)) return;
+      clearTimeout(geoLegendTimer);
+      geoLegendTimer = setTimeout(refreshGeoLegend, 450);
+    }
+    setGeoLegendVisible(true);
+
+    L.control.layers(
+      {
+        'Gris claro (Esri) — ver geología': grisEsri,
+        'Satélite nítido (Esri)': satelite,
+        'Calles (Esri)': callesEsri,
+        'OSM (calles)': osm,
+        'OSM Humanitarian': osmHot,
+        'Topográfico (OpenTopo)': openTopo,
+      },
+      {
+        'Geología (Macrostrat)': geologia,
+        'Etiquetas': etiquetasEsri,
+        'Amenazas costeras (Atlas Caribe)': amenazasCosteras,
+        'Playas arenosas (VE)': playasVe,
+      },
+      { position: 'topright', collapsed: false }
+    ).addTo(map);
+
+    map.on('overlayadd', function (e) {
+      if (e.layer === geologia) {
+        setGeoLegendVisible(true);
+        if (map.getZoom() > 13) map.setZoom(12);
+        if (map.hasLayer(satelite)) {
+          map.removeLayer(satelite);
+          grisEsri.addTo(map);
+        }
+        setAviso('Geología activa. Leyenda: edad en Ma + lectura de impacto para el estudio de daños (panel izquierdo).', 7000);
+        scheduleGeoLegend();
+      }
+    });
+    map.on('overlayremove', function (e) {
+      if (e.layer === geologia) setGeoLegendVisible(false);
+    });
+    map.on('baselayerchange', function (e) {
+      if (e.layer === satelite && map.hasLayer(geologia)) {
+        setAviso('Con satélite la geología se ve poco: use «Gris claro» o desactive geología.', 6000);
+      }
+      setTimeout(function () { map.invalidateSize(); }, 50);
+    });
+    map.on('moveend', scheduleGeoLegend);
+    map.on('zoomend', scheduleGeoLegend);
+    setAviso('Geología encendida. Leyenda de colores abajo a la izquierda.', 5000);
+    setTimeout(function () { map.invalidateSize(); scheduleGeoLegend(); }, 100);
+    // Zoom inicial donde Macrostrat pinta bien en costa VE
+    map.setView([10.60, -66.90], 11);
+
+    const clusters = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 55,
+      spiderfyOnMaxZoom: true,
+      disableClusteringAtZoom: 16,
+      chunkedLoading: true,
+    });
+    map.addLayer(clusters);
+
+    const focoId = {{ caso_foco|default:"null" }};
+
+    function decisionKey(props) {
+      const raw = String(props.decision || '').trim();
+      if (!raw || raw === 'Pendiente') return 'SIN';
+      const d = raw.slice(0, 2).toUpperCase();
+      if (d === 'D1' || d === 'D2' || d === 'D3' || d === 'D4') return d;
+      return 'SIN';
+    }
+
+    function colorMarcador(props) {
+      return COLORS[decisionKey(props)] || COLORS.SIN;
+    }
+
+    function popupHtml(p) {
+      const dKey = decisionKey(p);
+      const dLabel = dKey === 'SIN' ? 'Sin dictamen' : (p.decision || dKey);
+      return (
+        '<strong>' + (p.nombre || '—') + '</strong><br>' +
+        'ID Habitable: ' + p.hab_id + '<br>' +
+        'Score: ' + (p.score ?? '—') + ' · ' + (p.banda || '—') + '<br>' +
+        'Estado: ' + (p.estado || '—') + '<br>' +
+        'Decisión: ' + dLabel + '<br>' +
+        '<a href="' + p.admin_url + '" target="_blank" rel="noopener">Abrir ficha</a>'
+      );
+    }
+
+    async function cargar() {
+      const params = new URLSearchParams();
+      const universo = document.getElementById('filtro-universo').value || 'bandeja';
+      const est = document.getElementById('filtro-estado').value;
+      const dec = document.getElementById('filtro-decision').value;
+      const banda = document.getElementById('filtro-banda').value;
+      const score = document.getElementById('filtro-score').value;
+      params.set('universo', universo);
+      if (est) params.set('estado', est);
+      if (dec) params.set('decision', dec);
+      if (banda) params.set('banda', banda);
+      if (score) params.set('min_score', score);
+      if (focoId) params.set('caso', String(focoId));
+
+      const res = await fetch('/api/casos/geojson/?' + params.toString(), { credentials: 'same-origin' });
+      const geo = await res.json();
+      clusters.clearLayers();
+      const bounds = [];
+      let focoMarker = null;
+      const features = geo.features || [];
+      const elConteo = document.getElementById('mapa-conteo');
+      if (elConteo) elConteo.textContent = String(features.length);
+
+      features.forEach(function (f) {
+        const coords = f.geometry && f.geometry.coordinates;
+        if (!coords) return;
+        const lng = coords[0];
+        const lat = coords[1];
+        bounds.push([lat, lng]);
+        const isFoco = focoId && f.properties.hab_id == focoId;
+        const m = L.circleMarker([lat, lng], {
+          radius: isFoco ? 6 : 3,
+          color: '#fff',
+          weight: 1,
+          fillColor: colorMarcador(f.properties),
+          fillOpacity: 0.92,
+        }).bindPopup(popupHtml(f.properties));
+        clusters.addLayer(m);
+        if (isFoco) focoMarker = m;
+      });
+
+      if (focoMarker) {
+        map.setView(focoMarker.getLatLng(), 16);
+        clusters.zoomToShowLayer(focoMarker, function () {
+          focoMarker.openPopup();
+        });
+      } else if (bounds.length) {
+        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 14 });
+      }
+    }
+
+    document.getElementById('btn-aplicar').addEventListener('click', cargar);
+    document.getElementById('filtro-universo').addEventListener('change', cargar);
+    cargar();
+  </script>
+</body>
+</html>

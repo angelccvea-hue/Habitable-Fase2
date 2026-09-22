@@ -1,0 +1,181 @@
+<details class="cpeh-accordion cpeh-guia-tutorial mb-3" id="tutorial-sistema">
+  <summary class="cpeh-accordion-header">
+    <i class="fas fa-route" aria-hidden="true"></i>
+    Tutorial del sistema — flujo, roles y funciones
+  </summary>
+  <div class="cpeh-accordion-body">
+    <p class="cpeh-about-text">
+      Esta guía describe <strong>cómo funciona el sistema de punta a punta</strong>: desde la precarga
+      de casos ROJO hasta la publicación del dictamen. Incluye la
+      <strong>cascada de asignación</strong> (administrador → coordinador → ingeniero).
+      Para el detalle campo a campo del informe, abra la sección
+      <strong>«Guía de secciones del informe»</strong> más abajo.
+    </p>
+
+    <h3 class="cpeh-about-heading">Panorama general — las cinco etapas</h3>
+    <div class="cpeh-tutorial-phases">
+      <div class="cpeh-tutorial-phase">
+        <span class="cpeh-tutorial-phase-num">A</span>
+        <div>
+          <strong>Precarga e ingreso</strong>
+          <p>Los casos ROJO entran con datos de Habitable (Fase I) y score CPEH. El administrador verifica el universo en el panel y el mapa.</p>
+        </div>
+      </div>
+      <div class="cpeh-tutorial-phase">
+        <span class="cpeh-tutorial-phase-num">B</span>
+        <div>
+          <strong>Asignación en cascada</strong>
+          <p>Administrador → coordinador (bolsa). Coordinador → ingenieros. El admin también puede asignar ingenieros directo. El revisor ve todo pero no asigna.</p>
+        </div>
+      </div>
+      <div class="cpeh-tutorial-phase">
+        <span class="cpeh-tutorial-phase-num">C</span>
+        <div>
+          <strong>Visita y levantamiento</strong>
+          <p>El ingeniero confirma datos, documenta daños (secciones 3–10), adjunta fotos/croquis, carga Excel y prepara el dictamen preliminar.</p>
+        </div>
+      </div>
+      <div class="cpeh-tutorial-phase">
+        <span class="cpeh-tutorial-phase-num">D</span>
+        <div>
+          <strong>Revisión y aprobación</strong>
+          <p>El revisor valida coherencia técnica; el coordinador confirma y publica cuando el caso está listo para reportes.</p>
+        </div>
+      </div>
+      <div class="cpeh-tutorial-phase">
+        <span class="cpeh-tutorial-phase-num">E</span>
+        <div>
+          <strong>Salida institucional</strong>
+          <p>PDF del informe, tableros de avance y plantilla Excel archivada como respaldo de la visita.</p>
+        </div>
+      </div>
+    </div>
+
+    {% include "includes/cpeh_guia_flujo_core.html" %}
+
+    <h3 class="cpeh-about-heading cpeh-mt-lg">Tutorial paso a paso por rol</h3>
+    <p class="cpeh-about-text">
+      Siga la ruta que corresponda a su perfil. Los enlaces abren en la misma ventana salvo mapa y asignación.
+    </p>
+
+    <div class="cpeh-tutorial-paths">
+      <details class="cpeh-tutorial-path cpeh-tutorial-path-coord">
+        <summary><i class="fas fa-user-shield" aria-hidden="true"></i> Si usted es <strong>administrador</strong></summary>
+        <ol class="cpeh-about-list cpeh-about-ordered">
+          <li>Ingrese al <strong>panel de inicio</strong> y revise el inventario completo (9.000+ casos).</li>
+          <li>Abra el <a href="/asignacion/" target="_blank" rel="noopener">tablero de asignación</a>.</li>
+          <li>Filtre <em>Sin coordinador</em>, seleccione casos y asígnelos a un <strong>coordinador</strong> (barra amarilla).</li>
+          <li>Si hace falta urgencia, asigne también <strong>ingeniero</strong> o <strong>revisor</strong> de forma directa.</li>
+          <li>Gestione usuarios (alta de equipos) desde Autenticación → Usuarios cuando corresponda.</li>
+        </ol>
+      </details>
+
+      <details class="cpeh-tutorial-path cpeh-tutorial-path-coord">
+        <summary><i class="fas fa-user-tie" aria-hidden="true"></i> Si usted es <strong>coordinador</strong></summary>
+        <ol class="cpeh-about-list cpeh-about-ordered">
+          <li>Ingrese al panel: verá la KPI <strong>«Mi bolsa»</strong> (solo casos que el admin le asignó; al inicio puede ser cero).</li>
+          <li>En el <a href="/asignacion/" target="_blank" rel="noopener">tablero de asignación</a>, filtre casos sin inspector y reparte
+            entre los ingenieros de su cuadrilla o empresa.
+            Por defecto hay <strong>6 perfiles (A–F)</strong>; si el equipo crece, se pueden <strong>ampliar</strong> (alta vía administrador).</li>
+          <li>Descargue Excel lote/informe para el equipo; el ingeniero devolverá el archivo con <strong>Cargar Excel llenado</strong>.</li>
+          <li>Monitoree estados y, cuando un caso esté <em>Aprobado</em>, páselo a <em>Publicado</em>.</li>
+        </ol>
+        <p class="cpeh-about-text mb-0"><em>Nota:</em> el mapa GPS es opcional; no forma parte del flujo habitual de asignación.</p>
+      </details>
+
+      <details class="cpeh-tutorial-path cpeh-tutorial-path-insp">
+        <summary><i class="fas fa-hard-hat" aria-hidden="true"></i> Si usted es <strong>ingeniero / inspector</strong></summary>
+        <ol class="cpeh-about-list cpeh-about-ordered">
+          <li>Inicie sesión y vaya a <strong>Inspecciones → Casos ROJO</strong>. Solo verá casos donde usted es el inspector asignado.</li>
+          <li>Abra la ficha. Revise la <strong>precarga</strong> (secc. 1–2).</li>
+          <li>Descargue la <strong>plantilla Excel</strong> o complete en el admin; al terminar use <strong>Cargar Excel llenado</strong>.</li>
+          <li>Adjunte <strong>al menos 3 fotos</strong> y <strong>1 croquis</strong>; complete GPS de visita, sección 3 (validación), fecha, nombre confirmado, evaluadores, prioridad y medidas.</li>
+          <li>Marque <strong>En visita</strong> / <strong>Borrador</strong> según avance; al cerrar envíe a <strong>Pendiente revisión</strong> (el sistema valida evidencia y dictamen).</li>
+        </ol>
+      </details>
+
+      <details class="cpeh-tutorial-path cpeh-tutorial-path-rev">
+        <summary><i class="fas fa-clipboard-check" aria-hidden="true"></i> Si usted es <strong>revisor</strong></summary>
+        <ol class="cpeh-about-list cpeh-about-ordered">
+          <li>En el panel verá la <strong>cola de revisión</strong> y el chip <em>Para revisar</em> (casos en estado <strong>Pendiente revisión</strong>).</li>
+          <li>Al abrir <strong>Casos ROJO</strong> se aplica ese filtro por defecto; quite el filtro solo si necesita consultar otros estados.</li>
+          <li>Valide decisión D1–D4, complementos y resumen; apruebe → <strong>Aprobado</strong> o devuelva a <strong>Borrador</strong>.</li>
+          <li>Puede consultar todo el inventario; no asigna ni publica (eso lo hace admin/coordinador).</li>
+        </ol>
+      </details>
+    </div>
+
+    <h3 class="cpeh-about-heading cpeh-mt-lg">Herramientas del sistema</h3>
+    <div class="table-responsive">
+      <table class="table table-sm cpeh-tutorial-table mb-3">
+        <thead>
+          <tr>
+            <th>Herramienta</th>
+            <th>Para qué sirve</th>
+            <th>Quién la usa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Panel de inicio</strong></td>
+            <td>Indicadores según su alcance (total / bolsa / mis casos).</td>
+            <td>Todos</td>
+          </tr>
+          <tr>
+            <td><a href="/admin/inspecciones/casorojo/">Casos ROJO Fase II</a></td>
+            <td>Ficha del informe, PDF, Excel, fotos, croquis y PDFs adjuntos.</td>
+            <td>Ingeniero, revisor, coordinador, admin</td>
+          </tr>
+          <tr>
+            <td><a href="/asignacion/" target="_blank" rel="noopener">Tablero asignación</a></td>
+            <td>Cascada admin→coord→ingeniero; exportar Excel de seleccionados.</td>
+            <td>Administrador y coordinador (no revisor)</td>
+          </tr>
+          <tr>
+            <td><a href="/mapa/" target="_blank" rel="noopener">Mapa GPS</a></td>
+            <td>Consulta opcional de ubicación. No es el flujo habitual del coordinador.</td>
+            <td>Todos los perfiles con acceso</td>
+          </tr>
+          <tr>
+            <td><strong>Plantilla / Cargar Excel</strong></td>
+            <td>Trabajo offline y volcado al sistema tras la visita.</td>
+            <td>Ingeniero (completa y carga); coord/admin (distribuyen)</td>
+          </tr>
+          <tr>
+            <td><strong>PDF informe</strong></td>
+            <td>Salida formal del dictamen Fase II.</td>
+            <td>Revisor, coordinador, admin</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="cpeh-about-heading">Plantillas Excel — flujo recomendado (v1.8-compacto)</h3>
+    <ol class="cpeh-about-list cpeh-about-ordered">
+      <li><strong>Coordinador o admin</strong> descarga Excel informe/lote de los casos asignados.</li>
+      <li><strong>Ingeniero</strong> verá solo 4 pestañas (Portada, Informe verde, Metrados ámbar, Procedimientos).
+        Zona gris fuera del formulario; sin cuadrícula. Edita solo columna Valor (§3–12), Metrados B–K y Sí/No.
+        Precarga azul bloqueada. Códigos de partida = desplegable (ya no hay pestaña Catalogo_partidas).</li>
+      <li><strong>Carga</strong> el archivo con <em>Cargar Excel llenado</em> en la ficha o menú superior.</li>
+      <li>Adjunta croquis/fotos (≥3 fotos, ≥1 croquis) y envía a revisión; el sistema aplica las mismas
+        reglas obligatorias/condicionales que el Excel (inclinación+Δ, daño A/B/C, D1/D2, etc.).</li>
+    </ol>
+
+    <h3 class="cpeh-about-heading">Campos obligatorios al elevar (sistema = Excel)</h3>
+    <ul class="cpeh-about-list mb-0">
+      <li><strong>Siempre:</strong> §3 validación, fecha visita, nombre confirmado, evaluadores, GPS visita 2,
+        inspector asignado, decisión D1–D4, prioridad, medidas, resumen, ≥3 fotos y ≥1 croquis.</li>
+      <li><strong>Si inclinación = «Sí — con medición Δ»:</strong> campo Δ inclinación.</li>
+      <li><strong>Si severidad A/B/C</strong> en columnas/vigas/muros/losas: mecanismo + evidencia de ese elemento;
+        en mampostería: diagnóstico.</li>
+      <li><strong>Si D1:</strong> códigos complemento, plazo, detalle y medidas. <strong>Si D2:</strong> magnitud M1–M4.</li>
+      <li><strong>Si acción de metrado = Otro:</strong> nota de la línea.</li>
+    </ul>
+
+    <p class="cpeh-about-text cpeh-mt-md mb-0">
+      <i class="fas fa-info-circle" aria-hidden="true"></i>
+      Decisiones <strong>D1–D4</strong>: ver bloque explicativo en la sección
+      <a href="#sobre-fase"><strong>Sobre esta fase</strong></a> (arriba).
+    </p>
+  </div>
+</details>

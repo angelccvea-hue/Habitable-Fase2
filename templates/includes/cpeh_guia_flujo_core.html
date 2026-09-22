@@ -1,0 +1,145 @@
+{# Fragmento reutilizable: roles, flujograma y devoluciones #}
+<div class="cpeh-guide-grid">
+  <div class="cpeh-role-card cpeh-role-coord">
+    <h3 class="cpeh-about-heading">Administrador</h3>
+    <p class="cpeh-about-text">Gestión global del sistema. Abre el circuito de trabajo y puede intervenir en cualquier nivel.</p>
+    <ul class="cpeh-about-list">
+      <li><strong>Asigna</strong> casos a <em>coordinadores</em> (bolsa operativa) desde el tablero de asignación.</li>
+      <li><strong>También puede</strong> asignar ingenieros/inspectores de forma directa.</li>
+      <li><strong>No asigna revisores</strong> — usan la bandeja compartida «Por revisión».</li>
+      <li><strong>Ve todo</strong> el inventario; crea usuarios y gestiona permisos.</li>
+      <li><strong>No sustituye</strong> la visita de campo ni la revisión técnica rutinaria.</li>
+    </ul>
+  </div>
+
+  <div class="cpeh-role-card cpeh-role-coord">
+    <h3 class="cpeh-about-heading">Coordinador</h3>
+    <p class="cpeh-about-text">
+      Suele ser el <strong>ingeniero jefe de una cuadrilla</strong> o el <strong>líder de una empresa de ingeniería</strong>.
+      Opera la <strong>bolsa de casos</strong> que el administrador le asignó y reparte el trabajo a su equipo.
+    </p>
+    <ul class="cpeh-about-list">
+      <li><strong>Solo ve</strong> los casos donde figura como coordinador asignado.</li>
+      <li><strong>Asigna</strong> ingenieros (inspectores) de su equipo — por defecto 6 perfiles (A–F),
+        <strong>ampliable</strong> si la cuadrilla o empresa crece.</li>
+      <li><strong>No asigna revisores</strong> (bandeja compartida al elevar a Pendiente revisión).</li>
+      <li><strong>No reasigna</strong> el coordinador del caso (eso lo hace el administrador).</li>
+      <li><strong>Distribuye plantillas Excel</strong> y monitorea avance (En visita, Borrador, Pendiente revisión…).</li>
+      <li><strong>Publica</strong> casos <em>Aprobado → Publicado</em> cuando corresponde.</li>
+      <li>El <strong>mapa GPS</strong> es opcional; la operación diaria usa panel y tablero de asignación.</li>
+    </ul>
+  </div>
+
+  <div class="cpeh-role-card cpeh-role-insp">
+    <h3 class="cpeh-about-heading">Ingeniero / Inspector</h3>
+    <p class="cpeh-about-text">Profesional en campo responsable del levantamiento técnico detallado (visita 2).</p>
+    <ul class="cpeh-about-list">
+      <li><strong>Solo ve</strong> los casos donde figura como inspector asignado (al inicio: ninguno).</li>
+      <li><strong>Marca «En visita»</strong>; completa secciones 3–11; sube fotos y croquis.</li>
+      <li><strong>Descarga Excel</strong> (v1.8-compacto: 4 pestañas, zona gris fuera del formulario; solo celdas a rellenar),
+        completa offline y <strong>carga el Excel llenado</strong> en el sistema.</li>
+      <li><strong>Adjunta ≥3 fotos y ≥1 croquis</strong>; GPS de visita 2 y sección 3 (validación ≠ Pendiente) son obligatorios al elevar.
+        También: inclinación (y Δ si midió), mecanismo+evidencia si daño A/B/C, reglas D1/D2.</li>
+      <li><strong>Envía a revisión</strong> (estado <em>Pendiente revisión</em>) cuando el informe está listo.</li>
+      <li><strong>No asigna</strong> casos a otros usuarios.</li>
+    </ul>
+  </div>
+
+  <div class="cpeh-role-card cpeh-role-rev">
+    <h3 class="cpeh-about-heading">Revisor</h3>
+    <p class="cpeh-about-text">Referente técnico de control de calidad. No se le asignan casos: trabaja la bandeja compartida.</p>
+    <ul class="cpeh-about-list">
+      <li><strong>Ve todos</strong> los casos (modo consulta / validación).</li>
+      <li><strong>No se le asignan</strong> casos y <strong>no asigna</strong> a nadie.</li>
+      <li><strong>Bandeja por revisión</strong>: al elevar a Pendiente revisión, el caso aparece para todos los revisores.</li>
+      <li>Puede <strong>marcar Revisado</strong>, <strong>aprobar</strong> o <strong>devolver</strong> a Borrador.</li>
+      <li>Se diferencia del administrador: no gestiona usuarios ni el tablero de asignación.</li>
+    </ul>
+  </div>
+</div>
+
+<h3 class="cpeh-about-heading cpeh-mt-lg">Cascada de asignación (operativa)</h3>
+<ol class="cpeh-about-list cpeh-about-ordered">
+  <li><strong>Administrador</strong> → asigna el caso a un <em>coordinador</em> (y opcionalmente a ingeniero).</li>
+  <li><strong>Coordinador</strong> → asigna <em>ingenieros</em> dentro de su bolsa.</li>
+  <li><strong>Ingeniero</strong> → solo trabaja lo asignado a su usuario; al elevar, el caso entra a la bandeja de revisión.</li>
+  <li><strong>Revisor</strong> → abre cualquier caso de la bandeja compartida; no se asigna previamente.</li>
+</ol>
+
+<h3 class="cpeh-about-heading cpeh-mt-lg">Flujograma — estados del caso</h3>
+<p class="cpeh-about-text">
+  Cada edificio avanza por una secuencia trazable. Las flechas indican el camino normal;
+  revisor o coordinador pueden devolver un caso para corrección.
+</p>
+
+<div class="cpeh-flowchart" role="img" aria-label="Flujograma de estados del caso ROJO Fase II">
+  <div class="cpeh-flow-step cpeh-flow-precarga">
+    <span class="cpeh-flow-num">0</span>
+    <strong>Precarga</strong>
+    <small>Habitable + ranking CPEH</small>
+    <span class="cpeh-flow-actor">Sistema / administrador</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step cpeh-flow-asign">
+    <span class="cpeh-flow-num">★</span>
+    <strong>Asignación</strong>
+    <small>Admin → coord. → ingeniero</small>
+    <span class="cpeh-flow-actor cpeh-flow-actor-coord">Admin / coordinador</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step">
+    <span class="cpeh-flow-num">1</span>
+    <strong>Pendiente verificación</strong>
+    <small>Sin visita detallada</small>
+    <span class="cpeh-flow-actor">Coordinador</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step cpeh-flow-insp">
+    <span class="cpeh-flow-num">2</span>
+    <strong>En visita</strong>
+    <small>Levantamiento en campo</small>
+    <span class="cpeh-flow-actor cpeh-flow-actor-insp">Ingeniero</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step cpeh-flow-insp">
+    <span class="cpeh-flow-num">3</span>
+    <strong>Borrador</strong>
+    <small>Informe en elaboración</small>
+    <span class="cpeh-flow-actor cpeh-flow-actor-insp">Ingeniero</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step cpeh-flow-rev">
+    <span class="cpeh-flow-num">4</span>
+    <strong>Pendiente revisión</strong>
+    <small>Cola del revisor</small>
+    <span class="cpeh-flow-actor cpeh-flow-actor-rev">Revisor</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step cpeh-flow-rev">
+    <span class="cpeh-flow-num">5</span>
+    <strong>Revisado</strong>
+    <small>Control técnico confirmado</small>
+    <span class="cpeh-flow-actor cpeh-flow-actor-rev">Revisor</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step cpeh-flow-coord">
+    <span class="cpeh-flow-num">6</span>
+    <strong>Aprobado</strong>
+    <small>Dictamen validado</small>
+    <span class="cpeh-flow-actor cpeh-flow-actor-rev">Revisor</span>
+  </div>
+  <div class="cpeh-flow-arrow" aria-hidden="true">→</div>
+  <div class="cpeh-flow-step cpeh-flow-final">
+    <span class="cpeh-flow-num">7</span>
+    <strong>Publicado</strong>
+    <small>Cierre operativo</small>
+    <span class="cpeh-flow-actor cpeh-flow-actor-coord">Coordinador / admin</span>
+  </div>
+</div>
+
+<div class="cpeh-flow-return">
+  <strong>Devoluciones (corrección):</strong>
+  Pendiente revisión / Revisado → Borrador (revisor) ·
+  Aprobado → Revisado o Pendiente revisión (ajuste) ·
+  Borrador → En visita (ingeniero).
+</div>

@@ -1,0 +1,3304 @@
+/* CPEH Fase II — identidad portal web CPEH (bandera VE + logo oficial) */
+:root {
+  --ve-amarillo: #ffcc00;
+  --ve-azul: #00247d;
+  --ve-azul-oscuro: #001a5c;
+  --ve-rojo: #cf142b;
+  --ve-rojo-oscuro: #a81024;
+  --cpeh-surface: #f4f6f9;
+  --cpeh-success: #2d6a4f;
+}
+
+.main-header.navbar,
+.navbar-dark,
+.sidebar-dark-primary,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.app-sidebar.sidebar-dark-primary,
+.app-sidebar .sidebar-menu > .nav-item > .nav-link.active {
+  background-color: var(--ve-azul) !important;
+}
+
+.main-header.navbar,
+.app-header {
+  border-bottom: 3px solid var(--ve-amarillo) !important;
+}
+
+.brand-link .brand-image,
+.brand-image-cpeh {
+  border: 2px solid rgba(255, 204, 0, 0.55) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 50% !important;
+  object-fit: cover;
+}
+
+.login-logo img,
+.brand-image,
+.brand-image-cpeh {
+  max-height: 52px !important;
+}
+
+/* Sidebar — cabecera marca (logo + texto) — Jazzmin 2 (.main-sidebar) y 3 (.app-sidebar) */
+.main-sidebar .brand-link,
+.app-sidebar .brand-link {
+  height: auto !important;
+  min-height: 4.25rem;
+  max-height: none !important;
+  padding: 0.7rem 0.65rem !important;
+  display: flex !important;
+  align-items: center;
+  gap: 0.55rem;
+  overflow: visible !important;
+  white-space: normal !important;
+  line-height: 1.25;
+  border-bottom: 2px solid var(--ve-amarillo) !important;
+}
+
+.main-sidebar .brand-link .brand-image,
+.main-sidebar .brand-link .brand-image-cpeh,
+.app-sidebar .brand-link .brand-image,
+.app-sidebar .brand-link .brand-image-cpeh {
+  max-height: 44px !important;
+  width: 44px !important;
+  min-width: 44px;
+  margin: 0 !important;
+  float: none !important;
+  flex-shrink: 0;
+}
+
+.main-sidebar .brand-link .brand-text,
+.app-sidebar .brand-link .brand-text {
+  font-size: 0.82rem !important;
+  font-weight: 700;
+  white-space: normal !important;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+.main-sidebar .sidebar,
+.app-sidebar .sidebar,
+.app-sidebar .sidebar-wrapper {
+  padding-top: 0 !important;
+}
+
+.main-sidebar .user-panel,
+.app-sidebar .user-panel {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-top: 0 !important;
+}
+
+/* Menú lateral desplegable: hamburger + secciones treeview */
+[data-lte-toggle="sidebar"],
+[data-widget="pushmenu"] {
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body.sidebar-collapse .app-sidebar,
+body.sidebar-collapse .main-sidebar {
+  margin-left: -250px !important;
+}
+
+body.sidebar-open .app-sidebar,
+body.sidebar-open .main-sidebar,
+body:not(.sidebar-collapse) .app-sidebar {
+  margin-left: 0 !important;
+}
+
+/* Secciones del menú (apps) como acordeón desplegable */
+.app-sidebar .nav-item > .nav-link .nav-arrow,
+.main-sidebar .nav-item > .nav-link .right {
+  transition: transform 0.15s ease;
+}
+
+.app-sidebar .nav-item.menu-open > .nav-link .nav-arrow,
+.main-sidebar .nav-item.menu-open > .nav-link .right {
+  transform: rotate(-90deg);
+}
+
+/* Forzar show/hide del árbol (AdminLTE/Jazzmin 3 a veces deja height:0) */
+.app-sidebar .nav-item > .nav-treeview,
+.main-sidebar .nav-item > .nav-treeview {
+  display: none !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.app-sidebar .nav-item.menu-open > .nav-treeview,
+.main-sidebar .nav-item.menu-open > .nav-treeview {
+  display: block !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding-left: 0.35rem;
+}
+
+/* Navbar superior: pocos atajos, más legible */
+.main-header .navbar-nav .nav-link,
+.app-header .navbar-nav .nav-link {
+  font-weight: 600 !important;
+  white-space: nowrap;
+  padding-left: 0.65rem !important;
+  padding-right: 0.65rem !important;
+}
+
+/* Grupos custom del sidebar (Operación / Equipo / Ayuda) */
+.app-sidebar .nav-sidebar > .nav-item > .nav-link p,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link p {
+  font-weight: 700;
+}
+
+.ve-tricolor-bar {
+  display: flex;
+  height: 6px;
+  width: 100%;
+}
+
+.ve-tricolor-bar span {
+  flex: 1;
+}
+
+.ve-tricolor-bar .ve-amarillo { background: var(--ve-amarillo); }
+.ve-tricolor-bar .ve-azul { background: var(--ve-azul); }
+.ve-tricolor-bar .ve-rojo { background: var(--ve-rojo); }
+
+.ve-tricolor-bar--footer {
+  height: 8px;
+}
+
+.ve-footer-stars {
+  background: var(--ve-azul);
+  color: #fff;
+  text-align: center;
+  font-size: 0.62rem;
+  letter-spacing: 0.22rem;
+  padding: 0.35rem 0;
+}
+
+.cpeh-footer-bandera {
+  width: 100%;
+  overflow: hidden;
+}
+
+.cpeh-guides-footer {
+  border: 1px solid #d0d7e2;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 36, 125, 0.08);
+  background: #fff;
+}
+
+.cpeh-page-footer-bandera {
+  margin: 0;
+  width: 100%;
+}
+
+.cpeh-page-footer-bandera .ve-tricolor-bar--footer {
+  height: 10px;
+}
+
+.cpeh-app-footer {
+  background: var(--ve-azul-oscuro) !important;
+  color: #e8eef8 !important;
+  border-top: none !important;
+  padding-top: 0.65rem !important;
+}
+
+.cpeh-auth-card .cpeh-footer-bandera {
+  border-radius: 0 0 10px 10px;
+}
+
+.ve-hero-stars {
+  background: var(--ve-azul);
+  color: #fff;
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.22rem;
+  padding: 0.35rem 0;
+}
+
+.cpeh-hero-body {
+  background: linear-gradient(180deg, #fff 0%, var(--cpeh-surface) 100%);
+  padding: 1.25rem 1.5rem !important;
+}
+
+.cpeh-hero-card {
+  overflow: hidden;
+}
+
+.cpeh-hero-card .ve-tricolor-bar {
+  border-radius: 0;
+}
+
+.cpeh-hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cpeh-hero-brand--stacked {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.cpeh-hero-brand--stacked .cpeh-hero-program {
+  min-width: 0;
+  width: 100%;
+}
+
+.cpeh-hero-program {
+  flex: 1;
+  min-width: 16rem;
+}
+
+.cpeh-institutional-name {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cpeh-institutional-logo {
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 36, 125, 0.2);
+}
+
+.cpeh-institutional-logo--sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cpeh-institutional-text {
+  line-height: 1.15;
+}
+
+.cpeh-name-lg {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ve-azul-oscuro);
+  letter-spacing: -0.01em;
+}
+
+.cpeh-name-star {
+  color: var(--ve-rojo);
+  font-size: 0.85em;
+  margin-right: 0.15rem;
+}
+
+.cpeh-name-sm {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #3d4654;
+}
+
+.cpeh-institutional-name--compact {
+  flex-direction: column;
+  text-align: center;
+  gap: 0.35rem;
+}
+
+.cpeh-institutional-name:not(.cpeh-institutional-name--compact) .cpeh-name-lg {
+  font-size: 1.5rem;
+}
+
+.cpeh-institutional-name:not(.cpeh-institutional-name--compact) .cpeh-name-sm {
+  font-size: 0.95rem;
+  color: #2c3440 !important;
+}
+
+.cpeh-institutional-name--compact .cpeh-name-star {
+  color: var(--ve-rojo);
+}
+
+.cpeh-institutional-name--compact .cpeh-name-lg {
+  font-size: 1.05rem;
+  color: #fff !important;
+}
+
+.cpeh-institutional-name--compact .cpeh-name-sm {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.cpeh-auth-program {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffcc00 !important;
+  text-align: center;
+  line-height: 1.35;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.01em;
+}
+
+.cpeh-hero-logo {
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 36, 125, 0.2);
+  border: 2px solid rgba(255, 204, 0, 0.5);
+}
+
+.cpeh-hero-eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ve-azul) !important;
+  font-weight: 600;
+}
+
+.cpeh-hero-title {
+  color: var(--ve-azul-oscuro);
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.cpeh-about-list strong {
+  color: var(--ve-azul-oscuro);
+}
+
+.cpeh-about-ordered {
+  list-style: decimal;
+  padding-left: 1.35rem;
+}
+
+/* ── Acordeones plegables (portada) ── */
+.cpeh-accordion {
+  border: 1px solid #d0d7e2;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 36, 125, 0.08);
+}
+
+.cpeh-accordion-header {
+  background: var(--ve-azul) !important;
+  color: #fff !important;
+  padding: 0.9rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 2px solid var(--ve-amarillo);
+  user-select: none;
+}
+
+.cpeh-accordion-header::-webkit-details-marker {
+  display: none;
+}
+
+.cpeh-accordion-header::after {
+  content: "▾";
+  margin-left: auto;
+  font-size: 1rem;
+  opacity: 0.9;
+  transition: transform 0.2s ease;
+}
+
+.cpeh-accordion[open] > .cpeh-accordion-header::after {
+  transform: rotate(180deg);
+}
+
+.cpeh-accordion-header:hover {
+  background: var(--ve-azul-oscuro) !important;
+}
+
+.cpeh-accordion-body {
+  padding: 1.25rem 1.5rem;
+  background: #fff !important;
+  color: #1a2332 !important;
+}
+
+.cpeh-guide-block {
+  margin-bottom: 1.15rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e8eef8;
+}
+
+.cpeh-guide-block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.cpeh-guide-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--ve-azul-oscuro);
+  margin-bottom: 0.5rem;
+}
+
+.cpeh-guide-code {
+  display: inline-block;
+  background: var(--ve-azul);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2em 0.55em;
+  border-radius: 4px;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+
+/* ── Portada: contraste forzado (independiente del tema Jazzmin) ── */
+.content-header h1 {
+  color: #fff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.cpeh-dashboard-wrap,
+.cpeh-dashboard-wrap .card,
+.cpeh-admin-modules .card {
+  color: #1a2332;
+}
+
+.cpeh-hero-sub {
+  font-size: 0.95rem;
+  max-width: 42rem;
+  color: #2c3440 !important;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.cpeh-hero-guia-pdf {
+  margin-top: 0.35rem;
+}
+
+.cpeh-btn-guia-pdf {
+  font-weight: 600;
+  color: var(--ve-azul-oscuro) !important;
+  border: 1px solid #c5d0e3;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.cpeh-btn-guia-pdf:hover {
+  background: #eef4ff !important;
+  color: var(--ve-azul) !important;
+}
+
+.cpeh-badge-status {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.cpeh-badge-draft {
+  background: #fff3cd;
+  color: #7a4b00;
+  border: 1px solid #f0c040;
+}
+
+.cpeh-badge-ok {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #28a745;
+}
+
+.cpeh-dev-body {
+  background: #fff !important;
+  color: #1a2332 !important;
+}
+
+.cpeh-dev-body .cpeh-about-heading {
+  color: #001a5c !important;
+}
+
+.cpeh-dev-body .cpeh-about-text,
+.cpeh-dev-body .cpeh-about-list,
+.cpeh-dev-body .cpeh-guide-title {
+  color: #3d4654 !important;
+}
+
+.cpeh-dev-body .cpeh-about-list strong {
+  color: #001a5c !important;
+}
+
+.cpeh-dev-alert {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-left: 4px solid #cf142b;
+  color: #5c4a00;
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.cpeh-dev-body code {
+  background: #eef2f8;
+  color: #001a5c;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.82em;
+}
+
+.cpeh-dev-code {
+  background: #1a2332;
+  color: #e8eef8;
+  padding: 0.75rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid var(--ve-amarillo);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cpeh-dev-table {
+  font-size: 0.82rem;
+  background: #fff !important;
+  color: #1a2332 !important;
+}
+
+.cpeh-dev-body .table-responsive {
+  background: #fff !important;
+  border: 1px solid #d0d7e2;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cpeh-dev-table thead th {
+  background: #eef2f8 !important;
+  color: #001a5c !important;
+  font-weight: 700;
+  border-color: #c5d0e3 !important;
+}
+
+.cpeh-dev-table tbody tr {
+  background: #fff !important;
+}
+
+.cpeh-dev-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+.cpeh-dev-table tbody tr:hover td {
+  background: #eef4ff !important;
+}
+
+.cpeh-dev-table td,
+.cpeh-dev-table th {
+  border-color: #d0d7e2 !important;
+  color: #1a2332 !important;
+  vertical-align: top;
+  background-color: inherit !important;
+}
+
+.cpeh-dev-table td code {
+  background: #eef2f8 !important;
+  color: #001a5c !important;
+}
+
+.cpeh-dev-table th {
+  width: 28%;
+}
+
+.cpeh-dev-accordion .cpeh-accordion-header {
+  background: #343a40 !important;
+  border-bottom-color: var(--ve-amarillo);
+}
+
+.cpeh-dev-accordion .cpeh-accordion-header:hover {
+  background: #23272b !important;
+}
+
+.cpeh-kpi-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+  align-items: stretch;
+}
+
+.cpeh-kpi-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.55rem;
+  min-height: 1.85rem;
+  max-height: 2.4rem;
+  background: #fff !important;
+  border-radius: 5px;
+  border-left: 3px solid var(--ve-azul);
+  box-shadow: 0 1px 3px rgba(0, 36, 125, 0.1);
+  color: #1a2332 !important;
+  font-size: 0.72rem;
+  line-height: 1.15;
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+.cpeh-kpi-chip:hover {
+  box-shadow: 0 2px 6px rgba(0, 36, 125, 0.16);
+  transform: translateY(-1px);
+  color: var(--ve-azul-oscuro) !important;
+}
+
+.cpeh-kpi-chip-icon {
+  font-size: 0.7rem;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+.cpeh-kpi-chip-value {
+  font-weight: 700;
+  font-size: 0.88rem;
+  min-width: 1.1rem;
+  text-align: center;
+  flex-shrink: 0;
+  color: #1a2332 !important;
+}
+
+.cpeh-kpi-chip-label {
+  color: #3d4654 !important;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 9rem;
+}
+
+.kpi-blue.cpeh-kpi-chip { border-left-color: var(--ve-azul); }
+.kpi-blue .cpeh-kpi-chip-icon { color: var(--ve-azul); }
+
+.kpi-red.cpeh-kpi-chip { border-left-color: var(--ve-rojo); }
+.kpi-red .cpeh-kpi-chip-icon { color: var(--ve-rojo); }
+
+.kpi-yellow.cpeh-kpi-chip { border-left-color: var(--ve-amarillo); }
+.kpi-yellow .cpeh-kpi-chip-icon { color: #b8860b; }
+
+.kpi-green.cpeh-kpi-chip { border-left-color: var(--cpeh-success); }
+.kpi-green .cpeh-kpi-chip-icon { color: var(--cpeh-success); }
+
+.kpi-neutral.cpeh-kpi-chip { border-left-color: #6c757d; }
+.kpi-neutral .cpeh-kpi-chip-icon { color: #6c757d; }
+
+.cpeh-kpi-chip-operacion {
+  border-left-color: #0f766e !important;
+  background: linear-gradient(135deg, #ecfdf5 0%, #fff 70%);
+}
+.cpeh-kpi-chip-operacion .cpeh-kpi-chip-icon { color: #0f766e; }
+.cpeh-kpi-chip-operacion .cpeh-kpi-chip-value { color: #0f766e; }
+
+.cpeh-kpi-label {
+  font-size: 0.78rem;
+  color: #3d4654 !important;
+  margin-top: 0.25rem;
+  line-height: 1.25;
+}
+
+.cpeh-recent-table tbody td {
+  background: #fff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  vertical-align: middle;
+  font-size: 0.88rem;
+}
+
+.cpeh-recent-table tbody tr:nth-child(even) td {
+  background: #f1f5f9 !important;
+}
+
+.cpeh-recent-table tbody tr:hover td {
+  background: #dbeafe !important;
+  color: #0f172a !important;
+}
+
+.cpeh-recent-table a {
+  color: #00247d !important;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cpeh-recent-table a:hover {
+  color: #b91c1c !important;
+}
+
+.cpeh-recent-table thead th {
+  background: #1e3a5f !important;
+  color: #fff !important;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-top: none;
+  border-bottom: 2px solid #f5c518 !important;
+  padding: 0.55rem 0.6rem !important;
+}
+
+.cpeh-recent-table thead th a,
+.cpeh-recent-table thead th.cpeh-th-sort a {
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.cpeh-recent-table thead th.cpeh-th-sort a:hover,
+.cpeh-recent-table thead th.cpeh-th-sort.is-active a {
+  color: #fde68a !important;
+  text-decoration: underline !important;
+}
+
+/* Estado 2.ª ronda legible */
+.cpeh-recent-table td:nth-child(5) {
+  font-weight: 600;
+  color: #0f172a !important;
+}
+
+/* Paginación panel de control */
+.cpeh-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  margin-top: 0.85rem;
+  padding: 0.65rem 0.75rem;
+  background: #e8eef8;
+  border: 1px solid #9eb0cc;
+  border-radius: 8px;
+}
+.cpeh-pager-info {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+.cpeh-pager-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+.cpeh-pager-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.28rem 0.55rem;
+  border-radius: 5px;
+  border: 1px solid #64748b;
+  background: #fff;
+  color: #0f172a !important;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-decoration: none !important;
+}
+.cpeh-pager-btn:hover {
+  background: #dbeafe;
+  border-color: #00247d;
+  color: #00247d !important;
+}
+.cpeh-pager-btn.is-active {
+  background: #00247d !important;
+  border-color: #00247d !important;
+  color: #fff !important;
+}
+
+body.dark-mode .cpeh-pager,
+.dark-mode .cpeh-pager {
+  background: #1e293b;
+  border-color: #475569;
+}
+body.dark-mode .cpeh-pager-info,
+.dark-mode .cpeh-pager-info {
+  color: #f1f5f9;
+}
+body.dark-mode .cpeh-pager-btn,
+.dark-mode .cpeh-pager-btn {
+  background: #0f172a;
+  border-color: #64748b;
+  color: #f8fafc !important;
+}
+body.dark-mode .cpeh-pager-btn:hover,
+.dark-mode .cpeh-pager-btn:hover {
+  background: #334155;
+  border-color: #93c5fd;
+  color: #93c5fd !important;
+}
+body.dark-mode .cpeh-pager-btn.is-active,
+.dark-mode .cpeh-pager-btn.is-active {
+  background: #2563eb !important;
+  border-color: #60a5fa !important;
+  color: #fff !important;
+}
+
+body.dark-mode .cpeh-recent-table thead th,
+.dark-mode .cpeh-recent-table thead th {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-bottom-color: #fbbf24 !important;
+}
+body.dark-mode .cpeh-recent-table thead th a,
+.dark-mode .cpeh-recent-table thead th a {
+  color: #f8fafc !important;
+}
+body.dark-mode .cpeh-recent-table tbody td,
+.dark-mode .cpeh-recent-table tbody td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+body.dark-mode .cpeh-recent-table tbody tr:nth-child(even) td,
+.dark-mode .cpeh-recent-table tbody tr:nth-child(even) td {
+  background: #0f172a !important;
+}
+body.dark-mode .cpeh-recent-table tbody tr:hover td,
+.dark-mode .cpeh-recent-table tbody tr:hover td {
+  background: #1e3a5f !important;
+}
+body.dark-mode .cpeh-recent-table a,
+.dark-mode .cpeh-recent-table a {
+  color: #93c5fd !important;
+}
+body.dark-mode .cpeh-ra-filters,
+.dark-mode .cpeh-ra-filters {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+body.dark-mode .cpeh-ra-field > span,
+.dark-mode .cpeh-ra-field > span {
+  color: #e2e8f0 !important;
+}
+body.dark-mode .cpeh-ra-field .form-control,
+body.dark-mode .cpeh-ra-field select,
+.dark-mode .cpeh-ra-field .form-control,
+.dark-mode .cpeh-ra-field select {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #64748b !important;
+}
+body.dark-mode .cpeh-recent-actions-card > .card-body,
+.dark-mode .cpeh-recent-actions-card > .card-body {
+  background: #0f172a !important;
+}
+body.dark-mode .cpeh-recent-action-row,
+.dark-mode .cpeh-recent-action-row {
+  color: #e2e8f0;
+  border-color: #334155;
+}
+body.dark-mode .cpeh-recent-action-row:nth-child(even),
+.dark-mode .cpeh-recent-action-row:nth-child(even) {
+  background: #1e293b;
+}
+body.dark-mode .cpeh-ra-count,
+.dark-mode .cpeh-ra-count {
+  /* En cabecera azul el contador usa el estilo del badge ámbar (abajo). */
+  background: #fde68a !important;
+  color: #0f172a !important;
+}
+
+.badge-cpeh {
+  background: #e8eef8 !important;
+  color: var(--ve-azul-oscuro) !important;
+  font-weight: 600;
+  white-space: normal;
+  text-align: left;
+  padding: 0.35em 0.65em;
+}
+
+.badge-cpeh-d1 {
+  background: #2d6a4f !important;
+  color: #fff !important;
+}
+
+.badge-cpeh-d2 {
+  background: #457b9d !important;
+  color: #fff !important;
+}
+
+.badge-cpeh-d3 {
+  background: #b8860b !important;
+  color: #fff !important;
+}
+
+.badge-cpeh-d4 {
+  background: #e85d04 !important;
+  color: #fff !important;
+}
+
+.badge-cpeh-d4 {
+  background: var(--ve-rojo) !important;
+  color: #fff !important;
+}
+
+.badge-cpeh-pending {
+  background: #6c757d !important;
+  color: #fff !important;
+}
+
+.cpeh-admin-modules {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+/* Acciones recientes a ancho de página (grid responsive) */
+.cpeh-recent-actions-card {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.cpeh-recent-actions-card > .card-body,
+#recent-actions-module {
+  width: 100% !important;
+  max-width: 100% !important;
+  background: #fff !important;
+}
+
+.cpeh-ra-count {
+  background: #fde68a !important;
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  padding: 0.4rem 0.7rem !important;
+  border-radius: 6px !important;
+  border: 1px solid #f59e0b !important;
+  letter-spacing: 0.01em;
+}
+
+/* Controles de página en la cabecera azul (siempre visibles) */
+.cpeh-hdr-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.55rem;
+}
+.cpeh-hdr-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.32rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #fbbf24;
+  background: #fff !important;
+  color: #00247d !important;
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-decoration: none !important;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.cpeh-hdr-page-btn:hover {
+  background: #fef3c7 !important;
+  color: #001a5c !important;
+  border-color: #f59e0b;
+}
+.cpeh-hdr-page-btn.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: default;
+  background: #e2e8f0 !important;
+  color: #64748b !important;
+  border-color: #94a3b8;
+}
+
+.cpeh-pager-top {
+  margin-top: 0;
+  margin-bottom: 0.85rem;
+  background: #fef3c7;
+  border-color: #f59e0b;
+  border-width: 2px;
+}
+.cpeh-pager-top .cpeh-pager-info {
+  color: #0f172a;
+  font-weight: 800;
+}
+.cpeh-pager-btn.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: default;
+  background: #e2e8f0 !important;
+  color: #64748b !important;
+}
+
+body.dark-mode .cpeh-pager-top,
+.dark-mode .cpeh-pager-top {
+  background: #422006;
+  border-color: #fbbf24;
+}
+body.dark-mode .cpeh-pager-top .cpeh-pager-info,
+.dark-mode .cpeh-pager-top .cpeh-pager-info {
+  color: #fef3c7;
+}
+body.dark-mode .cpeh-hdr-page-btn,
+.dark-mode .cpeh-hdr-page-btn {
+  background: #fef3c7 !important;
+  color: #0f172a !important;
+  border-color: #fbbf24;
+}
+
+.cpeh-ra-filters {
+  background: #eef2f7 !important;
+  border: 1px solid #c5d0e0 !important;
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  color: #1a2332 !important;
+}
+
+.cpeh-ra-filters-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem 0.45rem;
+  align-items: flex-end;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.cpeh-ra-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 0 0 auto;
+  width: 7.1rem;
+  min-width: 6.4rem;
+  max-width: 8.5rem;
+  margin: 0;
+  color: #1a2332 !important;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.cpeh-ra-field--sm {
+  width: 6.4rem;
+  min-width: 5.8rem;
+  max-width: 6.8rem;
+}
+
+.cpeh-ra-field--md {
+  width: 8rem;
+  min-width: 7.2rem;
+  max-width: 9rem;
+}
+
+.cpeh-ra-field--date {
+  width: 10.8rem;
+  min-width: 10.2rem;
+  max-width: 11.5rem;
+}
+
+.cpeh-ra-field--date input[type="date"] {
+  cursor: pointer;
+  color-scheme: light;
+}
+
+.cpeh-ra-field--date input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  cursor: pointer;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0 0.1rem 0 0.15rem;
+  padding: 0.12rem;
+  border-radius: 3px;
+  background-color: #e8eef8;
+}
+
+.cpeh-ra-field--date input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #d4e0f5;
+}
+
+.cpeh-ra-field > span {
+  color: #1a2332 !important;
+  opacity: 1 !important;
+  white-space: nowrap;
+  line-height: 1.15;
+}
+
+.cpeh-ra-field .form-control,
+.cpeh-ra-field select {
+  color: #0f172a !important;
+  background: #ffffff !important;
+  border: 1px solid #7b8ba3 !important;
+  font-weight: 600;
+  font-size: 0.78rem !important;
+  height: 1.9rem;
+  padding: 0.15rem 0.35rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.cpeh-ra-actions {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  flex: 0 0 auto;
+  padding-bottom: 0.05rem;
+  margin-left: 0.15rem;
+  white-space: nowrap;
+}
+
+.cpeh-ra-actions .btn-primary {
+  background: #0b3d91 !important;
+  border-color: #0b3d91 !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.cpeh-ra-actions .btn-outline-secondary {
+  background: #fff !important;
+  border-color: #64748b !important;
+  color: #1a2332 !important;
+  font-weight: 600;
+}
+
+.cpeh-ra-empty {
+  color: #334155 !important;
+  font-weight: 500;
+}
+
+/* Lista en líneas (no fichas) */
+.cpeh-recent-actions-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border: 1px solid #b8c4d6;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.cpeh-recent-action-row {
+  display: grid;
+  grid-template-columns: 1.5rem 9.5rem 9rem minmax(12rem, 1.2fr) minmax(14rem, 1.6fr);
+  gap: 0.55rem 0.75rem;
+  align-items: start;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid #d8e0ec;
+  background: #fff;
+  color: #0f172a;
+}
+
+.cpeh-recent-action-row:nth-child(even) {
+  background: #f5f7fb;
+}
+
+.cpeh-recent-action-row:last-child {
+  border-bottom: none;
+}
+
+.cpeh-recent-action-icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  color: #334155 !important;
+  padding-top: 0.1rem;
+  text-align: center;
+}
+
+.cpeh-recent-action-time {
+  font-size: 0.78rem;
+  color: #334155 !important;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cpeh-ra-actor {
+  color: #1e3a5f !important;
+  font-weight: 700;
+  font-size: 0.82rem;
+  word-break: break-all;
+}
+
+.cpeh-recent-action-title {
+  font-weight: 700;
+  color: #0f172a !important;
+  line-height: 1.3;
+}
+
+.cpeh-recent-action-title a {
+  color: #0b3d91 !important;
+  font-weight: 700;
+}
+
+.cpeh-recent-action-title a:hover {
+  color: #9b1b1e !important;
+}
+
+.cpeh-recent-action-msg,
+.cpeh-recent-action-msg * {
+  color: #1e293b !important;
+  font-size: 0.84rem !important;
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 1 !important;
+}
+
+@media (max-width: 992px) {
+  .cpeh-recent-action-row {
+    grid-template-columns: 1.5rem 1fr;
+    grid-template-areas:
+      "icon time"
+      "icon actor"
+      "icon title"
+      "icon msg";
+  }
+  .cpeh-recent-action-icon { grid-area: icon; }
+  .cpeh-recent-action-time { grid-area: time; white-space: normal; }
+  .cpeh-ra-actor { grid-area: actor; }
+  .cpeh-recent-action-title { grid-area: title; }
+  .cpeh-recent-action-msg { grid-area: msg; }
+}
+
+/* compat: por si queda markup viejo en caché */
+.cpeh-recent-actions-grid {
+  display: flex !important;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  border: 1px solid #b8c4d6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cpeh-recent-action-item {
+  display: flex;
+  gap: 0.65rem;
+  background: #ffffff;
+  border: none;
+  border-bottom: 1px solid #d8e0ec;
+  border-radius: 0;
+  padding: 0.55rem 0.75rem;
+  min-height: 0;
+  box-shadow: none;
+}
+
+.cpeh-admin-modules .card,
+.cpeh-admin-modules .card-outline {
+  background: #fff !important;
+  border: 1px solid #d0d7e2 !important;
+  color: #1a2332 !important;
+}
+
+.cpeh-admin-modules .card-header,
+.cpeh-admin-modules .card-header a {
+  background: var(--ve-azul) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.cpeh-admin-modules .card-body,
+.cpeh-admin-modules .card-body table,
+.cpeh-admin-modules .card-body td,
+.cpeh-admin-modules .card-body th {
+  background: #fff !important;
+  color: #1a2332 !important;
+}
+
+.cpeh-admin-modules .card-body a:not(.btn) {
+  color: var(--ve-azul) !important;
+  font-weight: 600;
+}
+
+.cpeh-admin-modules .card-body a:not(.btn):hover {
+  color: var(--ve-rojo) !important;
+}
+
+.cpeh-admin-modules .recent-actions,
+.cpeh-admin-modules #recent-actions-module {
+  background: #fff !important;
+  color: #1a2332 !important;
+}
+
+.cpeh-admin-modules .recent-actions h2,
+.cpeh-admin-modules #recent-actions-module h2 {
+  background: var(--ve-azul) !important;
+  color: #fff !important;
+}
+
+.cpeh-admin-modules .actionlist li {
+  color: #1a2332 !important;
+  border-color: #dee2e6 !important;
+}
+
+.main-footer {
+  color: #cbd5e1 !important;
+}
+
+.main-footer a {
+  color: var(--ve-amarillo) !important;
+}
+
+.cpeh-card-header {
+  background: var(--ve-azul) !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-bottom: 2px solid var(--ve-amarillo);
+}
+
+fieldset.collapsed h2 {
+  background: var(--ve-azul) !important;
+}
+
+.content-header h1 {
+  font-size: 1.35rem;
+}
+
+textarea.vLargeTextField {
+  min-height: 120px;
+}
+
+.login-page {
+  background: var(--cpeh-surface) !important;
+}
+
+/* Jazzmin duplica logo fuera de la tarjeta CPEH — ocultar (logo va dentro del header) */
+.login-page .login-logo {
+  display: none !important;
+}
+
+.login-page .login-box .card-body {
+  padding: 0 !important;
+}
+
+.login-page .login-box,
+.login-page .card {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.login-page .login-box-msg {
+  display: none !important;
+}
+
+.cpeh-auth-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 36, 125, 0.18);
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.cpeh-auth-header {
+  background: var(--ve-azul);
+  color: #fff;
+  padding: 1.1rem 1.25rem 1rem;
+  text-align: center;
+}
+
+.cpeh-auth-header .cpeh-institutional-logo {
+  border: 2px solid rgba(255, 204, 0, 0.75);
+  background: #fff;
+  margin-bottom: 0.35rem;
+}
+
+.cpeh-auth-header .cpeh-name-lg,
+.cpeh-auth-header .cpeh-name-sm {
+  color: #fff !important;
+}
+
+.cpeh-auth-header .cpeh-name-sm {
+  color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.cpeh-auth-header .cpeh-name-star {
+  color: var(--ve-amarillo) !important;
+}
+
+.cpeh-auth-eyebrow {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ve-amarillo) !important;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cpeh-auth-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff !important;
+  line-height: 1.35;
+}
+
+.cpeh-auth-body {
+  padding: 1.25rem 1.35rem 1.35rem;
+  background: #fff;
+  color: #1a2332;
+}
+
+.cpeh-auth-lead,
+.cpeh-auth-message {
+  color: #3d4654 !important;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.cpeh-auth-link {
+  color: var(--ve-azul) !important;
+  font-weight: 600;
+}
+
+.cpeh-auth-btn {
+  background: var(--ve-azul) !important;
+  border-color: var(--ve-azul) !important;
+  font-weight: 600;
+}
+
+.cpeh-auth-btn:hover {
+  background: var(--ve-azul-oscuro) !important;
+  border-color: var(--ve-azul-oscuro) !important;
+}
+
+.cpeh-about-body {
+  background: #fff;
+  color: #1a2332;
+  padding: 1.25rem 1.5rem !important;
+}
+
+.cpeh-about-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ve-azul-oscuro);
+  margin-bottom: 0.65rem;
+}
+
+.cpeh-about-text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #3d4654;
+  margin-bottom: 0.75rem;
+}
+
+.cpeh-about-list {
+  padding-left: 1.15rem;
+  color: #3d4654;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.cpeh-about-list li {
+  margin-bottom: 0.45rem;
+}
+
+/* ── Guía asignación: roles + flujograma ── */
+.cpeh-guia-asignacion {
+  margin-bottom: 1rem;
+}
+
+.cpeh-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.cpeh-role-card {
+  border: 1px solid #d0d7e2;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: #f8fafc;
+}
+
+.cpeh-role-card .cpeh-about-heading {
+  margin-top: 0;
+  font-size: 0.95rem;
+}
+
+.cpeh-role-coord { border-top: 4px solid #f59e0b; }
+.cpeh-role-insp { border-top: 4px solid #2563eb; }
+.cpeh-role-rev { border-top: 4px solid #16a34a; }
+
+.cpeh-flowchart {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.35rem;
+  padding: 1rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+}
+
+.cpeh-flow-step {
+  flex: 1 1 7.5rem;
+  min-width: 7rem;
+  max-width: 9.5rem;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.55rem 0.5rem;
+  text-align: center;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.cpeh-flow-step strong {
+  color: #001a5c;
+  font-size: 0.78rem;
+}
+
+.cpeh-flow-step small {
+  color: #64748b;
+  font-size: 0.68rem;
+}
+
+.cpeh-flow-num {
+  display: inline-block;
+  width: 1.35rem;
+  height: 1.35rem;
+  line-height: 1.35rem;
+  border-radius: 50%;
+  background: #00247d;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  margin: 0 auto 0.15rem;
+}
+
+.cpeh-flow-actor {
+  margin-top: auto;
+  padding: 0.15rem 0.35rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.cpeh-flow-actor-coord { background: #fef3c7; color: #92400e; }
+.cpeh-flow-actor-insp { background: #dbeafe; color: #1e40af; }
+.cpeh-flow-actor-rev { background: #dcfce7; color: #166534; }
+
+.cpeh-flow-arrow {
+  align-self: center;
+  color: #64748b;
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cpeh-flow-precarga { border-color: #94a3b8; }
+.cpeh-flow-asign { border-color: #f59e0b; background: #fffbeb; }
+.cpeh-flow-insp { border-color: #93c5fd; }
+.cpeh-flow-rev { border-color: #86efac; }
+.cpeh-flow-coord { border-color: #fcd34d; }
+.cpeh-flow-final { border-color: #00247d; background: #eff6ff; }
+
+.cpeh-flow-return {
+  font-size: 0.82rem;
+  color: #475569;
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 0.55rem 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .cpeh-flowchart {
+    flex-direction: column;
+    align-items: center;
+  }
+  .cpeh-flow-arrow {
+    transform: rotate(90deg);
+  }
+  .cpeh-flow-step {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* Menú rápido de estados (ficha + dashboard) */
+.cpeh-guia-estados-rapida > .cpeh-accordion-header {
+  background: #1e3a8a;
+  color: #fff;
+  font-weight: 700;
+}
+
+.cpeh-guia-estados-rapida > .cpeh-accordion-header:hover {
+  background: #1e40af;
+}
+
+.cpeh-estado-pill-inline {
+  margin-left: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  vertical-align: middle;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.cpeh-status-glossary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.55rem;
+  margin-bottom: 0.75rem;
+}
+
+.cpeh-status-item {
+  background: #fff;
+  border: 1px solid #d0d7e2;
+  border-left: 4px solid #64748b;
+  border-radius: 6px;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.cpeh-status-item.is-current {
+  border-left-color: #f59e0b;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
+  background: #fffbeb;
+}
+
+.cpeh-status-name {
+  font-weight: 700;
+  color: #001a5c;
+  margin-bottom: 0.2rem;
+}
+
+.cpeh-status-def {
+  color: #334155;
+  margin-bottom: 0.25rem;
+}
+
+.cpeh-status-who,
+.cpeh-status-do {
+  color: #475569;
+  font-size: 0.74rem;
+}
+
+.cpeh-flowchart-compact .cpeh-flow-step {
+  flex: 1 1 5.5rem;
+  min-width: 5.2rem;
+  max-width: 7.5rem;
+}
+
+.cpeh-flow-step.is-current {
+  outline: 2px solid #f59e0b;
+  outline-offset: 1px;
+  background: #fffbeb;
+}
+
+.cpeh-role-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.45rem;
+}
+
+.cpeh-role-mini {
+  background: #f8fafc;
+  border: 1px solid #d0d7e2;
+  border-top: 3px solid #64748b;
+  border-radius: 6px;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.cpeh-role-mini strong {
+  display: block;
+  color: #001a5c;
+  margin-bottom: 0.15rem;
+  font-size: 0.78rem;
+}
+
+.cpeh-role-mini.cpeh-role-insp { border-top-color: #2563eb; }
+.cpeh-role-mini.cpeh-role-rev { border-top-color: #16a34a; }
+.cpeh-role-mini.cpeh-role-coord { border-top-color: #f59e0b; }
+
+/* ── Tutorial del sistema ── */
+.cpeh-mt-md { margin-top: 0.75rem; }
+.cpeh-mt-lg { margin-top: 1.25rem; }
+
+.cpeh-tutorial-phases {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.cpeh-tutorial-phase {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.65rem 0.85rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  border-left: 4px solid var(--ve-azul);
+}
+
+.cpeh-tutorial-phase-num {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--ve-azul);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.cpeh-tutorial-phase strong {
+  display: block;
+  color: var(--ve-azul-oscuro);
+  font-size: 0.92rem;
+  margin-bottom: 0.2rem;
+}
+
+.cpeh-tutorial-phase p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.cpeh-tutorial-paths {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.cpeh-tutorial-path {
+  border: 1px solid #d0d7e2;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.cpeh-tutorial-path > summary {
+  cursor: pointer;
+  padding: 0.7rem 1rem;
+  font-size: 0.92rem;
+  color: #1e293b;
+  background: #f1f5f9;
+  list-style: none;
+}
+
+.cpeh-tutorial-path > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cpeh-tutorial-path > summary::after {
+  content: "▸";
+  float: right;
+  color: #64748b;
+}
+
+.cpeh-tutorial-path[open] > summary::after {
+  content: "▾";
+}
+
+.cpeh-tutorial-path > summary:hover {
+  background: #e2e8f0;
+}
+
+.cpeh-tutorial-path > ol {
+  margin: 0;
+  padding: 0.75rem 1rem 0.85rem 2.25rem;
+}
+
+.cpeh-tutorial-path-coord { border-top: 3px solid #f59e0b; }
+.cpeh-tutorial-path-insp { border-top: 3px solid #2563eb; }
+.cpeh-tutorial-path-rev { border-top: 3px solid #16a34a; }
+
+.cpeh-guia-tutorial .table-responsive {
+  background: #fff !important;
+  border: 1px solid #d0d7e2;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cpeh-tutorial-table {
+  font-size: 0.88rem;
+  background: #fff !important;
+  color: #1a2332 !important;
+  margin-bottom: 0 !important;
+}
+
+.cpeh-tutorial-table thead th {
+  background: #eef2f8 !important;
+  color: #001a5c !important;
+  font-weight: 700;
+  border-color: #c5d0e3 !important;
+  border-top: none;
+}
+
+.cpeh-tutorial-table tbody tr {
+  background: #fff !important;
+}
+
+.cpeh-tutorial-table tbody tr:nth-child(even) {
+  background: #f8fafc !important;
+}
+
+.cpeh-tutorial-table tbody tr:hover td {
+  background: #eef4ff !important;
+}
+
+.cpeh-tutorial-table td,
+.cpeh-tutorial-table th {
+  border-color: #d0d7e2 !important;
+  color: #1a2332 !important;
+  vertical-align: top;
+  background-color: inherit !important;
+}
+
+.cpeh-tutorial-table td a {
+  color: var(--ve-azul) !important;
+  font-weight: 600;
+}
+
+.cpeh-tutorial-table td a:hover {
+  color: var(--ve-rojo) !important;
+}
+
+.cpeh-guia-tutorial > .cpeh-accordion-header {
+  background: linear-gradient(90deg, #eff6ff 0%, #fff 100%);
+  border-left: 4px solid var(--ve-azul);
+}
+
+.cpeh-decision-box {
+  margin-top: 1rem;
+  padding: 1rem 1.15rem;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+}
+
+.cpeh-decision-list li {
+  margin-bottom: 0.55rem;
+}
+
+.cpeh-decision-note {
+  font-size: 0.86rem;
+  color: #78350f;
+  background: #fff;
+  border: 1px dashed #fcd34d;
+  border-radius: 6px;
+  padding: 0.55rem 0.75rem;
+}
+
+/* Wizard didáctico por sección (fieldsets del caso) */
+/* Notas largas plegables: solo se ve el summary hasta expandir */
+.cpeh-note-fold {
+  border: 1px solid #c8d4e8;
+  border-radius: 8px;
+  background: #f4f7fb;
+  padding: 0.35rem 0.75rem;
+}
+
+.cpeh-note-fold > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #00247d;
+  list-style: none;
+  padding: 0.35rem 0;
+}
+
+.cpeh-note-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cpeh-note-fold > summary::before {
+  content: "▸ ";
+  color: #00247d;
+}
+
+.cpeh-note-fold[open] > summary::before {
+  content: "▾ ";
+}
+
+.cpeh-note-fold-body {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #1a2332;
+  padding: 0.25rem 0 0.5rem;
+  border-top: 1px solid #dde5f0;
+  margin-top: 0.25rem;
+}
+
+.cpeh-note-fold-warn {
+  background: #fff8e6;
+  border-color: #f0c36d;
+}
+
+.cpeh-note-fold-warn > summary {
+  color: #8a5a00;
+}
+
+.cpeh-note-fold-danger {
+  background: #fdecea;
+  border-color: #e5a3a0;
+}
+
+.cpeh-note-fold-danger > summary {
+  color: #9b1c1c;
+}
+
+.cpeh-action-btns .btn {
+  margin-right: 0.35rem;
+}
+
+/* Paneles de pie de ficha: secciones claras */
+.cpeh-panel {
+  background: #ffffff;
+  border: 1px solid #c5d0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 36, 125, 0.06);
+}
+
+.cpeh-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  background: #00247d;
+  color: #ffffff;
+}
+
+.cpeh-panel-head-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+.cpeh-panel-head-title .fas {
+  margin-right: 0.35rem;
+  opacity: 0.95;
+}
+
+.cpeh-panel-body {
+  padding: 0.75rem 0.85rem 0.85rem;
+  background: #f8fafc;
+}
+
+.cpeh-panel-body-folds {
+  background: #fff;
+}
+
+.cpeh-panel-lead {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.cpeh-panel-flujo .cpeh-panel-head {
+  background: #1e40af;
+}
+
+.cpeh-panel-guardar .cpeh-panel-head {
+  background: #0f766e;
+}
+
+.cpeh-submit-slot .submit-row,
+.cpeh-submit-slot .form-group {
+  margin-bottom: 0.35rem;
+}
+
+.cpeh-submit-slot .submit-row {
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cpeh-submit-slot .submit-row input,
+.cpeh-submit-slot .submit-row button,
+.cpeh-submit-slot .submit-row a.btn {
+  width: 100%;
+  margin: 0 !important;
+}
+
+.cpeh-panel-herramientas .cpeh-panel-head {
+  background: #00247d;
+}
+
+.cpeh-panel-mas .cpeh-panel-head {
+  background: #475569;
+}
+
+.cpeh-panel-checklist .cpeh-panel-head {
+  background: #7c2d12;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.cpeh-checklist-score {
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.18);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.cpeh-checklist-score.is-ready {
+  background: #166534;
+}
+
+.cpeh-checklist-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.cpeh-checklist-group {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0;
+  overflow: hidden;
+}
+
+.cpeh-checklist-group.is-ready {
+  border-color: #86efac;
+}
+
+.cpeh-checklist-group.is-open {
+  border-color: #fb923c;
+}
+
+.cpeh-checklist-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.45rem 0.65rem;
+  background: #0f172a;
+}
+
+.cpeh-checklist-group.is-ready .cpeh-checklist-group-head {
+  background: #14532d;
+}
+
+.cpeh-checklist-group.is-open .cpeh-checklist-group-head {
+  background: #7c2d12;
+}
+
+.cpeh-checklist-group-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff !important;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+.cpeh-checklist-group-score {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #0f172a !important;
+  background: #f8fafc;
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.cpeh-checklist-group.is-open .cpeh-checklist-group-score {
+  color: #7c2d12 !important;
+  background: #ffedd5;
+}
+
+.cpeh-checklist-group-score.is-ready,
+.cpeh-checklist-group.is-ready .cpeh-checklist-group-score {
+  color: #14532d !important;
+  background: #dcfce7;
+}
+
+.cpeh-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0.45rem 0.5rem 0.55rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.3rem;
+  background: #f8fafc;
+}
+
+.cpeh-checklist-group.is-ready .cpeh-checklist {
+  background: #f0fdf4;
+}
+
+.cpeh-checklist-group.is-open .cpeh-checklist {
+  background: #fff7ed;
+}
+
+.cpeh-checklist-item {
+  display: grid;
+  grid-template-columns: 1.2rem 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 0.4rem;
+  align-items: start;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.cpeh-checklist-item.is-ok {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.cpeh-checklist-item.is-pending {
+  border-color: #fdba74;
+  background: #fff7ed;
+}
+
+.cpeh-checklist-mark {
+  grid-row: 1 / span 2;
+  font-weight: 800;
+  color: #166534;
+  line-height: 1.2;
+}
+
+.cpeh-checklist-item.is-pending .cpeh-checklist-mark {
+  color: #c2410c;
+}
+
+.cpeh-checklist-label {
+  grid-column: 2;
+  font-weight: 750;
+  color: #0f172a !important;
+  line-height: 1.25;
+}
+
+.cpeh-checklist-hint {
+  grid-column: 2;
+  font-size: 0.72rem;
+  font-weight: 550;
+  color: #334155 !important;
+  line-height: 1.3;
+}
+
+.cpeh-sticky-save {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.cpeh-sticky-save-hint {
+  font-size: 0.78rem;
+  color: #115e59;
+}
+
+.cpeh-flujo-top {
+  position: sticky;
+  top: 2.75rem;
+  z-index: 39;
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+.cpeh-flujo-top-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 0.35rem;
+}
+
+.cpeh-flujo-top-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.cpeh-flujo-top-hint {
+  font-size: 0.78rem;
+  color: #1e40af;
+  line-height: 1.35;
+}
+
+.cpeh-excel-banner {
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+  border-radius: 6px;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.82rem;
+}
+
+.cpeh-action-card-optional {
+  opacity: 0.95;
+}
+
+/* Resaltar bloque Losas en §6 */
+.form-row.field-los_mec,
+.form-row.field-los_nivel,
+.form-row.field-los_evidencia,
+.form-row.field-dano_losas {
+  background: #eff6ff !important;
+  border-left: 3px solid #2563eb;
+  padding-left: 0.4rem !important;
+  border-radius: 0 6px 6px 0;
+}
+
+.cpeh-alert-fotos {
+  background: #fdecea;
+  border: 1px solid #e5a3a0;
+  color: #9b1c1c;
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.cpeh-action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.65rem;
+}
+
+.cpeh-action-grid-decision {
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.cpeh-action-card {
+  background: #fff;
+  border: 1px solid #d0d7e2;
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem 0.45rem;
+}
+
+.cpeh-action-card .btn-block {
+  width: 100%;
+  white-space: normal;
+}
+
+.cpeh-btn-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: #475569;
+}
+
+.cpeh-estado-pill {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #dbeafe;
+  color: #1e3a8a;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+}
+
+.cpeh-panel-head .cpeh-estado-pill {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.cpeh-action-card-ok {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.cpeh-action-card-warn {
+  border-color: #fcd34d;
+  background: #fffbeb;
+}
+
+.cpeh-action-card-info {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+
+.cpeh-action-card-pub {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.cpeh-submit-legend-list {
+  padding-left: 1.1rem;
+  margin: 0;
+  font-size: 0.8rem;
+  color: #334155;
+  line-height: 1.45;
+}
+
+.cpeh-submit-legend-list li {
+  margin-bottom: 0.25rem;
+}
+
+/* Explicación corta al lado de cada campo */
+.cpeh-field-with-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.35rem 0.85rem;
+  width: 100%;
+}
+
+.cpeh-field-widget {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.cpeh-field-widget .form-control,
+.cpeh-field-widget select,
+.cpeh-field-widget textarea {
+  max-width: 100%;
+}
+
+.cpeh-field-hint {
+  flex: 1 1 200px;
+  max-width: 28rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: #5a6a7e;
+  padding: 0.4rem 0.55rem;
+  background: #eef2f7;
+  border-left: 3px solid #00247d;
+  border-radius: 0 6px 6px 0;
+}
+
+body.dark-mode .cpeh-field-hint,
+.dark-mode .cpeh-field-hint {
+  color: #c5d0de;
+  background: #243447;
+  border-left-color: #5b8def;
+}
+
+/* Wizard de sección también plegable por defecto (menos ruido) */
+.cpeh-fieldset-description .cpeh-wizard {
+  max-height: none;
+}
+
+.cpeh-fieldset-description details.cpeh-wizard-fold {
+  border: 1px solid #c8d4e8;
+  border-radius: 8px;
+  background: #f4f7fb;
+  padding: 0.35rem 0.75rem;
+}
+
+.cpeh-fieldset-description details.cpeh-wizard-fold > summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #00247d;
+}
+
+.cpeh-wizard {
+  background: #f4f7fb;
+  border: 1px solid #c8d4e8;
+  border-left: 4px solid #00247d;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0.35rem 0 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #1a2332;
+}
+
+.cpeh-wizard-paso {
+  display: inline-block;
+  background: #00247d;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  margin-bottom: 0.45rem;
+}
+
+.cpeh-wizard-obj,
+.cpeh-wizard-do,
+.cpeh-wizard-no {
+  margin: 0.35rem 0;
+}
+
+.cpeh-wizard-box,
+.cpeh-wizard-ej {
+  background: #fff;
+  border: 1px solid #dde5f0;
+  border-radius: 6px;
+  padding: 0.55rem 0.75rem;
+  margin: 0.45rem 0;
+}
+
+.cpeh-wizard-ej {
+  border-left: 3px solid #ffcc00;
+  background: #fffdf5;
+}
+
+.cpeh-wizard-box ul {
+  margin: 0.35rem 0 0 1.1rem;
+  padding: 0;
+}
+
+.cpeh-wizard-box li {
+  margin-bottom: 0.25rem;
+}
+
+.cpeh-wizard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0 0.75rem;
+  font-size: 0.82rem;
+}
+
+.cpeh-wizard-table th,
+.cpeh-wizard-table td {
+  border: 1px solid #c8d4e8;
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.cpeh-wizard-table thead th {
+  background: #e8eef8;
+  color: #00247d;
+  font-weight: 700;
+}
+
+.cpeh-wizard-table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.cpeh-wizard-table code {
+  font-size: 0.78rem;
+}
+
+body.dark-mode .cpeh-wizard-table th,
+body.dark-mode .cpeh-wizard-table td,
+.dark-mode .cpeh-wizard-table th,
+.dark-mode .cpeh-wizard-table td {
+  border-color: #3d4f66;
+}
+
+body.dark-mode .cpeh-wizard-table thead th,
+.dark-mode .cpeh-wizard-table thead th {
+  background: #1e2d42;
+  color: #93c5fd;
+}
+
+body.dark-mode .cpeh-wizard-table tbody tr:nth-child(even),
+.dark-mode .cpeh-wizard-table tbody tr:nth-child(even) {
+  background: #1a2433;
+}
+
+.cpeh-wizard-no {
+  color: #7a1f2b;
+}
+
+.cpeh-wizard-cat {
+  background: #f0f7ff;
+  border: 1px solid #b6d0f0;
+  border-radius: 6px;
+  padding: 0.55rem 0.75rem;
+  margin: 0.45rem 0;
+  max-height: 280px;
+  overflow-y: auto;
+  font-size: 0.86rem;
+}
+
+.cpeh-wizard-cat ul,
+.cpeh-wizard-cat-list {
+  margin: 0.35rem 0 0 1.1rem;
+  padding: 0;
+}
+
+.cpeh-wizard-cat code {
+  background: #e3eefc;
+  padding: 0 0.25rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* --- Ancho completo: procedimientos (sin romper celdas de tabla) --- */
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel),
+body.change-form.model-casorojo .form-row.field-procedimientos_catalogo,
+body.change-form.model-casorojo .form-group.field-procedimientos_catalogo {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  clear: both;
+}
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row,
+body.change-form.model-casorojo .form-group.field-procedimientos_catalogo > .row {
+  display: flex !important;
+  flex-wrap: wrap;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+/* Solo columnas Bootstrap del form-group, NO .cpeh-pc-* ni celdas de tabla */
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row > .col-sm-2,
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row > .col-sm-3,
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row > .col-md-3,
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row > label,
+body.change-form.model-casorojo .form-group.field-procedimientos_catalogo > .row > label,
+body.change-form.model-casorojo .form-group.field-procedimientos_catalogo > .row > .col-sm-3 {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  text-align: left !important;
+  padding-left: 0 !important;
+  margin-bottom: 0.35rem;
+}
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row > .col-sm-9,
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row > .col-sm-10,
+body.change-form.model-casorojo .form-group:has(.cpeh-proc-excel) > .row > .col-md-9,
+body.change-form.model-casorojo .form-group.field-procedimientos_catalogo > .row > .col-sm-9,
+body.change-form.model-casorojo .form-group.field-procedimientos_catalogo > .row > [class*="field-procedimientos"] {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Hint encima, tabla a todo el ancho (no compartir fila con la pista azul) */
+body.change-form.model-casorojo .field-procedimientos_catalogo .cpeh-field-with-hint,
+.form-group.field-procedimientos_catalogo .cpeh-field-with-hint {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  gap: 0.45rem;
+}
+body.change-form.model-casorojo .field-procedimientos_catalogo .cpeh-field-hint,
+.form-group.field-procedimientos_catalogo .cpeh-field-hint {
+  order: -1;
+  flex: 0 0 auto !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+body.change-form.model-casorojo .field-procedimientos_catalogo .cpeh-field-widget,
+.form-group.field-procedimientos_catalogo .cpeh-field-widget {
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+fieldset.cpeh-proc-wide,
+.module.cpeh-proc-wide,
+.card.cpeh-proc-wide,
+details.cpeh-proc-wide {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.field-procedimientos_catalogo .cpeh-proc-excel,
+.form-row.field-procedimientos_catalogo .cpeh-proc-excel,
+.cpeh-proc-excel {
+  max-width: none !important;
+  width: 100% !important;
+}
+
+/* Catálogo procedimientos — tabla tipo Excel Metrados (Sí + cantidades) */
+.cpeh-proc-excel-hint {
+  font-size: 0.8rem;
+  color: #1e293b;
+  margin: 0 0 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: #fff8e1;
+  border-left: 3px solid #f57f17;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.35;
+}
+.cpeh-proc-excel-sec {
+  margin-bottom: 0.65rem;
+  border: 1px solid #e0a800;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  width: 100%;
+}
+.cpeh-proc-excel-sec-h {
+  background: #f57f17;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.55rem;
+}
+.cpeh-proc-excel-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+.cpeh-proc-excel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin: 0;
+  table-layout: auto;
+}
+.cpeh-proc-excel-table.cpeh-proc-excel-wide {
+  min-width: 1100px;
+  width: max(100%, 1100px);
+}
+.cpeh-proc-excel-table thead tr.cpeh-proc-h1 th {
+  background: #f57f17;
+  color: #fff;
+  font-weight: 700;
+  padding: 0.35rem 0.4rem;
+  text-align: left;
+  border-bottom: 1px solid #e65100;
+  white-space: nowrap;
+  font-size: 0.75rem;
+}
+.cpeh-proc-excel-table thead tr.cpeh-proc-h2 th {
+  background: #fffde7;
+  color: #5d4037;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 0.65rem;
+  padding: 0.2rem 0.35rem;
+  border-bottom: 1px solid #f0d78c;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.cpeh-proc-excel-table thead th.cpeh-pc-si {
+  text-align: center;
+  background: #ffb300 !important;
+  color: #3e2723 !important;
+  width: 3.6rem;
+}
+.cpeh-proc-excel-table td {
+  display: table-cell !important;
+  padding: 0.22rem 0.3rem;
+  border-bottom: 1px solid #e8d48b;
+  border-right: 1px solid #f5e6b8;
+  vertical-align: middle;
+  color: #0f172a;
+  background: #fffef5;
+}
+.cpeh-proc-excel-table tr:nth-child(even) td { background: #fff8e1; }
+.cpeh-proc-excel-table tr.is-on td { background: #ecfdf5; }
+.cpeh-proc-excel-table .cpeh-pc-si {
+  width: 3.6rem;
+  text-align: center;
+  background: #fff3cd !important;
+}
+.cpeh-proc-excel-table .cpeh-pc-cod {
+  width: 5.5rem;
+  white-space: nowrap;
+}
+.cpeh-proc-excel-table .cpeh-pc-tit {
+  min-width: 14rem;
+  max-width: none;
+  white-space: normal;
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+.cpeh-proc-excel-table .cpeh-pc-ubic { min-width: 10rem; }
+.cpeh-proc-excel-table .cpeh-pc-cant { width: 5.5rem; background: #fef9c3 !important; }
+.cpeh-proc-excel-table .cpeh-pc-uni { width: 6rem; }
+.cpeh-proc-excel-table .cpeh-pc-sev { width: 4.5rem; }
+.cpeh-proc-excel-table .cpeh-pc-acc { min-width: 9rem; }
+.cpeh-proc-excel-table .cpeh-pc-conf { width: 6rem; }
+.cpeh-proc-excel-table .cpeh-pc-nota { min-width: 8rem; }
+.cpeh-proc-excel-table .cpeh-pc-cod code {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  background: #dbeafe;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+}
+.cpeh-proc-excel-table input[type="text"],
+.cpeh-proc-excel-table select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-size: 0.72rem;
+  padding: 0.18rem 0.28rem;
+  border: 1px solid #d4a017;
+  border-radius: 2px;
+  background: #fff;
+  color: #0f172a;
+}
+.cpeh-proc-excel-table .cpeh-pc-cant input {
+  font-weight: 700;
+  text-align: right;
+  background: #fffef5;
+  border-color: #ca8a04;
+}
+.cpeh-proc-si {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  margin: 0;
+  min-height: 1.5rem;
+  padding: 0.12rem 0.28rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #78350f;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #d97706;
+  border-radius: 3px;
+  user-select: none;
+}
+.cpeh-proc-si:has(input:checked) {
+  background: #15803d;
+  border-color: #166534;
+  color: #fff;
+}
+.cpeh-proc-si input {
+  margin: 0;
+  width: 0.95rem;
+  height: 0.95rem;
+  accent-color: #15803d;
+  cursor: pointer;
+}
+.cpeh-proc-excel-empty { color: #64748b; font-size: 0.85rem; }
+
+body.dark-mode .cpeh-proc-excel-hint,
+.dark-mode .cpeh-proc-excel-hint {
+  background: #422006;
+  border-left-color: #fbbf24;
+  color: #fef3c7;
+}
+body.dark-mode .cpeh-proc-excel-sec,
+.dark-mode .cpeh-proc-excel-sec {
+  border-color: #a16207;
+  background: #0f172a;
+}
+body.dark-mode .cpeh-proc-excel-sec-h,
+.dark-mode .cpeh-proc-excel-sec-h {
+  background: #b45309;
+  color: #fffbeb;
+}
+body.dark-mode .cpeh-proc-excel-table thead tr.cpeh-proc-h1 th,
+.dark-mode .cpeh-proc-excel-table thead tr.cpeh-proc-h1 th {
+  background: #b45309;
+  color: #fffbeb;
+  border-bottom-color: #f59e0b;
+}
+body.dark-mode .cpeh-proc-excel-table thead tr.cpeh-proc-h2 th,
+.dark-mode .cpeh-proc-excel-table thead tr.cpeh-proc-h2 th {
+  background: #422006;
+  color: #fde68a;
+  border-bottom-color: #78350f;
+}
+body.dark-mode .cpeh-proc-excel-table thead th.cpeh-pc-si,
+.dark-mode .cpeh-proc-excel-table thead th.cpeh-pc-si {
+  background: #a16207 !important;
+  color: #fffbeb !important;
+}
+body.dark-mode .cpeh-proc-excel-table td,
+.dark-mode .cpeh-proc-excel-table td {
+  border-color: #44403c;
+  color: #f1f5f9;
+  background: #1c1917;
+}
+body.dark-mode .cpeh-proc-excel-table tr:nth-child(even) td,
+.dark-mode .cpeh-proc-excel-table tr:nth-child(even) td {
+  background: #292524;
+}
+body.dark-mode .cpeh-proc-excel-table tr.is-on td,
+.dark-mode .cpeh-proc-excel-table tr.is-on td {
+  background: #14532d;
+  color: #f0fdf4;
+}
+body.dark-mode .cpeh-proc-excel-table .cpeh-pc-si,
+.dark-mode .cpeh-proc-excel-table .cpeh-pc-si {
+  background: #422006 !important;
+}
+body.dark-mode .cpeh-proc-excel-table .cpeh-pc-cant,
+.dark-mode .cpeh-proc-excel-table .cpeh-pc-cant {
+  background: #422006 !important;
+}
+body.dark-mode .cpeh-proc-excel-table .cpeh-pc-cod code,
+.dark-mode .cpeh-proc-excel-table .cpeh-pc-cod code {
+  background: #1e3a8a;
+  color: #dbeafe;
+}
+body.dark-mode .cpeh-proc-excel-table input[type="text"],
+body.dark-mode .cpeh-proc-excel-table select,
+.dark-mode .cpeh-proc-excel-table input[type="text"],
+.dark-mode .cpeh-proc-excel-table select {
+  background: #0f172a;
+  border-color: #a16207;
+  color: #f8fafc;
+}
+body.dark-mode .cpeh-proc-si,
+.dark-mode .cpeh-proc-si {
+  background: #1e293b;
+  border-color: #f59e0b;
+  color: #fde68a;
+}
+body.dark-mode .cpeh-proc-si:has(input:checked),
+.dark-mode .cpeh-proc-si:has(input:checked) {
+  background: #15803d;
+  border-color: #4ade80;
+  color: #fff;
+}
+
+/* Checkboxes legacy */
+.field-procedimientos_catalogo > ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+
+/* --- Líneas de metrado: planilla ligera tipo PDF/Excel --- */
+#lineametado_set-group,
+.inline-group.cpeh-metrado-excel-inline {
+  width: 100% !important;
+  max-width: 100% !important;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.75rem 0 1.25rem;
+  background: #fff;
+  box-shadow: none;
+}
+#lineametado_set-group > .tabular,
+#lineametado_set-group .tabular {
+  overflow-x: auto !important;
+  max-width: 100%;
+  width: 100%;
+}
+#lineametado_set-group h2,
+#lineametado_set-group .inline-heading,
+#lineametado_set-group > h2 {
+  background: #00247d !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  padding: 0.45rem 0.7rem !important;
+  margin: 0 !important;
+  border: none !important;
+}
+#lineametado_set-group .tabular table {
+  width: 100%;
+  min-width: 1280px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.78rem;
+}
+#lineametado_set-group .tabular thead th {
+  background: #e8eef8 !important;
+  color: #0f172a !important;
+  font-weight: 700;
+  white-space: normal;
+  line-height: 1.2;
+  padding: 0.4rem 0.45rem !important;
+  border-bottom: 2px solid #00247d;
+  vertical-align: bottom;
+  font-size: 0.72rem;
+  text-transform: none;
+}
+#lineametado_set-group .tabular th,
+#lineametado_set-group .tabular td {
+  vertical-align: middle !important;
+  padding: 0.28rem 0.4rem !important;
+  border-bottom: 1px solid #cbd5e1;
+  border-right: 1px solid #e2e8f0;
+  color: #0f172a;
+  background: #fff;
+}
+#lineametado_set-group .tabular tbody tr:nth-child(even) td {
+  background: #f4f7fb;
+}
+#lineametado_set-group .tabular th.original,
+#lineametado_set-group .tabular td.original {
+  width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: none !important;
+  font-size: 0;
+}
+#lineametado_set-group .tabular th.column-orden,
+#lineametado_set-group .tabular td.field-orden { width: 3.2rem; }
+#lineametado_set-group .tabular th.column-partida,
+#lineametado_set-group .tabular td.field-partida { width: 12rem; }
+#lineametado_set-group .tabular th.column-codigo_partida,
+#lineametado_set-group .tabular td.field-codigo_partida { width: 7.5rem; }
+#lineametado_set-group .tabular th.column-elemento,
+#lineametado_set-group .tabular td.field-elemento { width: 6.5rem; }
+#lineametado_set-group .tabular th.column-ubicacion,
+#lineametado_set-group .tabular td.field-ubicacion { width: 14rem; }
+#lineametado_set-group .tabular th.column-cantidad,
+#lineametado_set-group .tabular td.field-cantidad {
+  width: 6.5rem;
+  background: #fef9c3 !important;
+  text-align: center;
+}
+#lineametado_set-group .tabular th.column-unidad,
+#lineametado_set-group .tabular td.field-unidad { width: 5.5rem; }
+#lineametado_set-group .tabular th.column-severidad,
+#lineametado_set-group .tabular td.field-severidad { width: 4.5rem; }
+#lineametado_set-group .tabular th.column-accion,
+#lineametado_set-group .tabular td.field-accion { width: 9rem; }
+#lineametado_set-group .tabular th.column-confianza,
+#lineametado_set-group .tabular td.field-confianza { width: 6.5rem; }
+#lineametado_set-group .tabular th.column-nota,
+#lineametado_set-group .tabular td.field-nota { width: 12rem; }
+#lineametado_set-group .tabular th.column-DELETE,
+#lineametado_set-group .tabular td.delete { width: 3.5rem; text-align: center; }
+
+#lineametado_set-group .tabular td.field-cantidad input,
+#lineametado_set-group input.cpeh-metrado-cantidad {
+  width: 100% !important;
+  max-width: 6rem;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  text-align: right;
+  color: #0f172a !important;
+  background: #fffef5 !important;
+  border: 1px solid #ca8a04 !important;
+  border-radius: 3px;
+  padding: 0.2rem 0.35rem !important;
+}
+#lineametado_set-group .tabular td.field-orden input {
+  width: 2.6rem !important;
+  text-align: center;
+}
+#lineametado_set-group .tabular td.field-codigo_partida input {
+  width: 100% !important;
+  font-family: Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+#lineametado_set-group .tabular td.field-partida .related-widget-wrapper,
+#lineametado_set-group .tabular td.field-partida .select2-container {
+  min-width: 100% !important;
+  max-width: 100%;
+  width: 100% !important;
+}
+#lineametado_set-group .tabular td.field-ubicacion input,
+#lineametado_set-group .tabular td.field-nota input {
+  width: 100% !important;
+  min-width: 0;
+  color: #0f172a;
+}
+#lineametado_set-group .tabular td select {
+  width: 100% !important;
+  max-width: 100%;
+  font-size: 0.75rem;
+  color: #0f172a;
+}
+#lineametado_set-group .tabular .help,
+#lineametado_set-group .tabular p.help {
+  display: none !important; /* minimalista: sin hints bajo cada celda */
+}
+#lineametado_set-group .add-row a {
+  font-weight: 600;
+  color: #00247d !important;
+  font-size: 0.85rem;
+}
+
+body.dark-mode #lineametado_set-group,
+.dark-mode #lineametado_set-group {
+  border-color: #64748b;
+  background: #0f172a;
+}
+body.dark-mode #lineametado_set-group .tabular thead th,
+.dark-mode #lineametado_set-group .tabular thead th {
+  background: #1e3a5f !important;
+  color: #f8fafc !important;
+  border-bottom-color: #60a5fa;
+}
+body.dark-mode #lineametado_set-group .tabular th,
+body.dark-mode #lineametado_set-group .tabular td,
+.dark-mode #lineametado_set-group .tabular th,
+.dark-mode #lineametado_set-group .tabular td {
+  border-color: #334155;
+  color: #f1f5f9;
+  background: #0f172a;
+}
+body.dark-mode #lineametado_set-group .tabular tbody tr:nth-child(even) td,
+.dark-mode #lineametado_set-group .tabular tbody tr:nth-child(even) td {
+  background: #1e293b;
+}
+body.dark-mode #lineametado_set-group .tabular th.column-cantidad,
+body.dark-mode #lineametado_set-group .tabular td.field-cantidad,
+.dark-mode #lineametado_set-group .tabular th.column-cantidad,
+.dark-mode #lineametado_set-group .tabular td.field-cantidad {
+  background: #713f12 !important;
+}
+body.dark-mode #lineametado_set-group .tabular td.field-cantidad input,
+.dark-mode #lineametado_set-group .tabular td.field-cantidad input {
+  background: #422006 !important;
+  border-color: #fbbf24 !important;
+  color: #fef3c7 !important;
+}
+body.dark-mode #lineametado_set-group .tabular td input,
+body.dark-mode #lineametado_set-group .tabular td select,
+.dark-mode #lineametado_set-group .tabular td input,
+.dark-mode #lineametado_set-group .tabular td select {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #475569;
+}
+
+/* Sección 9 a ancho completo */
+fieldset.cpeh-metrado-wide,
+.module.cpeh-metrado-wide,
+details.cpeh-metrado-wide {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* --- Evidencias fotográficas: filas compactas y alineadas --- */
+#evidenciafoto_set-group .tabular {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+#evidenciafoto_set-group .tabular table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#evidenciafoto_set-group .tabular thead th {
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+
+#evidenciafoto_set-group .tabular th,
+#evidenciafoto_set-group .tabular td {
+  vertical-align: middle !important;
+  padding: 0.5rem 0.6rem !important;
+  overflow: hidden;
+}
+
+/* original (Django) oculto visualmente en esta tabla */
+#evidenciafoto_set-group .tabular th.original,
+#evidenciafoto_set-group .tabular td.original {
+  width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: none !important;
+  font-size: 0;
+}
+
+#evidenciafoto_set-group .tabular th.column-miniatura,
+#evidenciafoto_set-group .tabular td.field-miniatura {
+  width: 84px;
+  text-align: center;
+}
+
+img.cpeh-evidencia-thumb {
+  display: block;
+  width: 72px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #475569;
+  margin: 0 auto;
+  background: #0f172a;
+}
+
+#evidenciafoto_set-group .tabular th.column-imagen,
+#evidenciafoto_set-group .tabular td.field-imagen {
+  width: 28%;
+}
+
+#evidenciafoto_set-group .tabular th.column-descripcion,
+#evidenciafoto_set-group .tabular td.field-descripcion {
+  width: 32%;
+}
+
+#evidenciafoto_set-group .tabular td.field-descripcion input {
+  width: 100% !important;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+#evidenciafoto_set-group .tabular th.column-fecha,
+#evidenciafoto_set-group .tabular td.field-fecha {
+  width: 9.5rem;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
+}
+
+#evidenciafoto_set-group .tabular th.column-DELETE,
+#evidenciafoto_set-group .tabular td.delete {
+  width: 5.5rem !important;
+  text-align: center !important;
+}
+
+#evidenciafoto_set-group .tabular td.delete input[type="checkbox"] {
+  display: inline-block !important;
+  margin: 0 !important;
+  float: none !important;
+  position: static !important;
+  transform: none !important;
+}
+
+/* Widget: nombre corto + input file (sin Actualmente / limpiar) */
+.cpeh-file-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  max-width: 100%;
+}
+
+a.cpeh-file-name {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #7dd3fc;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  text-decoration: none;
+}
+
+a.cpeh-file-name:hover {
+  text-decoration: underline;
+}
+
+.cpeh-file-widget input[type="file"] {
+  max-width: 100%;
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+/* Ocultar restos del clearable Django si Jazzmin inyecta markup viejo */
+#evidenciafoto_set-group .field-imagen .file-upload > p,
+#evidenciafoto_set-group .field-imagen .file-upload > label,
+#evidenciafoto_set-group .field-imagen a[href*="evidencias"]:not(.cpeh-file-name) {
+  display: none !important;
+}
+
+#croquisadjunto_set-group .tabular,
+#informepdfadjunto_set-group .tabular {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.inline-group .file-upload {
+  max-width: 260px;
+  overflow: hidden;
+  word-break: break-word;
+  font-size: 0.78rem;
+}
+
+.inline-group .file-upload a {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Historial detallado — debajo del historial de estados */
+#historialdetallado_set-group,
+.inline-group.cpeh-hist-detallado-inline {
+  border: 1px solid #64748b;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.75rem 0 1.25rem;
+}
+#historialdetallado_set-group > h2,
+#historialdetallado_set-group .inline-heading {
+  background: #0f766e !important;
+  color: #ecfdf5 !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  padding: 0.45rem 0.7rem !important;
+  margin: 0 !important;
+}
+#historialdetallado_set-group .tabular {
+  overflow-x: auto;
+}
+#historialdetallado_set-group .tabular table {
+  width: 100%;
+  min-width: 900px;
+  font-size: 0.78rem;
+}
+#historialdetallado_set-group .tabular thead th {
+  background: #ccfbf1 !important;
+  color: #134e4a !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+#historialdetallado_set-group .tabular td.field-resumen {
+  font-weight: 600;
+  color: #0f766e;
+  min-width: 14rem;
+}
+#historialdetallado_set-group .tabular td.field-detalle {
+  min-width: 22rem;
+  white-space: pre-wrap;
+  line-height: 1.35;
+  color: #0f172a;
+}
+#historialdetallado_set-group .tabular td.field-created_at {
+  white-space: nowrap;
+  width: 9rem;
+}
+#historialdetallado_set-group .tabular td.field-origen {
+  width: 6rem;
+  font-family: Consolas, monospace;
+  font-size: 0.72rem;
+}
+
+#historialestado_set-group .tabular td.field-nota {
+  min-width: 14rem;
+  white-space: pre-wrap;
+  font-size: 0.78rem;
+}
+
+body.dark-mode #historialdetallado_set-group > h2,
+body.dark-mode #historialdetallado_set-group .inline-heading,
+.dark-mode #historialdetallado_set-group > h2,
+.dark-mode #historialdetallado_set-group .inline-heading {
+  background: #115e59 !important;
+  color: #ecfdf5 !important;
+}
+body.dark-mode #historialdetallado_set-group .tabular thead th,
+.dark-mode #historialdetallado_set-group .tabular thead th {
+  background: #134e4a !important;
+  color: #ccfbf1 !important;
+}
+body.dark-mode #historialdetallado_set-group .tabular td.field-resumen,
+.dark-mode #historialdetallado_set-group .tabular td.field-resumen {
+  color: #5eead4;
+}
+body.dark-mode #historialdetallado_set-group .tabular td.field-detalle,
+.dark-mode #historialdetallado_set-group .tabular td.field-detalle {
+  color: #e2e8f0;
+}
+
+

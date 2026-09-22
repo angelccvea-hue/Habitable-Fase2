@@ -1,0 +1,297 @@
+{# Bloque ampliado: política reparación, catálogos completos y ejemplos caso a caso #}
+
+<div class="tip-box">
+  <strong>Política del programa en esta fase:</strong>
+  el universo operativo es de <strong>reparación / reconstrucción (D2)</strong>
+  o, si faltan estudios, <strong>complementos (D1)</strong>.
+  La <strong>demolición (D3/D4) es última instancia</strong>: no se espera en la mayoría de los casos
+  y no debe tratarse como camino habitual. Si en visita 2 el daño resulta incompatible con reparar,
+  documente la justificación y escale a revisor/coordinador.
+</div>
+
+<h3>9.1 Cómo llenar la sección 9 — Cuantificación (paso a paso)</h3>
+<ol>
+  <li><span class="paso-num">1</span><strong>Totales del edificio</strong> (arriba en la sección 9):
+    área aproximada m², n.º de viviendas, volumen de escombros si aplica, longitud de fachada en riesgo,
+    niveles a intervenir, % de estructura a intervenir, confianza global del metrado
+    (Alta / Media / Estimada) y notas de supuestos.</li>
+  <li><span class="paso-num">2</span>En la tabla <strong>Líneas de metrado</strong> agregue entre
+    <strong>5 y 12 líneas</strong> tipificadas (casos D2 típicos). No intente un presupuesto ejecutivo.</li>
+  <li><span class="paso-num">3</span>Elija la <strong>partida del catálogo</strong> (código).
+    El sistema completa el código; indique elemento, ubicación (piso/eje), cantidad, unidad,
+    severidad A/B/C, acción (Apuntalar / Reparar / Reforzar…) y confianza de esa línea.</li>
+  <li><span class="paso-num">4</span>Si trabaja en Excel (plantilla <strong>v1.8-compacto</strong>): use la hoja <em>Metrados</em>
+    y elija el código en el <strong>desplegable</strong> (no hay pestaña de catálogo).
+    Hay filas vacías al final para líneas nuevas. Al cargar el Excel se reemplazan las líneas de ese hab_id.</li>
+  <li><span class="paso-num">5</span>Los precios unitarios (PU) pueden estar vacíos: el levantamiento
+    queda listo para costear después sin re-visitar.</li>
+</ol>
+
+<div class="warn-box">
+  <strong>Qué no hace falta medir en cada visita:</strong>
+  partidas de demolición total, transporte masivo de escombros o estudios que no aplican,
+  salvo que la decisión vaya realmente a D1 (estudios) o, excepcionalmente, a D3/D4.
+</div>
+
+<div class="page-break"></div>
+
+<h3>9.2 Catálogos desplegables — referencia completa</h3>
+<p>
+  Los valores siguientes son los que aparecen en el panel y en las listas del Excel.
+  Use exactamente estas etiquetas (no invente sinónimos en celdas de lista).
+</p>
+
+<p><strong>A) Unidades de metrado</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Valor</th><th>Cuándo usarla</th><th>Ejemplo</th></tr></thead>
+  <tbody>
+    <tr><td><strong>m</strong></td><td>Metro lineal</td><td>Acordonamiento 80 m; fisuras 25 m</td></tr>
+    <tr><td><strong>m²</strong></td><td>Superficie</td><td>Losa 90 m²; fachada/mampostería 40 m²</td></tr>
+    <tr><td><strong>m³</strong></td><td>Volumen</td><td>Reconstrucción parcial; retiro de escombros</td></tr>
+    <tr><td><strong>und</strong></td><td>Unidad / pieza</td><td>12 columnas; 6 ensayos; 40 paneles de vidrio</td></tr>
+    <tr><td><strong>kg</strong></td><td>Masa (poco frecuente)</td><td>Refuerzos especiales</td></tr>
+    <tr><td><strong>m.l.</strong></td><td>Metro lineal (sinónimo operativo de m)</td><td>Algunas partidas legacy / Excel</td></tr>
+    <tr><td><strong>glb</strong></td><td>Global / lote</td><td>Estudio GEO; movilización; demolición total</td></tr>
+    <tr><td><strong>piso</strong></td><td>Por nivel</td><td>Apuntalamiento 5 pisos</td></tr>
+    <tr><td>Pendiente</td><td>Aún no definido</td><td>Evitar en envío a revisión si ya midió</td></tr>
+  </tbody>
+</table>
+
+<p><strong>B) Elemento estructural / de obra</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Valor</th><th>Uso típico</th></tr></thead>
+  <tbody>
+    <tr><td>Columna</td><td>Apuntamiento, reparación o refuerzo de pilares</td></tr>
+    <tr><td>Viga</td><td>Idem en vigas / dinteles</td></tr>
+    <tr><td>Muro / pantalla</td><td>Muros de concreto, pantallas, cortinas</td></tr>
+    <tr><td>Losa</td><td>Losas de entrepiso / cubierta</td></tr>
+    <tr><td>Escalera</td><td>Núcleo de circulación vertical</td></tr>
+    <tr><td>Fachada</td><td>Piel, mampostería de fachada, elementos en riesgo de caída</td></tr>
+    <tr><td>Sótano / semisótano</td><td>Niveles bajo rasante</td></tr>
+    <tr><td>Cimentación</td><td>Zapatas, losa de fundación (suele ir con EST_GEO)</td></tr>
+    <tr><td>Edificio completo</td><td>Acciones globales (estudio, demolición total, limpieza de lote)</td></tr>
+    <tr><td>Entorno / vía</td><td>Acordonamiento, peatones, aledaños, transporte</td></tr>
+    <tr><td>Otro</td><td>Detalle obligatorio en nota de la línea</td></tr>
+    <tr><td>Pendiente</td><td>Solo mientras se define; no dejar al enviar</td></tr>
+  </tbody>
+</table>
+
+<p><strong>C) Acción de la línea</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Valor</th><th>Cuándo</th><th>Partidas afines</th></tr></thead>
+  <tbody>
+    <tr><td>Apuntalar / shoring</td><td>Estabilizar antes de reparar</td><td>APUNT_*</td></tr>
+    <tr><td>Reparar</td><td>Recuperar capacidad / sellar / local</td><td>REP_*, INY_*</td></tr>
+    <tr><td>Reforzar</td><td>Encamisado, perfiles, aumento de sección</td><td>REF_*</td></tr>
+    <tr><td>Demoler</td><td>Solo D3/D4 o demolición parcial puntual</td><td>DEM_*</td></tr>
+    <tr><td>Retirar / desmontar</td><td>Elementos no estructurales o escombros</td><td>FAC_*, ESC_*</td></tr>
+    <tr><td>Acordonar / proteger</td><td>Seguridad inmediata perimetral</td><td>ACORD_PERIM, PROT_PEAT</td></tr>
+    <tr><td>Monitorear</td><td>Seguimiento instrumentado o reinspección</td><td>EST_MON, EST_REI</td></tr>
+    <tr><td>Estudio / ensayo</td><td>Complementos D1</td><td>EST_*</td></tr>
+    <tr><td>Otro</td><td>Logística / vigilancia / caso raro</td><td>MOV_*, OTRO_*</td></tr>
+    <tr><td>Pendiente</td><td>Evitar al cerrar</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<p><strong>D) Severidad (A/B/C) de la línea</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Valor</th><th>Significado operativo</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A</strong></td><td>Leve — fisuras / daño local sin compromiso inmediato de estabilidad</td></tr>
+    <tr><td><strong>B</strong></td><td>Moderada — daño visible que requiere intervención programada</td></tr>
+    <tr><td><strong>C</strong></td><td>Grave — compromiso de capacidad / riesgo; priorizar apuntamiento</td></tr>
+    <tr><td>No observable</td><td>No se pudo inspeccionar el elemento</td></tr>
+    <tr><td>Pendiente</td><td>Aún sin clasificar</td></tr>
+  </tbody>
+</table>
+
+<p><strong>E) Confianza del metrado (línea y total)</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Valor</th><th>Criterio</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Alta</strong></td><td>Contó / midió en sitio (ej. 3 columnas en ejes B-2, B-3, C-2)</td></tr>
+    <tr><td><strong>Media</strong></td><td>Muestreo parcial o estimación razonada con croquis</td></tr>
+    <tr><td><strong>Estimada</strong></td><td>Orden de magnitud (área × %; sin acceso pleno)</td></tr>
+    <tr><td>Pendiente</td><td>No use al enviar a revisión si ya visitó</td></tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<p><strong>F) Decisiones D (sección 10) y magnitudes M</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Código</th><th>Etiqueta completa</th><th>Rol en el programa</th></tr></thead>
+  <tbody>
+    <tr><td>D1</td><td>D1 — Complementos requeridos</td><td>Cierre provisional con plan de estudios</td></tr>
+    <tr><td>D2</td><td>D2 — Reparar / reconstruir</td><td><strong>Camino esperado</strong> + magnitud M1–M4</td></tr>
+    <tr><td>D3</td><td>D3 — Demoler</td><td>Última instancia</td></tr>
+    <tr><td>D4</td><td>D4 — Escombros / ya colapsado</td><td>Última instancia</td></tr>
+    <tr><td>—</td><td>Pendiente</td><td>No válido al enviar a revisión</td></tr>
+  </tbody>
+</table>
+
+<table class="catalogo-table">
+  <thead><tr><th>Magnitud (solo si D2)</th><th>Alcance típico</th><th>Metrados esperados</th></tr></thead>
+  <tbody>
+    <tr><td>M1 — Reparación local (menor intervención)</td><td>&lt;10% estructura; pocos elementos</td><td>APUNT + REP locales + fachada puntual</td></tr>
+    <tr><td>M2 — Reparación importante</td><td>Varios elementos / un piso crítico</td><td>APUNT por piso + REF/REP</td></tr>
+    <tr><td>M3 — Reconstrucción parcial</td><td>Rehacer tramos / losas / núcleos</td><td>RECONS_PARCIAL + REF + DEM parcial</td></tr>
+    <tr><td>M4 — Reconstrucción / refuerzo mayor</td><td>Obra mayor en varios niveles</td><td>Paquete amplio de REF/RECONS + logística</td></tr>
+    <tr><td>N/A (no es D2)</td><td>Cuando la decisión no es D2</td><td>Según D1 o D3/D4</td></tr>
+  </tbody>
+</table>
+
+<p><strong>G) Complementos (obligatorios si D1)</strong> — códigos separados por coma en el campo</p>
+<table class="catalogo-table">
+  <thead><tr><th>Código</th><th>Significado</th><th>Partida de metrado sugerida</th></tr></thead>
+  <tbody>
+    <tr><td>GEO</td><td>Estudio geotécnico</td><td>EST_GEO</td></tr>
+    <tr><td>ENS</td><td>Ensayos de materiales</td><td>EST_ENS</td></tr>
+    <tr><td>MOD</td><td>Modelo / análisis estructural</td><td>EST_MOD</td></tr>
+    <tr><td>MON</td><td>Monitoreo instrumentado</td><td>EST_MON</td></tr>
+    <tr><td>INV</td><td>Investigación de elementos ocultos</td><td>EST_INV</td></tr>
+    <tr><td>REI</td><td>Reinspección programada</td><td>EST_REI</td></tr>
+    <tr><td>ALE</td><td>Riesgo a edificios aledaños</td><td>EST_ALE</td></tr>
+    <tr><td>OTR</td><td>Otro (detallar en texto)</td><td>OTRO_PARTIDA</td></tr>
+  </tbody>
+</table>
+
+<p><strong>H) Prioridad operativa</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Valor</th><th>Uso</th></tr></thead>
+  <tbody>
+    <tr><td>Inmediata</td><td>Riesgo a vida / vía pública; medidas ya</td></tr>
+    <tr><td>Alta</td><td>Intervenir en el corto plazo</td></tr>
+    <tr><td>Programable</td><td>Puede entrar a programación normal</td></tr>
+    <tr><td>Pendiente</td><td>Aún sin definir</td></tr>
+  </tbody>
+</table>
+
+<p><strong>I) Grupos del catálogo de partidas</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Grupo</th><th>Nombre</th><th>Uso principal</th></tr></thead>
+  <tbody>
+    <tr><td>APUNTAMIENTO</td><td>Apuntamiento / seguridad</td><td>D1–D4 (casi siempre al menos una línea)</td></tr>
+    <tr><td>REPARACION</td><td>Reparación / refuerzo</td><td><strong>Núcleo de D2</strong></td></tr>
+    <tr><td>DEMOLICION</td><td>Demolición</td><td>D3 (excepcional) o parcial puntual en D2</td></tr>
+    <tr><td>ESCOMBROS</td><td>Escombros / retiro</td><td>D3/D4</td></tr>
+    <tr><td>ESTUDIOS</td><td>Estudios / complementos</td><td><strong>Núcleo de D1</strong></td></tr>
+    <tr><td>FACHADA</td><td>Fachada / no estructural</td><td>D2 (y a veces D3)</td></tr>
+    <tr><td>MOVILIZACION</td><td>Movilización / logística</td><td>Apoyo a cualquier D</td></tr>
+    <tr><td>OTRO</td><td>Otro</td><td>Detalle en nota</td></tr>
+  </tbody>
+</table>
+
+<p><strong>J) Catálogos frecuentes de otras secciones (visita)</strong></p>
+<table class="catalogo-table">
+  <thead><tr><th>Campo</th><th>Valores del sistema</th></tr></thead>
+  <tbody>
+    <tr><td>% columnas afectadas</td><td>No observable · &lt;10% · 10–30% · &gt;30% · &gt;50% · Pendiente</td></tr>
+    <tr><td>% estructura a intervenir (totales §9)</td><td>Misma escala orientativa (&lt;10% / 10–30% / &gt;30% / &gt;50% / No observable)</td></tr>
+    <tr><td>Inclinación</td><td>No · Sí — cualitativa · Sí — con medición Δ · No observable · Pendiente</td></tr>
+    <tr><td>Peligro a aledaños</td><td>Sí · No · No observable · Pendiente</td></tr>
+    <tr><td>Sistema estructural</td><td>Pórticos concreto armado · Muros de concreto · Mixto · Acero · Mampostería · Otro · Pendiente</td></tr>
+    <tr><td>Ocupación</td><td>Desalojado · Ocupación parcial · Habitado irregularmente · Escombros · Pendiente</td></tr>
+    <tr><td>Severidad daño (ABC en secciones 5–7)</td><td>A · B · C · No observable · Pendiente</td></tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<h3>9.3 Catálogo completo de partidas ({{ partidas|length }} códigos)</h3>
+<p>
+  Disponible en el panel: <strong>Inspecciones → Catálogo de partidas (metrados / costos)</strong>.
+  En la plantilla Excel v1.8 elija el código en el <strong>desplegable</strong> de la hoja Metrados
+  (la pestaña Catalogo_partidas ya no se muestra). Use sobre todo el grupo <strong>REPARACION</strong>
+  y <strong>APUNTAMIENTO</strong>. La columna «Aplica» indica para qué decisiones D está pensada la partida.
+</p>
+
+<table class="catalogo-table">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Grupo</th>
+      <th>Título</th>
+      <th>Ud.</th>
+      <th>Aplica</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in partidas %}
+    <tr>
+      <td><strong>{{ p.codigo }}</strong></td>
+      <td>{{ p.grupo }}</td>
+      <td>{{ p.titulo }}{% if p.descripcion %} <span class="muted">({{ p.descripcion }})</span>{% endif %}</td>
+      <td>{{ p.unidad_default }}</td>
+      <td>{{ p.aplica_decisiones|default:"todas" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">Catálogo no disponible en esta generación (sembrar partidas en el sistema).</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<h3>9.4 Ejemplos de llenado — caso a caso</h3>
+<p>
+  Los siguientes ejemplos son <strong>modelos didácticos</strong> (cantidades ilustrativas).
+  Adáptelos a lo observado; no copie cifras sin verificar en sitio.
+  Cada ejemplo muestra: perfil → totales §9 → líneas tipificadas → cierre de decisión.
+</p>
+
+{% for ej in ejemplos_llenado %}
+<div class="ejemplo-caso">
+  <h4>{{ ej.titulo }}</h4>
+  <p class="ejemplo-meta">
+    <strong>Perfil:</strong> {{ ej.perfil }} ·
+    <strong>Decisión esperada:</strong> {{ ej.decision }} ·
+    <strong>Magnitud:</strong> {{ ej.magnitud }}
+  </p>
+  <p>{{ ej.narrativa }}</p>
+
+  <p><strong>Totales (sección 9)</strong></p>
+  <table class="section-table">
+    {% for k, v in ej.totales.items %}
+    <tr><th style="width:32%; text-align:left;">{{ k }}</th><td>{{ v }}</td></tr>
+    {% endfor %}
+  </table>
+
+  <p><strong>Líneas de metrado</strong></p>
+  <table class="catalogo-table">
+    <thead>
+      <tr>
+        <th>#</th><th>Código</th><th>Elemento</th><th>Ubicación</th>
+        <th>Cant.</th><th>Ud</th><th>Sev.</th><th>Acción</th><th>Conf.</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ln in ej.lineas %}
+      <tr>
+        <td>{{ ln.orden }}</td>
+        <td>{{ ln.codigo }}</td>
+        <td>{{ ln.elemento }}</td>
+        <td>{{ ln.ubicacion }}</td>
+        <td>{{ ln.cantidad }}</td>
+        <td>{{ ln.unidad }}</td>
+        <td>{{ ln.severidad }}</td>
+        <td>{{ ln.accion }}</td>
+        <td>{{ ln.confianza }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if ej.nota_cierre %}
+  <p class="ejemplo-cierre"><strong>Cierre:</strong> {{ ej.nota_cierre }}</p>
+  {% endif %}
+</div>
+{% if not forloop.last %}<div class="page-break"></div>{% endif %}
+{% empty %}
+<p>No hay ejemplos cargados en esta versión de la guía.</p>
+{% endfor %}
+
+<div class="tip-box">
+  <strong>Regla práctica:</strong> si el caso es D2, al menos una línea de apuntamiento o protección
+  y varias de reparación/refuerzo. Si es D1, priorice partidas EST_* (estudios) + medidas inmediatas (ACORD_PERIM).
+  Si excepcionalmente es D3/D4, documente DEM_* / ESC_* y explique por qué no fue viable reparar.
+</div>

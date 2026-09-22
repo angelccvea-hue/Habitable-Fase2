@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard operativo — CPEH Fase II</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 0.85cm 1cm;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      font-size: 8.5pt;
+      color: #0f172a;
+      margin: 0;
+      line-height: 1.3;
+    }
+    .barra { display: flex; height: 4px; margin-bottom: 6px; }
+    .barra span { flex: 1; }
+    .ve-a { background: #ffcc00; }
+    .ve-b { background: #00247d; }
+    .ve-c { background: #c8102e; }
+    .hdr {
+      background: linear-gradient(120deg, #001a5c, #00247d 55%, #0a3a8a);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border-bottom: 3px solid #ffcc00;
+      margin-bottom: 10px;
+    }
+    .hdr h1 { margin: 0 0 2px; font-size: 14pt; font-weight: 800; }
+    .hdr .sub { margin: 0; font-size: 8pt; opacity: 0.92; }
+    .hdr .meta {
+      margin-top: 6px; font-size: 7.5pt; opacity: 0.9;
+      display: flex; flex-wrap: wrap; gap: 8px 16px;
+    }
+    .chip-filtros {
+      display: inline-block; background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28); border-radius: 999px;
+      padding: 2px 8px; font-size: 7.5pt;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .kpi {
+      background: #fff;
+      border: 1px solid #d7dee8;
+      border-radius: 8px;
+      padding: 6px 7px;
+      border-top: 3px solid #00247d;
+    }
+    .kpi.ok { border-top-color: #0f766e; }
+    .kpi.warn { border-top-color: #b45309; }
+    .kpi.danger { border-top-color: #c8102e; }
+    .kpi .v { font-size: 13pt; font-weight: 800; color: #00247d; line-height: 1.1; }
+    .kpi.ok .v { color: #0f766e; }
+    .kpi.warn .v { color: #b45309; }
+    .kpi.danger .v { color: #c8102e; }
+    .kpi .l { font-size: 6.8pt; font-weight: 700; color: #334155; margin-top: 2px; }
+    .kpi .s { font-size: 6.2pt; color: #64748b; margin-top: 1px; }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .grid2b {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .grid3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .grid4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #d7dee8;
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    .card h2 {
+      margin: 0 0 2px;
+      font-size: 9pt;
+      color: #00247d;
+      font-weight: 800;
+    }
+    .card .hint {
+      margin: 0 0 6px;
+      font-size: 6.8pt;
+      color: #64748b;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 52px;
+      gap: 5px;
+      align-items: center;
+      margin: 3px 0;
+      font-size: 7pt;
+    }
+    .bar-row.wide-label { grid-template-columns: 118px 1fr 52px; }
+    .bar-track {
+      height: 9px;
+      background: #eef2f7;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid #d7dee8;
+    }
+    .bar-fill { height: 100%; border-radius: 5px; }
+    .bar-n { text-align: right; font-weight: 700; color: #334155; font-size: 6.6pt; }
+    .funnel-step {
+      display: grid;
+      grid-template-columns: 28px 1fr 56px;
+      gap: 6px;
+      align-items: center;
+      margin: 5px 0;
+    }
+    .funnel-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #00247d; color: #fff; font-weight: 800;
+      font-size: 8pt; display: flex; align-items: center; justify-content: center;
+    }
+    .funnel-track {
+      height: 14px; background: #eef2f7; border-radius: 7px;
+      overflow: hidden; border: 1px solid #d7dee8;
+    }
+    .funnel-fill { height: 100%; background: linear-gradient(90deg, #00247d, #0f766e); }
+    table.mini {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 7pt;
+    }
+    table.mini th, table.mini td {
+      border: 1px solid #d7dee8;
+      padding: 3px 5px;
+      text-align: left;
+      vertical-align: top;
+    }
+    table.mini th {
+      background: #00247d;
+      color: #fff;
+      font-weight: 700;
+    }
+    table.mini tr:nth-child(even) td { background: #f8fafc; }
+    table.mini td.num { text-align: right; font-weight: 700; }
+    .sev-alta { color: #c8102e; font-weight: 800; }
+    .sev-media { color: #b45309; font-weight: 800; }
+    .foot {
+      margin-top: 8px;
+      font-size: 6.8pt;
+      color: #64748b;
+      border-top: 1px solid #d7dee8;
+      padding-top: 5px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .section-title {
+      font-size: 9pt;
+      font-weight: 800;
+      color: #00247d;
+      margin: 8px 0 6px;
+      padding-bottom: 2px;
+      border-bottom: 2px solid #ffcc00;
+    }
+    .page-title {
+      font-size: 11pt;
+      font-weight: 800;
+      color: #00247d;
+      margin: 0 0 8px;
+    }
+    .page-title span {
+      font-size: 8pt;
+      font-weight: 600;
+      color: #64748b;
+      margin-left: 8px;
+    }
+    svg.spark { width: 100%; height: 88px; display: block; }
+    .page { page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    .stack-legend {
+      display: flex; flex-wrap: wrap; gap: 6px 10px;
+      font-size: 6.5pt; color: #475569; margin-bottom: 4px;
+    }
+    .stack-legend i {
+      display: inline-block; width: 8px; height: 8px; border-radius: 2px;
+      margin-right: 3px; vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+{# ========== HOJA 1 ========== #}
+<section class="page">
+  <div class="barra">
+    <span class="ve-a"></span><span class="ve-b"></span><span class="ve-c"></span>
+  </div>
+
+  <header class="hdr">
+    <h1>Dashboard operativo — Seguimiento ROJO Fase II</h1>
+    <p class="sub">Comisión Presidencial · bandeja de equipos · misma lectura que el tablero en pantalla</p>
+    <div class="meta">
+      <span>Generado: {{ generado }}</span>
+      <span>Rol: {{ rol_etiqueta }}</span>
+      <span>Alcance: {{ alcance }}</span>
+      <span class="chip-filtros">Ventana {{ filtros.desde }} → {{ filtros.hasta }}</span>
+      {% if filtros.equipo %}<span class="chip-filtros">Equipo {{ filtros.equipo }}</span>{% endif %}
+      {% if filtros.estado %}<span class="chip-filtros">Estado: {{ filtros.estado }}</span>{% endif %}
+      {% if filtros.decision %}<span class="chip-filtros">Decisión: {{ filtros.decision }}</span>{% endif %}
+      {% if filtros.zona %}<span class="chip-filtros">Zona: {{ filtros.zona }}</span>{% endif %}
+      {% if filtros.visita %}<span class="chip-filtros">Visita: {{ filtros.visita }}</span>{% endif %}
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi">
+      <div class="v">{{ kpis.total }}</div>
+      <div class="l">Casos en bandeja</div>
+      <div class="s">Asignados a equipos</div>
+    </div>
+    <div class="kpi ok">
+      <div class="v">{{ kpis.pct_con_visita }}%</div>
+      <div class="l">Avance visita 2</div>
+      <div class="s">{{ kpis.con_visita }} / {{ kpis.total }} · faltan {{ kpis.sin_visita }}</div>
+    </div>
+    <div class="kpi ok">
+      <div class="v">{{ kpis.pct_con_dictamen }}%</div>
+      <div class="l">Cobertura dictamen</div>
+      <div class="s">D1 {{ kpis.n_d1 }} · D2 {{ kpis.n_d2 }} · D3 {{ kpis.n_d3 }} · D4 {{ kpis.n_d4 }}</div>
+    </div>
+    <div class="kpi {% if kpis.n_alertas %}danger{% else %}ok{% endif %}">
+      <div class="v">{{ kpis.n_alertas_casos|default:0 }}</div>
+      <div class="l">Alertas de calidad D</div>
+      <div class="s">{{ kpis.n_alertas|default:0 }} tipos</div>
+    </div>
+    <div class="kpi">
+      <div class="v">{{ kpis.visitas_7d }}</div>
+      <div class="l">Visitas (7 días)</div>
+      <div class="s">Prom. {{ kpis.promedio_visitas_dia }}/día</div>
+    </div>
+    <div class="kpi warn">
+      <div class="v">{{ kpis.n_d34|default:0 }}</div>
+      <div class="l">D3 + D4</div>
+      <div class="s">{{ kpis.vol_escombros_m3|default:0 }} m³ escombros</div>
+    </div>
+    <div class="kpi warn">
+      <div class="v">{{ kpis.cola_revision }}</div>
+      <div class="l">Cola revisión</div>
+      <div class="s">Pendiente revisión</div>
+    </div>
+    <div class="kpi">
+      <div class="v">{{ kpis.borrador }}</div>
+      <div class="l">En borrador</div>
+      <div class="s">{{ kpis.en_visita }} en visita · {{ kpis.pendiente }} pend.</div>
+    </div>
+    <div class="kpi ok">
+      <div class="v">{{ kpis.aprobados }}</div>
+      <div class="l">Aprobados / publicados</div>
+      <div class="s">Elev. 7d: {{ kpis.revisados_7d }}</div>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <article class="card">
+      <h2>Ritmo operativo (acumulado)</h2>
+      <p class="hint">Visitas · elevados a revisión · dictámenes en la ventana</p>
+      {% if spark_ritmo %}
+      <svg class="spark" viewBox="0 0 640 100" preserveAspectRatio="none" aria-hidden="true">
+        <polyline fill="none" stroke="#0f766e" stroke-width="2.2" points="{{ spark_ritmo.visitas }}"></polyline>
+        <polyline fill="none" stroke="#d97706" stroke-width="2.2" points="{{ spark_ritmo.revisados }}"></polyline>
+        <polyline fill="none" stroke="#00247d" stroke-width="2.2" points="{{ spark_ritmo.dictamenes }}"></polyline>
+      </svg>
+      <p class="hint" style="margin-top:4px">
+        <span style="color:#0f766e">■</span> Visitas
+        · <span style="color:#d97706">■</span> Elevados
+        · <span style="color:#00247d">■</span> Dictámenes
+        {% if spark_ritmo.n_dias %} · {{ spark_ritmo.n_dias }} días{% endif %}
+      </p>
+      {% else %}
+      <p class="hint">Sin serie de ritmo en la ventana.</p>
+      {% endif %}
+    </article>
+
+    <article class="card">
+      <h2>Por estado (bandeja)</h2>
+      <p class="hint">Cantidad y % sobre la bandeja</p>
+      {% for row in stats.por_estado %}
+      <div class="bar-row">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#3b82f6"></div></div>
+        <div class="bar-n">{{ row.value }} ({{ row.pct }}%)</div>
+      </div>
+      {% empty %}<p class="hint">Sin datos.</p>{% endfor %}
+    </article>
+
+    <article class="card">
+      <h2>Dictámenes (todos)</h2>
+      <p class="hint">Incluye «Sin dictamen» si aplica</p>
+      {% for row in stats.por_decision %}
+      <div class="bar-row">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#c8102e"></div></div>
+        <div class="bar-n">{{ row.value }} ({{ row.pct }}%)</div>
+      </div>
+      {% empty %}<p class="hint">Sin datos.</p>{% endfor %}
+    </article>
+  </div>
+
+  <div class="section-title">Avance por equipo y decisiones por zona</div>
+  <div class="grid2b">
+    <article class="card">
+      <h2>Avance % por equipo</h2>
+      <p class="hint">% con visita 2 · % con dictamen D</p>
+      <table class="mini">
+        <thead>
+          <tr><th>Equipo</th><th>Casos</th><th>% visita</th><th>% dictamen</th></tr>
+        </thead>
+        <tbody>
+          {% for eq in stats.por_equipo %}
+          <tr>
+            <td>{{ eq.equipo }}</td>
+            <td class="num">{{ eq.total }}</td>
+            <td class="num">{{ eq.pct_visita }}%</td>
+            <td class="num">{{ eq.pct_dictamen }}%</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">Sin equipos en la bandeja filtrada.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </article>
+    <article class="card">
+      <h2>Decisión × zona</h2>
+      <p class="hint">Conteo D1–D4 (sobre dictaminados)</p>
+      <table class="mini">
+        <thead>
+          <tr><th>Zona</th><th>Total</th><th>Con D</th><th>D1</th><th>D2</th><th>D3</th><th>D4</th></tr>
+        </thead>
+        <tbody>
+          {% for z in stats.decision_x_zona %}
+          <tr>
+            <td>{{ z.zona }}</td>
+            <td class="num">{{ z.total }}</td>
+            <td class="num">{{ z.con_dictamen }} ({{ z.pct_dictamen }}%)</td>
+            <td class="num">{{ z.decisiones.D1|default:0 }}</td>
+            <td class="num">{{ z.decisiones.D2|default:0 }}</td>
+            <td class="num">{{ z.decisiones.D3|default:0 }}</td>
+            <td class="num">{{ z.decisiones.D4|default:0 }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7">Sin desglose zonal.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </article>
+  </div>
+
+  <p class="foot">
+    <span>CPEH · Fase II ROJO — vista dashboard · hoja 1/3</span>
+    <span>No sustituye el dictamen por caso</span>
+  </p>
+</section>
+
+{# ========== HOJA 2: embudo + estados + equipos ========== #}
+<section class="page">
+  <div class="barra">
+    <span class="ve-a"></span><span class="ve-b"></span><span class="ve-c"></span>
+  </div>
+  <div class="page-title">
+    Embudo operativo y composición por estado
+    <span>{{ generado }} · {{ filtros.desde }} → {{ filtros.hasta }}</span>
+  </div>
+
+  <div class="grid2b">
+    <article class="card">
+      <h2>Embudo de dictamen</h2>
+      <p class="hint">Bandeja → visita → dictamen → cola → aprobado+</p>
+      {% for p in stats.embudo_dictamen.pasos %}
+      <div class="funnel-step">
+        <div class="funnel-num">{{ forloop.counter }}</div>
+        <div>
+          <div style="font-weight:700;font-size:7.5pt">{{ p.name }}</div>
+          <div class="funnel-track">
+            <div class="funnel-fill" style="width:{{ p.pct }}%"></div>
+          </div>
+        </div>
+        <div class="bar-n">{{ p.value }}<br>{{ p.pct }}%</div>
+      </div>
+      {% empty %}
+      <p class="hint">Sin embudo.</p>
+      {% endfor %}
+      <p class="hint" style="margin-top:6px">Sin dictamen: <strong>{{ stats.embudo_dictamen.sin_dictamen|default:0 }}</strong></p>
+    </article>
+
+    <article class="card">
+      <h2>Dictámenes D1–D4 (solo con D)</h2>
+      <p class="hint">% sobre casos ya dictaminados</p>
+      {% for row in stats.por_decision_dictamen %}
+      <div class="bar-row">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct_dictamen }}%;background:#c8102e"></div></div>
+        <div class="bar-n">{{ row.value }} ({{ row.pct_dictamen }}%)</div>
+      </div>
+      {% empty %}<p class="hint">Aún no hay dictámenes D.</p>{% endfor %}
+    </article>
+  </div>
+
+  <div class="section-title">Etapas por decisión D (campo · borrador · cola · aprobado)</div>
+  <article class="card" style="margin-bottom:8px">
+    <table class="mini">
+      <thead>
+        <tr>
+          <th>D</th><th>Total</th><th>Campo</th><th>Borrador</th><th>Cola</th><th>Aprobado+</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in stats.embudo_dictamen.por_d %}
+        <tr>
+          <td><strong>{{ d.d }}</strong></td>
+          <td class="num">{{ d.total }}</td>
+          <td class="num">{{ d.campo }}</td>
+          <td class="num">{{ d.borrador }}</td>
+          <td class="num">{{ d.cola }}</td>
+          <td class="num">{{ d.aprobado }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">Sin desglose por D.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+
+  <div class="section-title">Composición de estados por equipo</div>
+  <article class="card">
+    <div class="stack-legend">
+      <span><i style="background:#94a3b8"></i>Pend. verif.</span>
+      <span><i style="background:#3b82f6"></i>En visita</span>
+      <span><i style="background:#0ea5e9"></i>Borrador</span>
+      <span><i style="background:#d97706"></i>Pend. revisión</span>
+      <span><i style="background:#166534"></i>Revisado</span>
+      <span><i style="background:#4c1d95"></i>Aprobado+</span>
+    </div>
+    <table class="mini">
+      <thead>
+        <tr>
+          <th>Equipo</th><th>Total</th>
+          <th>Pend. verif.</th><th>En visita</th><th>Borrador</th>
+          <th>Pend. rev.</th><th>Revisado</th><th>Aprobado+</th>
+          <th>% visita</th><th>% dictamen</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for eq in equipos_pdf %}
+        <tr>
+          <td>{{ eq.equipo }}</td>
+          <td class="num">{{ eq.total }}</td>
+          <td class="num">{{ eq.e_pend }}</td>
+          <td class="num">{{ eq.e_visita }}</td>
+          <td class="num">{{ eq.e_borrador }}</td>
+          <td class="num">{{ eq.e_cola }}</td>
+          <td class="num">{{ eq.e_revisado }}</td>
+          <td class="num">{{ eq.e_aprobado }}</td>
+          <td class="num">{{ eq.pct_visita }}%</td>
+          <td class="num">{{ eq.pct_dictamen }}%</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10">Sin equipos.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
+
+  <p class="foot">
+    <span>CPEH · Fase II ROJO — vista dashboard · hoja 2/3</span>
+    <span>Embudo y estados por brigada</span>
+  </p>
+</section>
+
+{# ========== HOJA 3: analítica D + zonas + alertas ========== #}
+<section class="page">
+  <div class="barra">
+    <span class="ve-a"></span><span class="ve-b"></span><span class="ve-c"></span>
+  </div>
+  <div class="page-title">
+    Analítica de decisiones D1–D4 y zonas
+    <span>{{ generado }} · {{ filtros.desde }} → {{ filtros.hasta }}</span>
+  </div>
+
+  <div class="grid3">
+    <article class="card">
+      <h2>D1 — complementos</h2>
+      <p class="hint">Códigos entre casos D1</p>
+      {% for row in stats.d1_complementos %}
+      <div class="bar-row wide-label">
+        <div title="{{ row.name_full }}">{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#0ea5e9"></div></div>
+        <div class="bar-n">{{ row.value }} ({{ row.pct }}%)</div>
+      </div>
+      {% empty %}<p class="hint">Sin casos D1 / códigos.</p>{% endfor %}
+    </article>
+
+    <article class="card">
+      <h2>D2 — magnitud M</h2>
+      <p class="hint">Intensidad de reparación</p>
+      {% for row in stats.d2_magnitudes %}
+      <div class="bar-row">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#d97706"></div></div>
+        <div class="bar-n">{{ row.value }} ({{ row.pct }}%)</div>
+      </div>
+      {% empty %}<p class="hint">Sin casos D2.</p>{% endfor %}
+    </article>
+
+    <article class="card">
+      <h2>D3/D4 — escombros (m³)</h2>
+      <p class="hint">{{ kpis.n_d34|default:0 }} casos · suma {{ kpis.vol_escombros_m3|default:0 }} m³</p>
+      {% for row in stats.d34.vol_tramos %}
+      <div class="bar-row wide-label">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{% if d34_n %}{% widthratio row.value d34_n 100 %}{% else %}0{% endif %}%;background:#c8102e"></div></div>
+        <div class="bar-n">{{ row.value }}</div>
+      </div>
+      {% empty %}<p class="hint">Sin tramos de volumen.</p>{% endfor %}
+    </article>
+  </div>
+
+  <div class="grid2b">
+    <article class="card">
+      <h2>D3/D4 — score</h2>
+      <p class="hint">Promedio {{ stats.d34.score_prom|default:0 }} · n={{ stats.d34.n_con_score|default:0 }}</p>
+      {% for row in stats.d34.score_tramos %}
+      <div class="bar-row">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{% if d34_n %}{% widthratio row.value d34_n 100 %}{% else %}0{% endif %}%;background:#7c3aed"></div></div>
+        <div class="bar-n">{{ row.value }}</div>
+      </div>
+      {% empty %}<p class="hint">Sin tramos de score.</p>{% endfor %}
+    </article>
+    <article class="card">
+      <h2>D3/D4 — prioridad</h2>
+      <p class="hint">Distribución declarada</p>
+      {% for row in stats.d34.prioridades %}
+      <div class="bar-row wide-label">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#b45309"></div></div>
+        <div class="bar-n">{{ row.value }} ({{ row.pct }}%)</div>
+      </div>
+      {% empty %}<p class="hint">Sin prioridades.</p>{% endfor %}
+    </article>
+  </div>
+
+  <div class="section-title">La Guaira y Caracas — estado y decisión</div>
+  <div class="grid4">
+    <article class="card">
+      <h2>La Guaira · Estado</h2>
+      <p class="hint">n={{ stats.por_zona.la_guaira.total|default:0 }}</p>
+      {% for row in stats.por_zona.la_guaira.por_estado %}
+      <div class="bar-row wide-label">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#3b82f6"></div></div>
+        <div class="bar-n">{{ row.value }}</div>
+      </div>
+      {% empty %}<p class="hint">Sin datos.</p>{% endfor %}
+    </article>
+    <article class="card">
+      <h2>La Guaira · Decisión</h2>
+      <p class="hint">Mix D / sin dictamen</p>
+      {% for row in stats.por_zona.la_guaira.por_decision %}
+      <div class="bar-row">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#c8102e"></div></div>
+        <div class="bar-n">{{ row.value }}</div>
+      </div>
+      {% empty %}<p class="hint">Sin datos.</p>{% endfor %}
+    </article>
+    <article class="card">
+      <h2>Caracas · Estado</h2>
+      <p class="hint">n={{ stats.por_zona.caracas.total|default:0 }}</p>
+      {% for row in stats.por_zona.caracas.por_estado %}
+      <div class="bar-row wide-label">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#3b82f6"></div></div>
+        <div class="bar-n">{{ row.value }}</div>
+      </div>
+      {% empty %}<p class="hint">Sin datos.</p>{% endfor %}
+    </article>
+    <article class="card">
+      <h2>Caracas · Decisión</h2>
+      <p class="hint">Mix D / sin dictamen</p>
+      {% for row in stats.por_zona.caracas.por_decision %}
+      <div class="bar-row">
+        <div>{{ row.name }}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:{{ row.pct }}%;background:#c8102e"></div></div>
+        <div class="bar-n">{{ row.value }}</div>
+      </div>
+      {% empty %}<p class="hint">Sin datos.</p>{% endfor %}
+    </article>
+  </div>
+
+  <div class="section-title">Alertas de calidad de dictamen</div>
+  <article class="card">
+    {% if alertas_dictamen %}
+    <table class="mini">
+      <thead>
+        <tr>
+          <th>Severidad</th><th>Alerta</th><th>N.º</th><th>Qué hacer</th><th>Muestras (hab_id · días)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in alertas_dictamen %}
+        <tr>
+          <td>
+            {% if a.severidad == "danger" %}<span class="sev-alta">Alta</span>
+            {% else %}<span class="sev-media">Media</span>{% endif %}
+          </td>
+          <td><strong>{{ a.titulo }}</strong></td>
+          <td class="num">{{ a.n }}</td>
+          <td>{{ a.ayuda }}</td>
+          <td>
+            {% for m in a.muestras %}
+              #{{ m.hab_id }} ({{ m.dias_sin_actualizar }}d){% if not forloop.last %}, {% endif %}
+            {% empty %}—{% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="hint" style="margin:0">Sin alertas de calidad en la bandeja actual.</p>
+    {% endif %}
+  </article>
+
+  <p class="foot">
+    <span>CPEH · Fase II ROJO — vista dashboard · hoja 3/3</span>
+    <span>Analítica D · zonas · alertas</span>
+  </p>
+</section>
+
+</body>
+</html>

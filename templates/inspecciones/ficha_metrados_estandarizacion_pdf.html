@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{{ ficha.codigo }} — {{ ficha.titulo }}</title>
+  <style>
+    @page { size: A4; margin: 1.35cm 1.15cm; }
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 9.2pt; color: #1a2332; line-height: 1.35; }
+    .barra-tricolor { display: flex; height: 5px; margin-bottom: 6px; }
+    .barra-tricolor span { flex: 1; }
+    .ve-amarillo { background: #ffcc00; }
+    .ve-azul { background: #00247d; }
+    .ve-rojo { background: #cf142b; }
+    .header { border-bottom: 2px solid #00247d; padding-bottom: 8px; margin-bottom: 12px; }
+    .org { font-size: 8.5pt; color: #00247d; font-weight: 700; line-height: 1.25; }
+    .org-sm { font-size: 8pt; font-weight: 500; }
+    h1 { font-size: 12.5pt; color: #001a5c; margin: 6px 0 2px; }
+    .meta { font-size: 8.5pt; color: #555; margin-bottom: 4px; }
+    .badge {
+      display: inline-block; background: #00247d; color: #fff; font-weight: 700;
+      padding: 3px 10px; border-radius: 4px; font-size: 11pt; letter-spacing: 0.04em;
+      border-left: 4px solid #ffcc00;
+    }
+    .badge-draft { background: #9a3412; border-left-color: #fbbf24; }
+    h2 {
+      font-size: 10pt; background: #00247d; color: #fff; padding: 4px 8px;
+      margin: 12px 0 0; border-left: 4px solid #ffcc00;
+    }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 4px; page-break-inside: avoid; }
+    table.breakable { page-break-inside: auto; }
+    table.breakable tr { page-break-inside: avoid; }
+    th, td { border: 1px solid #c8d0dc; padding: 4px 6px; vertical-align: top; text-align: left; }
+    th { background: #eef2f8; font-weight: 600; color: #001a5c; }
+    th.narrow { width: 22%; }
+    ul { margin: 4px 0 4px 1.1rem; padding: 0; }
+    li { margin: 2px 0; }
+    .check { list-style: none; margin-left: 0; }
+    .check li:before { content: "☐ "; color: #00247d; font-weight: 700; }
+    .note {
+      margin-top: 10px; padding: 8px 10px; background: #fff8e6; border: 1px solid #f0d080;
+      font-size: 8.5pt;
+    }
+    .foot { margin-top: 14px; font-size: 7.5pt; color: #64748b; border-top: 1px solid #d0d7e2; padding-top: 6px; }
+    .tiny { font-size: 7.5pt; color: #475569; }
+    .code { font-family: Consolas, "Courier New", monospace; font-weight: 700; color: #001a5c; font-size: 8pt; }
+    .pill {
+      display: inline-block; background: #eef2f8; border: 1px solid #c8d0dc;
+      border-radius: 999px; padding: 1px 7px; font-size: 7.5pt; margin-right: 4px;
+    }
+    .page-break { page-break-before: always; }
+    .header-mini {
+      border-bottom: 1px solid #00247d; padding-bottom: 4px; margin-bottom: 8px;
+      font-size: 8pt; color: #00247d; font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="barra-tricolor">
+    <span class="ve-amarillo"></span><span class="ve-azul"></span><span class="ve-rojo"></span>
+  </div>
+  <div class="header">
+    <div class="org">REPÚBLICA BOLIVARIANA DE VENEZUELA</div>
+    <div class="org org-sm">Comisión Presidencial para la Evaluación de Habitabilidad de Infraestructuras</div>
+    <div class="org org-sm">Inspecciones post-sísmicas — Fase II ROJO · preparación Fase III</div>
+    <h1>Ficha técnica — estandarización de partidas</h1>
+    <div class="meta">Catálogo de metrados · dual coding CPEH ↔ COVENIN / ISO · mismo formato que fichas PLN</div>
+    <p style="margin:8px 0 0">
+      <span class="badge{% if ficha.borrador %} badge-draft{% endif %}">{{ ficha.codigo }}</span>
+      {% if ficha.borrador %}<span style="margin-left:8px;color:#9a3412;font-weight:700;font-size:9pt;">BORRADOR PARA REVISIÓN</span>{% endif %}
+    </p>
+  </div>
+
+  <table>
+    <tr><th class="narrow">Código</th><td><strong>{{ ficha.codigo }}</strong></td></tr>
+    <tr><th>Categoría</th><td>{{ ficha.categoria }}</td></tr>
+    <tr><th>Título</th><td>{{ ficha.titulo }}</td></tr>
+    <tr><th>Documento relacionado</th><td><strong>{{ ficha.documento_relacionado }}</strong> — leer antes de cuantificar</td></tr>
+    <tr><th>Alcance</th><td>{{ ficha.alcance }}</td></tr>
+    {% if ficha.jerga %}
+    <tr><th>Jerga (norma)</th><td>{{ ficha.jerga }}</td></tr>
+    {% endif %}
+  </table>
+
+  <h2>Aplicar cuando (lista de verificación)</h2>
+  <ul class="check">
+    {% for item in ficha.aplicar_cuando %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>No aplicar / derivar</h2>
+  <ul>
+    {% for item in ficha.no_aplicar %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+
+  <h2>Especificación técnica</h2>
+  <table>
+    <tr><td>{{ ficha.especificacion }}</td></tr>
+  </table>
+
+  <h2>Cadena PLN-01 → metrado → visor (Fase III)</h2>
+  <p class="meta">Las reparaciones se atan al croquis/plano; el sistema debe poder pintar qué arreglo corresponde a cada sección.</p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:8%">Paso</th>
+        <th style="width:28%">Título</th>
+        <th>Detalle</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in ficha.vinculo_pln01 %}
+      <tr>
+        <td><strong>{{ p.paso }}</strong></td>
+        <td>{{ p.titulo }}</td>
+        <td>{{ p.detalle }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>IDs PLN-01 (ejemplos — misma regla que el manual de planos)</h2>
+  <table>
+    <thead>
+      <tr><th style="width:28%">Ejemplo id_pln01</th><th>Significado</th></tr>
+    </thead>
+    <tbody>
+      {% for e in ficha.ids_pln01_ejemplos %}
+      <tr>
+        <td class="code">{{ e.ejemplo }}</td>
+        <td>{{ e.significa }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Apuntamiento post-sísmico (preocupación de equipo)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:28%">Tipo / partida</th>
+        <th style="width:40%">Cuándo</th>
+        <th>Nota</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in ficha.apuntamiento_post_sismico %}
+      <tr>
+        <td><strong>{{ a.tipo }}</strong></td>
+        <td>{{ a.cuando }}</td>
+        <td>{{ a.nota }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>Hallazgo normativo central.</strong>
+    COVENIN 2000 Parte II.A cubre bien demolición/escombros (E13/E9). Reparar/reforzar
+    existentes (D2) y apuntamiento de existentes caen en Parte II.B (anteproyecto R…).
+    No forzar códigos E… de obra nueva. El plan de apuntamiento calculado sigue siendo
+    obligación de ingeniería; el metrado solo cuantifica.
+  </div>
+
+  <h2>Capas normativas (no confundir)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:26%">Capa</th>
+        <th style="width:34%">Norma / marco</th>
+        <th>Rol en CPEH</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in ficha.capas_normativas %}
+      <tr>
+        <td><strong>{{ c.capa }}</strong></td>
+        <td>{{ c.norma }}</td>
+        <td>{{ c.rol }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Principios de estandarización</h2>
+  <table>
+    <thead>
+      <tr><th style="width:28%">Principio</th><th>Desarrollo</th></tr>
+    </thead>
+    <tbody>
+      {% for p in ficha.principios %}
+      <tr>
+        <td><strong>{{ p.titulo }}</strong></td>
+        <td>{{ p.texto }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Homologación de unidades</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:22%">Unidad CPEH</th>
+        <th style="width:38%">Tratamiento COVENIN</th>
+        <th>Nota operativa</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in ficha.unidades_homologacion %}
+      <tr>
+        <td class="code">{{ u.cpeh }}</td>
+        <td>{{ u.covenin }}</td>
+        <td>{{ u.nota }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {# ========== Página 2+: catálogo ========== #}
+  <div class="page-break">
+    <div class="barra-tricolor">
+      <span class="ve-amarillo"></span><span class="ve-azul"></span><span class="ve-rojo"></span>
+    </div>
+    <div class="header-mini">{{ ficha.codigo }} · Catálogo de partidas CPEH → ancla COVENIN / II.B · {{ generado }}</div>
+
+    <h2>Catálogo semilla — dual coding propuesto</h2>
+    <p class="meta">
+      Código CPEH (campo) · ancla normativa · criterio de medición · esfuerzo de ajuste.
+      Conservar el código CPEH; no renombrar en brigada hasta adopción formal.
+    </p>
+    <table class="breakable">
+      <thead>
+        <tr>
+          <th style="width:11%">Código</th>
+          <th style="width:12%">Grupo</th>
+          <th style="width:16%">Título</th>
+          <th style="width:8%">Und.</th>
+          <th style="width:7%">D</th>
+          <th style="width:18%">Ancla COVENIN / R</th>
+          <th>Criterio de medición</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in ficha.filas_catalogo %}
+        <tr>
+          <td><span class="code">{{ r.codigo }}</span></td>
+          <td class="tiny">{{ r.grupo }}</td>
+          <td>{{ r.titulo }}{% if r.desc and r.desc != "—" %}<br/><span class="tiny">{{ r.desc }}</span>{% endif %}</td>
+          <td class="tiny">{{ r.unidad }}</td>
+          <td class="tiny">{{ r.aplica }}</td>
+          <td class="tiny">{{ r.covenin }}<br/><span class="pill">{{ r.ajuste }}</span></td>
+          <td class="tiny">{{ r.criterio }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {# ========== Página final ========== #}
+  <div class="page-break">
+    <div class="barra-tricolor">
+      <span class="ve-amarillo"></span><span class="ve-azul"></span><span class="ve-rojo"></span>
+    </div>
+    <div class="header-mini">{{ ficha.codigo }} · Roadmap, normas y checklist · {{ generado }}</div>
+
+    <h2>Roadmap práctico (Fase III)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:8%">Paso</th>
+          <th style="width:28%">Título</th>
+          <th>Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in ficha.roadmap %}
+        <tr>
+          <td><strong>{{ s.paso }}</strong></td>
+          <td>{{ s.titulo }}</td>
+          <td>{{ s.detalle }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Normas — qué dicen y cómo se usan en MET-01</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%">Norma</th>
+          <th style="width:28%">Para qué sirve</th>
+          <th>Uso en este documento</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for n in ficha.normativa_detalle %}
+        <tr>
+          <td><strong>{{ n.codigo }}</strong><br/><span class="tiny">{{ n.titulo }}</span></td>
+          <td>{{ n.para_que }}</td>
+          <td>{{ n.uso }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Riesgos si se homologa mal</h2>
+    <table>
+      <thead>
+        <tr><th style="width:40%">Riesgo</th><th>Mitigación</th></tr>
+      </thead>
+      <tbody>
+        {% for r in ficha.riesgos %}
+        <tr>
+          <td>{{ r.riesgo }}</td>
+          <td>{{ r.mitigacion }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Checklist de estandarización (por partida / por caso)</h2>
+    <ul class="check">
+      {% for item in ficha.checklist %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+
+    <div class="note">
+      <strong>Relación con PLN-01.</strong>
+      El plano de inspección (ejes letra×número) aporta la ubicación que debe
+      figurar en cada línea de metrado estructural. MET-01 no redefine el dibujo;
+      exige que la cuantificación sea trazable al mismo sistema de ejes.
+    </div>
+
+    <p class="foot">
+      CPEH · Fase II ROJO · {{ ficha.codigo }} · generado {{ generado }} ·
+      borrador de referencia (no sustituye pliego contractual ni dictamen por caso).
+      Fuentes: COVENIN-MINDUR 2000-92 / supl. 2000-2:1999; anteproyecto Parte II.B;
+      ICMS 3; ISO 12006-2; catálogo semilla PartidaCatalogo CPEH.
+    </p>
+  </div>
+
+</body>
+</html>

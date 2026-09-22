@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asignación por lote (Excel) — CPEH Fase II</title>
+  <link rel="stylesheet" href="/static/css/cpeh_admin.css">
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f4f6f9; color: #1a2332; }
+    .cpeh-page-header {
+      background: #00247d; color: #fff; padding: 0.85rem 1.25rem;
+      border-bottom: 3px solid #ffcc00;
+    }
+    .cpeh-page-header h1 { font-size: 1.15rem; margin: 0 0 0.25rem; }
+    .cpeh-page-header p { margin: 0; font-size: 0.85rem; opacity: 0.92; }
+    .cpeh-toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center;
+      padding: 0.65rem 1.25rem; background: #fff; border-bottom: 1px solid #d0d7e2;
+    }
+    .cpeh-toolbar a, .cpeh-toolbar button { font-size: 0.82rem; }
+    .cpeh-section { padding: 1rem 1.25rem; max-width: 100%; }
+    .cpeh-kpi-row {
+      display: flex; flex-wrap: nowrap; gap: 0.4rem; margin-bottom: 1rem;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.15rem;
+    }
+    .cpeh-kpi {
+      flex: 1 1 0; min-width: 0; border-radius: 6px;
+      padding: 0.45rem 0.35rem; text-align: center;
+      border: 1px solid transparent;
+    }
+    .cpeh-kpi strong { display: block; font-size: 1.15rem; line-height: 1.15; }
+    .cpeh-kpi span {
+      display: block; font-size: 0.68rem; line-height: 1.2; margin-top: 0.15rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cpeh-kpi-ok { background: #dcfce7; border-color: #86efac; }
+    .cpeh-kpi-ok strong { color: #166534; }
+    .cpeh-kpi-ok span { color: #14532d; }
+    .cpeh-kpi-miss { background: #fee2e2; border-color: #fca5a5; }
+    .cpeh-kpi-miss strong { color: #991b1b; }
+    .cpeh-kpi-miss span { color: #7f1d1d; }
+    .cpeh-kpi-dup { background: #fef3c7; border-color: #fde047; }
+    .cpeh-kpi-dup strong { color: #a16207; }
+    .cpeh-kpi-dup span { color: #854d0e; }
+    .cpeh-kpi-empty { background: #f1f5f9; border-color: #cbd5e1; }
+    .cpeh-kpi-empty strong { color: #475569; }
+    .cpeh-kpi-empty span { color: #64748b; }
+    .cpeh-kpi-name-ok { background: #ccfbf1; border-color: #5eead4; }
+    .cpeh-kpi-name-ok strong { color: #0f766e; }
+    .cpeh-kpi-name-ok span { color: #115e59; }
+    .cpeh-kpi-name-parcial { background: #ffedd5; border-color: #fdba74; }
+    .cpeh-kpi-name-parcial strong { color: #c2410c; }
+    .cpeh-kpi-name-parcial span { color: #9a3412; }
+    .cpeh-kpi-name-dif { background: #fce7f3; border-color: #f9a8d4; }
+    .cpeh-kpi-name-dif strong { color: #be185d; }
+    .cpeh-kpi-name-dif span { color: #9d174d; }
+    .cpeh-kpi-libre { background: #dbeafe; border-color: #93c5fd; }
+    .cpeh-kpi-libre strong { color: #1d4ed8; }
+    .cpeh-kpi-libre span { color: #1e40af; }
+    .cpeh-kpi-ya { background: #ffedd5; border-color: #fb923c; }
+    .cpeh-kpi-ya strong { color: #c2410c; }
+    .cpeh-kpi-ya span { color: #9a3412; }
+    .cpeh-kpi-ubic { background: #ede9fe; border-color: #c4b5fd; }
+    .cpeh-kpi-ubic strong { color: #6d28d9; }
+    .cpeh-kpi-ubic span { color: #5b21b6; }
+    .cpeh-card {
+      background: #fff; border: 1px solid #d0d7e2; border-radius: 6px;
+      margin-bottom: 1rem; overflow: hidden;
+    }
+    .cpeh-card h2 {
+      margin: 0; padding: 0.65rem 1rem; font-size: 0.95rem;
+      background: #eef2f8; border-bottom: 1px solid #d0d7e2;
+    }
+    .cpeh-card-body { padding: 0.75rem 1rem; }
+    .cpeh-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .cpeh-table th, .cpeh-table td {
+      padding: 0.4rem 0.55rem; border-bottom: 1px solid #e8eef8; text-align: left;
+      vertical-align: top;
+    }
+    .cpeh-table th { background: #f8fafc; font-weight: 600; }
+    .cpeh-table tr:hover td { background: #f8fbff; }
+    .cpeh-badge {
+      display: inline-block; padding: 0.1rem 0.45rem; border-radius: 999px;
+      font-size: 0.72rem; background: #e2e8f0; color: #334155;
+    }
+    .cpeh-badge-ok { background: #dcfce7; color: #166534; }
+    .cpeh-badge-miss { background: #fee2e2; color: #7f1d1d; }
+    .cpeh-badge-dup { background: #fef3c7; color: #92400e; }
+    .cpeh-badge-empty { background: #e2e8f0; color: #475569; }
+    .cpeh-badge-name-ok { background: #dcfce7; color: #166534; }
+    .cpeh-badge-name-parcial { background: #fef3c7; color: #92400e; }
+    .cpeh-badge-name-dif { background: #fee2e2; color: #7f1d1d; }
+    .cpeh-badge-name-na { background: #e2e8f0; color: #64748b; }
+    .cpeh-badge-ya { background: #ffedd5; color: #9a3412; font-weight: 600; }
+    tr.ya-asignado td { background: #fff7ed; }
+    tr.ya-asignado td input[type=checkbox]:disabled { opacity: 0.45; }
+    .cpeh-msg { margin: 0.75rem 1.25rem; padding: 0.55rem 0.85rem; border-radius: 4px; font-size: 0.85rem; }
+    .cpeh-msg-success { background: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+    .cpeh-msg-warning { background: #fef9c3; color: #713f12; border: 1px solid #fde047; }
+    .cpeh-msg-error { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+    .cpeh-msg-info { background: #e0f2fe; color: #0c4a6e; border: 1px solid #7dd3fc; }
+    .cpeh-asign-bar {
+      display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: flex-end;
+      padding: 0.85rem; background: #fff8e6; border: 1px solid #f0d080; border-radius: 6px;
+      margin-bottom: 0.75rem;
+    }
+    .cpeh-asign-bar label { display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .cpeh-asign-bar select, .cpeh-asign-bar input[type=file] {
+      font-size: 0.82rem; padding: 0.35rem 0.45rem; border: 1px solid #cbd5e1; border-radius: 4px;
+      min-width: 220px; background: #fff;
+    }
+    .btn {
+      display: inline-block; padding: 0.4rem 0.85rem; border-radius: 4px; font-size: 0.82rem;
+      border: 1px solid transparent; cursor: pointer; text-decoration: none; line-height: 1.3;
+    }
+    .btn-primary { background: #00247d; color: #fff; border-color: #001a5c; }
+    .btn-primary:hover { background: #001a5c; color: #fff; }
+    .btn-success { background: #15803d; color: #fff; border-color: #166534; }
+    .btn-outline-secondary { background: #fff; color: #334155; border-color: #94a3b8; }
+    .btn-outline-danger { background: #fff; color: #b91c1c; border-color: #fca5a5; }
+    .hint { font-size: 0.8rem; color: #64748b; margin: 0.35rem 0 0; }
+    .table-wrap { max-height: 420px; overflow: auto; }
+    .table-wrap-sm { max-height: 260px; overflow: auto; }
+    .cpeh-table th.cpeh-th-sort {
+      cursor: pointer; user-select: none; white-space: nowrap;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .cpeh-table th.cpeh-th-sort:hover { background: #e2e8f0; color: #00247d; }
+    .cpeh-table th.cpeh-th-sort::after {
+      content: " ⇅"; font-size: 0.7em; opacity: 0.35; font-weight: 400;
+    }
+    .cpeh-table th.cpeh-th-sort.is-asc::after { content: " ▲"; opacity: 1; color: #00247d; }
+    .cpeh-table th.cpeh-th-sort.is-desc::after { content: " ▼"; opacity: 1; color: #00247d; }
+    .cpeh-sort-hint { font-size: 0.78rem; color: #64748b; margin: 0; padding: 0.45rem 1rem 0; }
+    .cpeh-card h2.cpeh-h2-miss {
+      background: #fee2e2; color: #7f1d1d; border-bottom-color: #fca5a5;
+    }
+    .cpeh-card h2.cpeh-h2-ya {
+      background: #ffedd5; color: #9a3412; border-bottom-color: #fdba74;
+    }
+    .cpeh-split-preview {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;
+    }
+    @media (max-width: 900px) {
+      .cpeh-split-preview { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cpeh-page-header">
+    <h1>Carga masiva y asignación por equipo</h1>
+    <p>
+      Solo administradores. Suba un Excel con <strong>hab_id o certificado (obligatorio)</strong>,
+      y opcionalmente nombre, estado de ubicación y parroquia para validar;
+      revise la vista previa y asígnelos en lote a un equipo.
+    </p>
+  </div>
+
+  <div class="cpeh-toolbar">
+    <a class="btn btn-outline-secondary" href="{% url 'admin:index' %}">← Admin</a>
+    <a class="btn btn-outline-secondary" href="{{ asignacion_url }}">Tablero asignación</a>
+    <a class="btn btn-primary" href="{{ plantilla_url }}">Descargar plantilla Excel</a>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="cpeh-msg cpeh-msg-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="cpeh-section">
+    <div class="cpeh-card">
+      <h2>1. Cargar archivo Excel</h2>
+      <div class="cpeh-card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="upload">
+          <div class="cpeh-asign-bar" style="background:#f8fafc;border-color:#d0d7e2;">
+            <div>
+              <label for="archivo">Archivo (.xlsx)</label>
+              <input id="archivo" type="file" name="archivo" accept=".xlsx,.xlsm" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Leer y previsualizar</button>
+          </div>
+        </form>
+        <p class="hint">
+          <strong>Obligatorio por fila:</strong> <code>hab_id</code> / <code>id</code>
+          <em>o</em> <code>certificado</code>.
+          Opcionales: <code>nombre_edificio</code>, <code>estado_ubicacion</code>, <code>parroquia</code>
+          (se muestran en vista previa frente a Habitable). Máximo 8&nbsp;MB.
+          {% if meta.archivo %}Último archivo: <strong>{{ meta.archivo }}</strong>.{% endif %}
+        </p>
+      </div>
+    </div>
+
+    {% if preview %}
+    <div class="cpeh-kpi-row">
+      <div class="cpeh-kpi cpeh-kpi-ok"><strong>{{ preview.resumen.ok }}</strong><span>Listos</span></div>
+      <div class="cpeh-kpi cpeh-kpi-miss"><strong>{{ preview.resumen.no_encontrado }}</strong><span>No encontrados</span></div>
+      <div class="cpeh-kpi cpeh-kpi-dup"><strong>{{ preview.resumen.duplicado }}</strong><span>Duplicados</span></div>
+      <div class="cpeh-kpi cpeh-kpi-empty"><strong>{{ preview.resumen.vacio }}</strong><span>Filas incompletas</span></div>
+      <div class="cpeh-kpi cpeh-kpi-name-ok"><strong>{{ preview.resumen.nombres_coinciden|default:0 }}</strong><span>Nombres OK</span></div>
+      <div class="cpeh-kpi cpeh-kpi-name-parcial"><strong>{{ preview.resumen.nombres_parcial|default:0 }}</strong><span>Nombre parcial</span></div>
+      <div class="cpeh-kpi cpeh-kpi-name-dif"><strong>{{ preview.resumen.nombres_difieren|default:0 }}</strong><span>Nombre difiere</span></div>
+      <div class="cpeh-kpi cpeh-kpi-libre"><strong>{{ preview.resumen.libres|default:0 }}</strong><span>Libres</span></div>
+      <div class="cpeh-kpi cpeh-kpi-ya"><strong>{{ preview.resumen.ya_asignados|default:0 }}</strong><span>Ya asignados</span></div>
+      <div class="cpeh-kpi cpeh-kpi-ubic"><strong>{{ preview.resumen.ubic_difieren|default:0 }}</strong><span>Ubicación difiere</span></div>
+    </div>
+
+    <div class="cpeh-split-preview">
+      <div class="cpeh-card" style="margin-bottom:0;">
+        <h2 class="cpeh-h2-miss">
+          Casos no encontrados
+          ({{ preview.resumen.no_encontrado }})
+        </h2>
+        <div class="table-wrap-sm">
+          <table class="cpeh-table">
+            <thead>
+              <tr>
+                <th>Fila</th>
+                <th>hab_id</th>
+                <th>Certificado</th>
+                <th>Nombre Excel</th>
+                <th>Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for f in preview.filas %}
+                {% if f.estado == "no_encontrado" %}
+                <tr>
+                  <td>{{ f.fila }}</td>
+                  <td>{{ f.hab_id|default:"—" }}</td>
+                  <td>{{ f.certificado|default:"—" }}</td>
+                  <td>{{ f.nombre_excel|default:"—" }}</td>
+                  <td>{{ f.detalle }}</td>
+                </tr>
+                {% endif %}
+              {% empty %}
+              <tr><td colspan="5">Sin filas.</td></tr>
+              {% endfor %}
+              {% if preview.resumen.no_encontrado == 0 %}
+              <tr><td colspan="5" class="hint" style="padding:0.75rem;">Ningún caso sin coincidencia en el sistema.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cpeh-card" style="margin-bottom:0;">
+        <h2 class="cpeh-h2-ya">
+          Casos ya asignados
+          ({{ preview.resumen.ya_asignados|default:0 }})
+        </h2>
+        <div class="table-wrap-sm">
+          <table class="cpeh-table">
+            <thead>
+              <tr>
+                <th>Fila</th>
+                <th>hab_id</th>
+                <th>Certificado</th>
+                <th>Nombre</th>
+                <th>Equipo actual</th>
+                <th>Detalle</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for f in preview.filas %}
+                {% if f.estado == "ya_asignado" %}
+                <tr class="ya-asignado">
+                  <td>{{ f.fila }}</td>
+                  <td>{{ f.hab_id|default:"—" }}</td>
+                  <td>{{ f.certificado|default:"—" }}</td>
+                  <td>{{ f.nombre_habitable|default:f.nombre|default:f.nombre_excel|default:"—" }}</td>
+                  <td><span class="cpeh-badge cpeh-badge-ya">{{ f.equipo_actual|default:"—" }}</span></td>
+                  <td>{{ f.detalle }}</td>
+                </tr>
+                {% endif %}
+              {% empty %}
+              <tr><td colspan="6">Sin filas.</td></tr>
+              {% endfor %}
+              {% if not preview.resumen.ya_asignados %}
+              <tr><td colspan="6" class="hint" style="padding:0.75rem;">Ningún caso del Excel ya tiene equipo asignado.</td></tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="cpeh-card">
+      <h2>Resultado del Excel (todas las filas)</h2>
+      <p class="cpeh-sort-hint">Clic en cualquier columna del encabezado para ordenar (ascendente / descendente).</p>
+      <div class="table-wrap">
+        <table class="cpeh-table cpeh-sortable" id="tabla-resultado-excel">
+          <thead>
+            <tr>
+              <th class="cpeh-th-sort" data-col="0" data-type="num">Fila</th>
+              <th class="cpeh-th-sort" data-col="1" data-type="num">hab_id</th>
+              <th class="cpeh-th-sort" data-col="2" data-type="text">Certificado</th>
+              <th class="cpeh-th-sort" data-col="3" data-type="text">Resultado</th>
+              <th class="cpeh-th-sort" data-col="4" data-type="text">Nombre Excel</th>
+              <th class="cpeh-th-sort" data-col="5" data-type="text">Nombre Habitable</th>
+              <th class="cpeh-th-sort" data-col="6" data-type="text">Validación nombre</th>
+              <th class="cpeh-th-sort" data-col="7" data-type="text">Estado (Excel)</th>
+              <th class="cpeh-th-sort" data-col="8" data-type="text">Parroquia (Excel)</th>
+              <th class="cpeh-th-sort" data-col="9" data-type="text">Municipio/parroquia Habitable</th>
+              <th class="cpeh-th-sort" data-col="10" data-type="text">Validación ubicación</th>
+              <th class="cpeh-th-sort" data-col="11" data-type="text">Equipo actual</th>
+              <th class="cpeh-th-sort" data-col="12" data-type="text">Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in preview.filas %}
+            <tr class="{% if f.nombre_match == 'difieren' or f.ubicacion_match == 'difieren' %}nombre-dif{% elif f.nombre_match == 'parcial' or f.ubicacion_match == 'parcial' %}nombre-parcial{% endif %}">
+              <td data-sort="{{ f.fila }}">{{ f.fila }}</td>
+              <td data-sort="{{ f.hab_id }}">{{ f.hab_id }}</td>
+              <td data-sort="{{ f.certificado }}">{{ f.certificado }}</td>
+              <td data-sort="{% if f.estado == 'ok' %}Libre{% elif f.estado == 'ya_asignado' %}Ya asignado{% elif f.estado == 'no_encontrado' %}No encontrado{% elif f.estado == 'duplicado' %}Duplicado{% else %}Incompleto{% endif %}">
+                {% if f.estado == "ok" %}<span class="cpeh-badge cpeh-badge-ok">Libre</span>
+                {% elif f.estado == "ya_asignado" %}<span class="cpeh-badge cpeh-badge-ya">Ya asignado</span>
+                {% elif f.estado == "no_encontrado" %}<span class="cpeh-badge cpeh-badge-miss">No encontrado</span>
+                {% elif f.estado == "duplicado" %}<span class="cpeh-badge cpeh-badge-dup">Duplicado</span>
+                {% else %}<span class="cpeh-badge cpeh-badge-empty">Incompleto</span>{% endif %}
+              </td>
+              <td data-sort="{{ f.nombre_excel|default:'' }}">{{ f.nombre_excel|default:"—" }}</td>
+              <td data-sort="{{ f.nombre_habitable|default:f.nombre|default:'' }}">{{ f.nombre_habitable|default:f.nombre|default:"—" }}</td>
+              <td data-sort="{% if f.nombre_match == 'coinciden' %}Coinciden{% elif f.nombre_match == 'parcial' %}Parcial{% elif f.nombre_match == 'difieren' %}Difieren{% elif f.nombre_match == 'sin_excel' %}Sin nombre{% else %}{% endif %}">
+                {% if f.nombre_match == "coinciden" %}
+                <span class="cpeh-badge cpeh-badge-name-ok">Coinciden</span>
+                {% elif f.nombre_match == "parcial" %}
+                <span class="cpeh-badge cpeh-badge-name-parcial">Parcial</span>
+                {% elif f.nombre_match == "difieren" %}
+                <span class="cpeh-badge cpeh-badge-name-dif">Difieren</span>
+                {% elif f.nombre_match == "sin_excel" %}
+                <span class="cpeh-badge cpeh-badge-name-na">Sin nombre en Excel</span>
+                {% else %}
+                <span class="cpeh-badge cpeh-badge-name-na">—</span>
+                {% endif %}
+              </td>
+              <td data-sort="{{ f.estado_excel|default:'' }}">{{ f.estado_excel|default:"—" }}</td>
+              <td data-sort="{{ f.parroquia_excel|default:'' }}">{{ f.parroquia_excel|default:"—" }}</td>
+              <td data-sort="{{ f.ubicacion_habitable|default:'' }}">{{ f.ubicacion_habitable|default:"—" }}</td>
+              <td data-sort="{% if f.ubicacion_match == 'coinciden' %}OK{% elif f.ubicacion_match == 'parcial' %}Parcial{% elif f.ubicacion_match == 'difieren' %}Difiere{% elif f.ubicacion_match == 'sin_excel' %}Sin dato{% else %}{% endif %}">
+                {% if f.ubicacion_match == "coinciden" %}
+                <span class="cpeh-badge cpeh-badge-name-ok">OK</span>
+                {% elif f.ubicacion_match == "parcial" %}
+                <span class="cpeh-badge cpeh-badge-name-parcial">Parcial</span>
+                {% elif f.ubicacion_match == "difieren" %}
+                <span class="cpeh-badge cpeh-badge-name-dif">Difiere</span>
+                {% elif f.ubicacion_match == "sin_excel" %}
+                <span class="cpeh-badge cpeh-badge-name-na">Sin dato Excel</span>
+                {% else %}
+                <span class="cpeh-badge cpeh-badge-name-na">—</span>
+                {% endif %}
+              </td>
+              <td data-sort="{{ f.equipo_actual|default:'' }}">{{ f.equipo_actual|default:"—" }}</td>
+              <td data-sort="{{ f.detalle }}">{{ f.detalle }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="13">Sin filas en el archivo.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if n_lote %}
+    <div class="cpeh-card">
+      <h2>2. Asignar lote a un equipo ({{ n_libres }} libre{{ n_libres|pluralize:"s" }} · {{ n_ya_asignados }} ya asignado{{ n_ya_asignados|pluralize:"s" }})</h2>
+      <div class="cpeh-card-body">
+        <form method="post" id="form-asignar">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="asignar">
+          <div class="cpeh-asign-bar">
+            <div>
+              <label for="coordinador_id">Equipo destino</label>
+              <select name="coordinador_id" id="coordinador_id" required>
+                <option value="">— Seleccione equipo —</option>
+                {% for e in equipos %}
+                <option value="{{ e.coordinador_id }}">
+                  {{ e.etiqueta }} ({{ e.coordinador_username }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success" id="btn-asignar-lote">
+              Asignar libres al equipo
+            </button>
+          </div>
+          <p class="hint">
+            Por defecto <strong>solo se asignan casos sin coordinador</strong>.
+            Los ya asignados aparecen desmarcados y no se mueven (evita reasignación errónea).
+          </p>
+          <label class="hint" style="display:block;margin:0.35rem 0 0.75rem;color:#9a3412">
+            <input type="checkbox" name="forzar_reasignacion" value="1" id="chk-forzar">
+            Forzar reasignación de casos que ya tienen otro equipo (usar con cuidado)
+          </label>
+          <div class="table-wrap">
+            <table class="cpeh-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="chk-all" title="Marcar solo libres"></th>
+                  <th>hab_id</th>
+                  <th>Certificado</th>
+                  <th>Nombre</th>
+                  <th>Banda</th>
+                  <th>Estado 2.ª</th>
+                  <th>Score</th>
+                  <th>Equipo actual</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for c in casos_lote %}
+                <tr class="{% if c.ya_asignado %}ya-asignado{% endif %}">
+                  <td>
+                    {% if c.ya_asignado %}
+                    <input type="checkbox" name="caso_ids" value="{{ c.pk }}" class="chk-caso chk-ya" disabled
+                           title="Ya asignado — active «Forzar» para incluir">
+                    <input type="hidden" class="chk-ya-val" value="{{ c.pk }}">
+                    {% else %}
+                    <input type="checkbox" name="caso_ids" value="{{ c.pk }}" class="chk-caso chk-libre" checked>
+                    {% endif %}
+                  </td>
+                  <td>{{ c.hab_id }}</td>
+                  <td>{{ c.certificado }}</td>
+                  <td>{{ c.nombre }}</td>
+                  <td>{{ c.banda }}</td>
+                  <td>{{ c.estado_2da }}</td>
+                  <td>{{ c.score }}</td>
+                  <td>
+                    {% if c.ya_asignado %}
+                    <span class="cpeh-badge cpeh-badge-ya">{{ c.equipo_actual }}</span>
+                    {% else %}
+                    <em>—</em>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8">No hay casos en el lote (vuelva a cargar el Excel).</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </form>
+        <form method="post" style="margin-top:0.75rem;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="limpiar">
+          <button type="submit" class="btn btn-outline-danger">Limpiar lote</button>
+        </form>
+      </div>
+    </div>
+    {% elif not preview %}
+    <div class="cpeh-card">
+      <h2>Sin lote activo</h2>
+      <div class="cpeh-card-body">
+        <p class="hint" style="margin:0;">
+          Descargue la plantilla, complete IDs o certificados, y cárguela arriba para previsualizar.
+        </p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    (function () {
+      var all = document.getElementById("chk-all");
+      var forzar = document.getElementById("chk-forzar");
+      var form = document.getElementById("form-asignar");
+
+      function syncYaChecks() {
+        var on = forzar && forzar.checked;
+        document.querySelectorAll(".chk-ya").forEach(function (el) {
+          el.disabled = !on;
+          if (!on) el.checked = false;
+        });
+      }
+      if (forzar) forzar.addEventListener("change", syncYaChecks);
+      syncYaChecks();
+
+      if (all) {
+        all.addEventListener("change", function () {
+          document.querySelectorAll(".chk-libre").forEach(function (el) {
+            el.checked = all.checked;
+          });
+          if (forzar && forzar.checked) {
+            document.querySelectorAll(".chk-ya").forEach(function (el) {
+              el.checked = all.checked;
+            });
+          }
+        });
+      }
+
+      if (form) {
+        form.addEventListener("submit", function (ev) {
+          var nLibre = document.querySelectorAll(".chk-libre:checked").length;
+          var nYa = document.querySelectorAll(".chk-ya:checked").length;
+          if (!nLibre && !nYa) {
+            ev.preventDefault();
+            alert("Seleccione al menos un caso libre (o active forzar y marque ya asignados).");
+            return;
+          }
+          var msg = "¿Asignar " + nLibre + " caso(s) libre(s) al equipo?";
+          if (nYa) {
+            msg = "ATENCIÓN: va a reasignar también " + nYa +
+              " caso(s) que YA tienen equipo. " + msg;
+          }
+          if (!confirm(msg)) ev.preventDefault();
+        });
+      }
+
+      function cellSortValue(td, type) {
+        if (!td) return "";
+        var raw = (td.getAttribute("data-sort") || td.textContent || "").trim();
+        if (type === "num") {
+          var n = parseFloat(String(raw).replace(/[^\d.-]/g, ""));
+          return isNaN(n) ? Number.NEGATIVE_INFINITY : n;
+        }
+        return raw.toLocaleLowerCase("es");
+      }
+
+      function enableSortable(table) {
+        if (!table) return;
+        var ths = table.querySelectorAll("thead th.cpeh-th-sort");
+        var tbody = table.tBodies[0];
+        if (!tbody || !ths.length) return;
+        var state = { col: -1, dir: 1 };
+
+        ths.forEach(function (th) {
+          th.addEventListener("click", function () {
+            var col = parseInt(th.getAttribute("data-col"), 10);
+            var type = th.getAttribute("data-type") || "text";
+            if (state.col === col) {
+              state.dir = -state.dir;
+            } else {
+              state.col = col;
+              state.dir = 1;
+            }
+            ths.forEach(function (h) {
+              h.classList.remove("is-asc", "is-desc");
+            });
+            th.classList.add(state.dir === 1 ? "is-asc" : "is-desc");
+
+            var rows = Array.prototype.slice.call(tbody.querySelectorAll("tr"));
+            rows.sort(function (a, b) {
+              var va = cellSortValue(a.cells[col], type);
+              var vb = cellSortValue(b.cells[col], type);
+              if (va < vb) return -1 * state.dir;
+              if (va > vb) return 1 * state.dir;
+              return 0;
+            });
+            rows.forEach(function (r) { tbody.appendChild(r); });
+          });
+        });
+      }
+
+      enableSortable(document.getElementById("tabla-resultado-excel"));
+    })();
+  </script>
+</body>
+</html>
