@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="lineametado",
+            model_name="lineametrado",
             name="id_pln01",
             field=models.CharField(
                 blank=True,
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="lineametado",
+            model_name="lineametrado",
             name="piso_pln",
             field=models.CharField(
                 blank=True,
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="lineametado",
+            model_name="lineametrado",
             name="tipo_apuntamiento",
             field=models.CharField(
                 blank=True,
@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="lineametado",
+            model_name="lineametrado",
             name="ubicacion",
             field=models.CharField(
                 blank=True,
