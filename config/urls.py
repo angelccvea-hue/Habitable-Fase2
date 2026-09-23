@@ -72,13 +72,20 @@ urlpatterns = [
     path("operacion/", tablero_operacion, name="tablero_operacion"),
     path("operacion/export.xlsx", export_operacion_excel, name="export_operacion_excel"),
     path("operacion/export.pdf", export_operacion_pdf, name="export_operacion_pdf"),
-    path("plano-metrado/", visor_plano_metrado, name="visor_plano_metrado"),
-    path("plano-metrado/<int:pk>/", visor_plano_metrado, name="visor_plano_metrado_caso"),
-    path(
-        "plano-metrado/<int:pk>/guardar/",
-        visor_plano_metrado_guardar,
-        name="visor_plano_metrado_guardar",
-    ),
+]
+
+if not getattr(settings, "CPEH_SCOPE_HASTA_MAPA", False):
+    urlpatterns += [
+        path("plano-metrado/", visor_plano_metrado, name="visor_plano_metrado"),
+        path("plano-metrado/<int:pk>/", visor_plano_metrado, name="visor_plano_metrado_caso"),
+        path(
+            "plano-metrado/<int:pk>/guardar/",
+            visor_plano_metrado_guardar,
+            name="visor_plano_metrado_guardar",
+        ),
+    ]
+
+urlpatterns += [
     path("export/excel/informe/<int:pk>/", export_excel_informe, name="export_excel_informe"),
     path("export/excel/lote/", export_excel_lote, name="export_excel_lote"),
     path("export/excel/informes/", export_excel_informes_multiples, name="export_excel_informes_multiples"),

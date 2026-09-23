@@ -1,4 +1,21 @@
 """Personalización Jazzmin — CPEH Fase II (identidad portal CPEH)."""
+import os
+
+_SCOPE_HASTA_MAPA = os.environ.get("CPEH_SCOPE_HASTA_MAPA", "0") == "1"
+
+_HIDE_MODELS = [
+    "inspecciones.CredencialEmitida",
+    "inspecciones.EvidenciaFoto",
+    "inspecciones.CroquisAdjunto",
+    "inspecciones.InformePdfAdjunto",
+    "inspecciones.HistorialEstado",
+    "inspecciones.HistorialDetallado",
+    "inspecciones.LineaMetrado",
+]
+if _SCOPE_HASTA_MAPA:
+    # Despliegue hasta mapa: no exponer catálogo MET-01 en menú lateral.
+    _HIDE_MODELS.append("inspecciones.PartidaCatalogo")
+
 JAZZMIN_SETTINGS = {
     "site_title": "CPEH · Habitabilidad",
     "site_header": "Verificación Habitable Fase II",
@@ -11,7 +28,6 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Comisión Presidencial para la Evaluación de Habitabilidad de Infraestructuras",
     "copyright": "Comisión Presidencial para la Evaluación de Habitabilidad de Infraestructuras",
     "search_model": ["inspecciones.CasoRojo"],
-    # Barra superior: solo atajos diarios (el resto vive en el menú izquierdo)
     "topmenu_links": [
         {"name": "Inicio", "url": "admin:index", "permissions": ["inspecciones.view_casorojo"]},
         {
@@ -30,12 +46,10 @@ JAZZMIN_SETTINGS = {
             "name": "Asignación",
             "url": "/asignacion/",
             "new_window": True,
-            # Coordinadores tienen auth.view_user (ver asegurar_permisos_grupos)
             "permissions": ["auth.view_user"],
         },
         {"name": "Mi perfil", "url": "/perfil/", "permissions": ["inspecciones.view_casorojo"]},
     ],
-    # Menú lateral: herramientas agrupadas (no saturan la navbar)
     "custom_links": {
         "Operación": [
             {
@@ -113,16 +127,7 @@ JAZZMIN_SETTINGS = {
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": [],
-    # Satélites del caso (se editan dentro de la ficha, no como listados sueltos)
-    "hide_models": [
-        "inspecciones.CredencialEmitida",
-        "inspecciones.EvidenciaFoto",
-        "inspecciones.CroquisAdjunto",
-        "inspecciones.InformePdfAdjunto",
-        "inspecciones.HistorialEstado",
-        "inspecciones.HistorialDetallado",
-        "inspecciones.LineaMetrado",
-    ],
+    "hide_models": _HIDE_MODELS,
     "order_with_respect_to": [
         "Operación",
         "inspecciones",

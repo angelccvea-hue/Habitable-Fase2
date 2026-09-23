@@ -116,6 +116,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Despliegue acotado: menú/rutas hasta mapa (sin visor metrados PLN-01 / MET-01 detallado).
+CPEH_SCOPE_HASTA_MAPA = os.environ.get("CPEH_SCOPE_HASTA_MAPA", "0") == "1"
+
 # Ficha CasoRojo + varios inlines (metrados, fotos, PDF, croquis) puede superar
 # el default de Django (1000). Si se trunca el POST, «Guardar y continuar editando»
 # parece borrar secciones llenadas (campos ausentes llegan vacíos).
@@ -165,6 +168,17 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = DEBUG
+
+# Detrás de proxy (Nginx) — hosts HTTP explícitos
+_csrf = os.environ.get("CSRF_TRUSTED_ORIGINS", "").strip()
+if _csrf:
+    CSRF_TRUSTED_ORIGINS = [h.strip() for h in _csrf.split(",") if h.strip()]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        f"http://{h}" for h in ALLOWED_HOSTS if h not in ("*", "localhost", "127.0.0.1")
+    ] + ["http://localhost", "http://127.0.0.1"]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Guía PDF usuario: False = marca «BORRADOR EN REVISIÓN» hasta aprobación gerencial
 GUIA_USUARIO_PDF_APROBADA = os.environ.get("GUIA_USUARIO_PDF_APROBADA", "0") == "1"
